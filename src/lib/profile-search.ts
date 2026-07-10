@@ -55,6 +55,27 @@ export class ProfileSearchResults {
     }
     return this.matches.get(frame) || null
   }
+
+  private matchingNodes: CallTreeNode[] | null = null
+  getMatchingCallTreeNodes(): CallTreeNode[] {
+    if (this.matchingNodes === null) {
+      const nodes: CallTreeNode[] = []
+      const visit = (node: CallTreeNode) => {
+        if (this.getMatchForFrame(node.frame)) {
+          nodes.push(node)
+        }
+        for (let child of node.children) {
+          visit(child)
+        }
+      }
+      const root = this.profile.getAppendOrderCalltreeRoot()
+      for (let child of root.children) {
+        visit(child)
+      }
+      this.matchingNodes = nodes
+    }
+    return this.matchingNodes
+  }
 }
 
 export interface FlamechartSearchMatch {

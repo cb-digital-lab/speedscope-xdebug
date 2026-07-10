@@ -35,11 +35,37 @@ export const getFlamechartStyle = withTheme(theme =>
       width: '100vw',
       bottom: 0,
     },
+    detailViewPanel: {
+      display: 'grid',
+      height: '100%',
+      overflow: 'hidden',
+      gridTemplateColumns: '120px 120px 1fr',
+      gridTemplateRows: 'auto auto 1fr',
+      fontSize: FontSize.LABEL,
+      background: theme.bgPrimaryColor,
+    },
     stackTraceViewPadding: {
       padding: 5,
     },
     stackTraceView: {
       height: Sizes.DETAIL_VIEW_HEIGHT,
+      lineHeight: `${FontSize.LABEL + 2}px`,
+      overflow: 'auto',
+      '::-webkit-scrollbar': {
+        background: theme.bgPrimaryColor,
+      },
+      '::-webkit-scrollbar-thumb': {
+        background: theme.fgSecondaryColor,
+        borderRadius: 20,
+        border: `3px solid ${theme.bgPrimaryColor}`,
+        ':hover': {
+          background: theme.fgPrimaryColor,
+        },
+      },
+    },
+    stackTraceViewPanel: {
+      height: '100%',
+      minHeight: 0,
       lineHeight: `${FontSize.LABEL + 2}px`,
       overflow: 'auto',
       '::-webkit-scrollbar': {

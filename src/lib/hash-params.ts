@@ -15,6 +15,8 @@ function getViewMode(value: string): ViewMode | null {
       return ViewMode.LEFT_HEAVY_FLAME_GRAPH
     case 'sandwich':
       return ViewMode.SANDWICH_VIEW
+    case 'tree':
+      return ViewMode.TREE_VIEW
     default:
       return null
   }

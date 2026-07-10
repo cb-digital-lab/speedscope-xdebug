@@ -1,7 +1,7 @@
 import {Profile} from '../lib/profile'
 import {getProfileToView} from './getters'
 import {flattenRecursionAtom, profileGroupAtom} from '.'
-import {FlamechartViewState, SandwichViewState} from './profile-group'
+import {FlamechartViewState, SandwichViewState, TreeViewState} from './profile-group'
 import {useAtom} from '../lib/atom'
 
 export interface ApplicationState {}
@@ -12,6 +12,7 @@ export interface ActiveProfileState {
   chronoViewState: FlamechartViewState
   leftHeavyViewState: FlamechartViewState
   sandwichViewState: SandwichViewState
+  treeViewState: TreeViewState
 }
 
 export function useActiveProfileState(): ActiveProfileState | null {

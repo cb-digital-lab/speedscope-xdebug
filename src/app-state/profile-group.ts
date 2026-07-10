@@ -23,11 +23,17 @@ export interface SandwichViewState {
   callerCallee: CallerCalleeState | null
 }
 
+export interface TreeViewState {
+  expandedNodes: Set<CallTreeNode>
+  selectedNode: CallTreeNode | null
+}
+
 export interface ProfileState {
   profile: Profile
   chronoViewState: FlamechartViewState
   leftHeavyViewState: FlamechartViewState
   sandwichViewState: SandwichViewState
+  treeViewState: TreeViewState
 }
 
 export type ProfileGroupState = {
@@ -53,6 +59,11 @@ let initialFlameChartViewState: FlamechartViewState = {
   logicalSpaceViewportSize: Vec2.zero,
 }
 
+let initialTreeViewState: TreeViewState = {
+  expandedNodes: new Set(),
+  selectedNode: null,
+}
+
 export class ProfileGroupAtom extends Atom<ProfileGroupState> {
   set(newState: ProfileGroupState) {
     const oldState = this.state
@@ -76,6 +87,7 @@ export class ProfileGroupAtom extends Atom<ProfileGroupState> {
         chronoViewState: initialFlameChartViewState,
         leftHeavyViewState: initialFlameChartViewState,
         sandwichViewState: {callerCallee: null},
+        treeViewState: initialTreeViewState,
       })),
     })
   }
@@ -109,6 +121,39 @@ export class ProfileGroupAtom extends Atom<ProfileGroupState> {
     this.updateActiveProfileState(p => ({
       ...p,
       sandwichViewState: fn(p.sandwichViewState),
+    }))
+  }
+
+  private updateActiveTreeViewState(fn: (treeViewState: TreeViewState) => TreeViewState) {
+    this.updateActiveProfileState(p => ({
+      ...p,
+      treeViewState: fn(p.treeViewState),
+    }))
+  }
+
+  setTreeSelectedNode = (selectedNode: CallTreeNode | null) => {
+    this.updateActiveTreeViewState(treeViewState => ({
+      ...treeViewState,
+      selectedNode,
+    }))
+  }
+
+  toggleTreeNodeExpanded = (node: CallTreeNode) => {
+    this.updateActiveTreeViewState(treeViewState => {
+      const expandedNodes = new Set(treeViewState.expandedNodes)
+      if (expandedNodes.has(node)) {
+        expandedNodes.delete(node)
+      } else {
+        expandedNodes.add(node)
+      }
+      return {...treeViewState, expandedNodes}
+    })
+  }
+
+  setTreeExpandedNodes = (expandedNodes: Set<CallTreeNode>) => {
+    this.updateActiveTreeViewState(treeViewState => ({
+      ...treeViewState,
+      expandedNodes,
     }))
   }
 

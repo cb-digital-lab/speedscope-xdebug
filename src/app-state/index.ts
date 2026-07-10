@@ -71,6 +71,17 @@ export interface SortMethod {
   direction: SortDirection
 }
 
+export enum TreeSortField {
+  CALL_ORDER,
+  TOTAL,
+  SELF,
+}
+
+export interface TreeSortMethod {
+  field: TreeSortField
+  direction: SortDirection
+}
+
 // The table sorting method using for the sandwich view, specifying the column
 // to sort by, and the direction to sort that clumn.
 export const tableSortMethodAtom = new Atom<SortMethod>(
@@ -79,4 +90,12 @@ export const tableSortMethodAtom = new Atom<SortMethod>(
     direction: SortDirection.DESCENDING,
   },
   'tableSortMethod',
+)
+
+export const treeSortMethodAtom = new Atom<TreeSortMethod>(
+  {
+    field: TreeSortField.CALL_ORDER,
+    direction: SortDirection.ASCENDING,
+  },
+  'treeSortMethod',
 )

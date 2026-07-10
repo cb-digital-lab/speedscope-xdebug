@@ -20,6 +20,7 @@ import {ProfileGroupState} from '../app-state/profile-group'
 import {HashParams} from '../lib/hash-params'
 import {StatelessComponent} from '../lib/preact-helpers'
 import {SandwichViewContainer} from './sandwich-view'
+import {TreeViewContainer} from './tree-view-container'
 
 const importModule = import('../import')
 
@@ -353,6 +354,8 @@ export class Application extends StatelessComponent<ApplicationProps> {
       this.props.setViewMode(ViewMode.LEFT_HEAVY_FLAME_GRAPH)
     } else if (ev.key === '3') {
       this.props.setViewMode(ViewMode.SANDWICH_VIEW)
+    } else if (ev.key === '4') {
+      this.props.setViewMode(ViewMode.TREE_VIEW)
     } else if (ev.key === 'r') {
       const {flattenRecursion} = this.props
       this.props.setFlattenRecursion(!flattenRecursion)
@@ -582,6 +585,9 @@ export class Application extends StatelessComponent<ApplicationProps> {
       }
       case ViewMode.SANDWICH_VIEW: {
         return <SandwichViewContainer activeProfileState={activeProfileState} glCanvas={glCanvas} />
+      }
+      case ViewMode.TREE_VIEW: {
+        return <TreeViewContainer activeProfileState={activeProfileState} />
       }
     }
   }

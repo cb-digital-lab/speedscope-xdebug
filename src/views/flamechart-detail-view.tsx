@@ -51,6 +51,7 @@ function StatisticsTable(props: StatisticsTableProps) {
 interface StackTraceViewProps {
   getFrameColor: (frame: Frame) => string
   node: CallTreeNode
+  sidePanel?: boolean
 }
 function StackTraceView(props: StackTraceViewProps) {
   const style = getFlamechartStyle(useTheme())
@@ -81,8 +82,49 @@ function StackTraceView(props: StackTraceViewProps) {
     rows.push(<div className={css(style.stackLine)}>{row}</div>)
   }
   return (
-    <div className={css(style.stackTraceView)}>
+    <div className={css(props.sidePanel ? style.stackTraceViewPanel : style.stackTraceView)}>
       <div className={css(style.stackTraceViewPadding)}>{rows}</div>
+    </div>
+  )
+}
+
+interface CallTreeNodeDetailViewProps {
+  grandTotal: number
+  formatValue: (v: number) => string
+  getCSSColorForFrame: (frame: Frame) => string
+  selectedNode: CallTreeNode
+  sidePanel?: boolean
+}
+
+export function CallTreeNodeDetailView(props: CallTreeNodeDetailViewProps) {
+  const style = getFlamechartStyle(useTheme())
+
+  const {selectedNode, grandTotal, formatValue} = props
+  const {frame} = selectedNode
+
+  return (
+    <div className={css(props.sidePanel ? style.detailViewPanel : style.detailView)}>
+      <StatisticsTable
+        title={'This Instance'}
+        cellStyle={style.thisInstanceCell}
+        grandTotal={grandTotal}
+        selectedTotal={selectedNode.getTotalWeight()}
+        selectedSelf={selectedNode.getSelfWeight()}
+        formatter={formatValue}
+      />
+      <StatisticsTable
+        title={'All Instances'}
+        cellStyle={style.allInstancesCell}
+        grandTotal={grandTotal}
+        selectedTotal={frame.getTotalWeight()}
+        selectedSelf={frame.getSelfWeight()}
+        formatter={formatValue}
+      />
+      <StackTraceView
+        node={selectedNode}
+        getFrameColor={props.getCSSColorForFrame}
+        sidePanel={props.sidePanel}
+      />
     </div>
   )
 }
@@ -94,30 +136,14 @@ interface FlamechartDetailViewProps {
 }
 
 export function FlamechartDetailView(props: FlamechartDetailViewProps) {
-  const style = getFlamechartStyle(useTheme())
-
   const {flamechart, selectedNode} = props
-  const {frame} = selectedNode
 
   return (
-    <div className={css(style.detailView)}>
-      <StatisticsTable
-        title={'This Instance'}
-        cellStyle={style.thisInstanceCell}
-        grandTotal={flamechart.getTotalWeight()}
-        selectedTotal={selectedNode.getTotalWeight()}
-        selectedSelf={selectedNode.getSelfWeight()}
-        formatter={flamechart.formatValue.bind(flamechart)}
-      />
-      <StatisticsTable
-        title={'All Instances'}
-        cellStyle={style.allInstancesCell}
-        grandTotal={flamechart.getTotalWeight()}
-        selectedTotal={frame.getTotalWeight()}
-        selectedSelf={frame.getSelfWeight()}
-        formatter={flamechart.formatValue.bind(flamechart)}
-      />
-      <StackTraceView node={selectedNode} getFrameColor={props.getCSSColorForFrame} />
-    </div>
+    <CallTreeNodeDetailView
+      grandTotal={flamechart.getTotalWeight()}
+      formatValue={flamechart.formatValue.bind(flamechart)}
+      getCSSColorForFrame={props.getCSSColorForFrame}
+      selectedNode={selectedNode}
+    />
   )
 }
