@@ -6,6 +6,11 @@ export interface CallTreeRow {
   depth: number
   hasChildren: boolean
   isExpanded: boolean
+
+  // Heat ratios in [0, 1] relative to the heaviest sibling in the same scope
+  // (nodes sharing the same parent). The worst offender in each scope is 1.
+  totalHeat: number
+  selfHeat: number
 }
 
 function sortChildren(children: CallTreeNode[], sortMethod: TreeSortMethod): CallTreeNode[] {
@@ -34,22 +39,36 @@ export function buildCallTreeRows(
 ): CallTreeRow[] {
   const rows: CallTreeRow[] = []
 
-  function visit(node: CallTreeNode, depth: number) {
-    const hasChildren = node.children.length > 0
-    const isExpanded = expandedNodes.has(node)
+  function visitScope(siblings: CallTreeNode[], depth: number) {
+    let maxTotal = 0
+    let maxSelf = 0
+    for (let sibling of siblings) {
+      const total = sibling.getTotalWeight()
+      const self = sibling.getSelfWeight()
+      if (total > maxTotal) maxTotal = total
+      if (self > maxSelf) maxSelf = self
+    }
 
-    rows.push({node, depth, hasChildren, isExpanded})
+    for (let node of sortChildren(siblings, sortMethod)) {
+      const hasChildren = node.children.length > 0
+      const isExpanded = expandedNodes.has(node)
 
-    if (hasChildren && isExpanded) {
-      for (let child of sortChildren(node.children, sortMethod)) {
-        visit(child, depth + 1)
+      rows.push({
+        node,
+        depth,
+        hasChildren,
+        isExpanded,
+        totalHeat: maxTotal > 0 ? node.getTotalWeight() / maxTotal : 0,
+        selfHeat: maxSelf > 0 ? node.getSelfWeight() / maxSelf : 0,
+      })
+
+      if (hasChildren && isExpanded) {
+        visitScope(node.children, depth + 1)
       }
     }
   }
 
-  for (let child of sortChildren(root.children, sortMethod)) {
-    visit(child, 0)
-  }
+  visitScope(root.children, 0)
 
   return rows
 }

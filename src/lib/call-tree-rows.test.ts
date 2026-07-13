@@ -107,6 +107,31 @@ test('buildCallTreeRows preserves call order by default', () => {
   expect(weightSortedBChildRows.map(r => r.node.frame.name)).not.toEqual(['d', 'c'])
 })
 
+test('buildCallTreeRows assigns heat relative to heaviest sibling in scope', () => {
+  const profile = buildTestProfile()
+  const root = profile.getAppendOrderCalltreeRoot()
+  const aNode = findNodeByPath(root, ['a'])!
+  const firstBNode = findNodeByPath(root, ['a', 'b'])!
+
+  const rows = buildCallTreeRows(root, new Set([aNode, firstBNode]), {
+    field: TreeSortField.TOTAL,
+    direction: SortDirection.DESCENDING,
+  })
+
+  const bChildRows = rows.filter(r => r.depth === 2 && r.node.parent === firstBNode)
+
+  // The heaviest sibling in a scope is always fully hot (ratio 1).
+  const maxHeat = Math.max(...bChildRows.map(r => r.totalHeat))
+  expect(maxHeat).toBe(1)
+
+  // Heat ratios track the relative weight ordering within the scope.
+  for (let i = 1; i < bChildRows.length; i++) {
+    expect(bChildRows[i - 1].totalHeat).toBeGreaterThanOrEqual(bChildRows[i].totalHeat)
+    expect(bChildRows[i].totalHeat).toBeGreaterThanOrEqual(0)
+    expect(bChildRows[i].totalHeat).toBeLessThanOrEqual(1)
+  }
+})
+
 test('buildCallTreeRows sorts children by total weight descending', () => {
   const profile = buildTestProfile()
   const root = profile.getAppendOrderCalltreeRoot()

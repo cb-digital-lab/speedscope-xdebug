@@ -1,9 +1,10 @@
 import {h, JSX, ComponentChild, createContext} from 'preact'
 import {StyleSheet, css} from 'aphrodite'
 import {memo} from 'preact/compat'
-import {useCallback, useContext, useMemo} from 'preact/hooks'
+import {useCallback, useContext, useMemo, useState} from 'preact/hooks'
 import {CallTreeNode, Profile} from '../lib/profile'
 import {CallTreeRow} from '../lib/call-tree-rows'
+import {buildAnalysisPrompt} from '../lib/analysis-prompt'
 import {formatPercent} from '../lib/utils'
 import {FontSize, Sizes, commonStyle} from './style'
 import {ColorChit} from './color-chit'
@@ -63,6 +64,12 @@ function HBarDisplay(props: HBarProps) {
   )
 }
 
+function heatColorForRatio(ratio: number): string {
+  const t = Math.max(0, Math.min(1, ratio))
+  const hue = 120 * (1 - t)
+  return `hsla(${hue.toFixed(0)}, 70%, 42%, ${(0.15 + 0.5 * t).toFixed(2)})`
+}
+
 function highlightRanges(
   text: string,
   ranges: [number, number][],
@@ -102,7 +109,7 @@ function TreeTableRowView({
   matchedRanges,
 }: TreeTableRowViewProps) {
   const style = getStyle(useTheme())
-  const {node, depth, hasChildren, isExpanded} = row
+  const {node, depth, hasChildren, isExpanded, totalHeat, selfHeat} = row
   const {frame} = node
 
   const totalWeight = node.getTotalWeight()
@@ -139,11 +146,14 @@ function TreeTableRowView({
         selected && style.tableRowSelected,
       )}
     >
-      <td className={css(style.numericCell)}>
+      <td
+        className={css(style.numericCell)}
+        style={{backgroundColor: heatColorForRatio(totalHeat)}}
+      >
         {profile.formatValue(totalWeight)} ({formatPercent(totalPerc)})
         <HBarDisplay perc={totalPerc} />
       </td>
-      <td className={css(style.numericCell)}>
+      <td className={css(style.numericCell)} style={{backgroundColor: heatColorForRatio(selfHeat)}}>
         {profile.formatValue(selfWeight)} ({formatPercent(selfPerc)})
         <HBarDisplay perc={selfPerc} />
       </td>
@@ -365,6 +375,78 @@ export const TreeTableView = memo(
   },
 )
 
+async function copyTextToClipboard(text: string): Promise<boolean> {
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(text)
+      return true
+    }
+  } catch (e) {
+    // Fall through to the execCommand fallback below.
+  }
+
+  try {
+    const textarea = document.createElement('textarea')
+    textarea.value = text
+    textarea.style.position = 'fixed'
+    textarea.style.opacity = '0'
+    document.body.appendChild(textarea)
+    textarea.select()
+    const ok = document.execCommand('copy')
+    document.body.removeChild(textarea)
+    return ok
+  } catch (e) {
+    return false
+  }
+}
+
+interface GeneratePromptButtonProps {
+  profile: Profile
+  selectedNode: CallTreeNode
+}
+
+function GeneratePromptButton({profile, selectedNode}: GeneratePromptButtonProps) {
+  const style = getStyle(useTheme())
+  const treeContext = useContext(TreeViewContext)
+  const [status, setStatus] = useState<'idle' | 'copied' | 'error'>('idle')
+
+  const onClick = useCallback(() => {
+    let calleeRows: CallTreeRow[] = []
+    let selectedDepth = 0
+
+    if (treeContext) {
+      const index = treeContext.getIndexForNode(selectedNode)
+      if (index != null) {
+        selectedDepth = treeContext.rowList[index].depth
+        for (let i = index + 1; i < treeContext.rowList.length; i++) {
+          if (treeContext.rowList[i].depth <= selectedDepth) break
+          calleeRows.push(treeContext.rowList[i])
+        }
+      }
+    }
+
+    const prompt = buildAnalysisPrompt(profile, selectedNode, calleeRows, selectedDepth)
+
+    copyTextToClipboard(prompt).then(ok => {
+      setStatus(ok ? 'copied' : 'error')
+      window.setTimeout(() => setStatus('idle'), 2500)
+    })
+  }, [profile, selectedNode, treeContext])
+
+  const label =
+    status === 'copied'
+      ? 'Copied to clipboard!'
+      : status === 'error'
+        ? 'Copy failed — check console'
+        : 'Copy AI analysis prompt'
+
+  return (
+    <button type="button" className={css(style.promptButton)} onClick={onClick}>
+      {label}
+    </button>
+  )
+}
+
 interface TreeViewProps {
   theme: Theme
   activeProfileState: ActiveProfileState
@@ -404,14 +486,19 @@ class TreeView extends StatelessComponent<TreeViewProps> {
     let detailView: JSX.Element | null = null
     if (selectedNode) {
       detailView = (
-        <div className={css(style.detailPanel)}>
-          <CallTreeNodeDetailView
-            grandTotal={profile.getTotalNonIdleWeight()}
-            formatValue={profile.formatValue.bind(profile)}
-            getCSSColorForFrame={getCSSColorForFrame}
-            selectedNode={selectedNode}
-            sidePanel={true}
-          />
+        <div className={css(style.detailPanel, commonStyle.vbox)}>
+          <div className={css(style.detailActions)}>
+            <GeneratePromptButton profile={profile} selectedNode={selectedNode} />
+          </div>
+          <div className={css(style.detailBody)}>
+            <CallTreeNodeDetailView
+              grandTotal={profile.getTotalNonIdleWeight()}
+              formatValue={profile.formatValue.bind(profile)}
+              getCSSColorForFrame={getCSSColorForFrame}
+              selectedNode={selectedNode}
+              sidePanel={true}
+            />
+          </div>
         </div>
       )
     }
@@ -459,6 +546,31 @@ const getStyle = withTheme(theme =>
       height: '100%',
       overflow: 'hidden',
       background: theme.bgPrimaryColor,
+    },
+    detailActions: {
+      display: 'flex',
+      flexShrink: 0,
+      padding: `${Sizes.FRAME_HEIGHT / 4}px ${Sizes.FRAME_HEIGHT / 2}px`,
+      borderBottom: `1px solid ${theme.bgSecondaryColor}`,
+    },
+    detailBody: {
+      position: 'relative',
+      flex: 1,
+      minHeight: 0,
+      overflow: 'hidden',
+    },
+    promptButton: {
+      background: theme.selectionPrimaryColor,
+      color: theme.altFgPrimaryColor,
+      border: 'none',
+      padding: `4px ${Sizes.FRAME_HEIGHT / 2}px`,
+      fontSize: FontSize.LABEL,
+      fontFamily: 'inherit',
+      cursor: 'pointer',
+      width: '100%',
+      ':hover': {
+        background: theme.selectionSecondaryColor,
+      },
     },
     treeTableView: {
       background: theme.bgPrimaryColor,
