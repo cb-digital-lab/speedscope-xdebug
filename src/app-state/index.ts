@@ -99,3 +99,5 @@ export const treeSortMethodAtom = new Atom<TreeSortMethod>(
   },
   'treeSortMethod',
 )
+
+export const splitPanelRightWidthAtom = new Atom<number | null>(null, 'splitPanelRightWidth')

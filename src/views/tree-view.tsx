@@ -16,6 +16,7 @@ import {ActiveProfileState} from '../app-state/active-profile-state'
 import {SortDirection, TreeSortField, TreeSortMethod} from '../app-state'
 import {StatelessComponent} from '../lib/preact-helpers'
 import {Theme} from './themes/theme'
+import {ResizableSplitView} from './resizable-split-view'
 
 const TREE_INDENT_PX = 12
 
@@ -416,42 +417,54 @@ class TreeView extends StatelessComponent<TreeViewProps> {
     }
 
     return (
-      <div className={css(commonStyle.hbox, commonStyle.fillY)}>
-        <div className={css(style.tablePanel)}>
-          <TreeTableView
-            profile={profile}
-            selectedNode={selectedNode}
-            getCSSColorForFrame={getCSSColorForFrame}
-            setSelectedNode={this.setSelectedNode}
-            toggleNodeExpanded={this.props.toggleNodeExpanded}
-            expandAll={this.props.expandAll}
-            collapseAll={this.props.collapseAll}
-            sortMethod={this.props.sortMethod}
-            setSortMethod={this.props.setSortMethod}
-          />
-          <TreeSearchView />
-        </div>
-        {detailView}
-      </div>
+      <ResizableSplitView
+        className={style.treeViewRoot}
+        left={
+          <div className={css(style.tablePanel)}>
+            <TreeTableView
+              profile={profile}
+              selectedNode={selectedNode}
+              getCSSColorForFrame={getCSSColorForFrame}
+              setSelectedNode={this.setSelectedNode}
+              toggleNodeExpanded={this.props.toggleNodeExpanded}
+              expandAll={this.props.expandAll}
+              collapseAll={this.props.collapseAll}
+              sortMethod={this.props.sortMethod}
+              setSortMethod={this.props.setSortMethod}
+            />
+            <TreeSearchView />
+          </div>
+        }
+        right={detailView}
+      />
     )
   }
 }
 
 const getStyle = withTheme(theme =>
   StyleSheet.create({
+    treeViewRoot: {
+      background: theme.bgPrimaryColor,
+    },
     tablePanel: {
       position: 'relative',
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100%',
+      minHeight: 0,
       flex: 1,
       minWidth: 0,
     },
     detailPanel: {
-      flex: '0 0 420px',
-      borderLeft: `${Sizes.SEPARATOR_HEIGHT}px solid ${theme.fgSecondaryColor}`,
+      height: '100%',
       overflow: 'hidden',
+      background: theme.bgPrimaryColor,
     },
     treeTableView: {
       background: theme.bgPrimaryColor,
       height: '100%',
+      minHeight: 0,
+      flex: 1,
     },
     treeControls: {
       display: 'flex',
@@ -475,6 +488,8 @@ const getStyle = withTheme(theme =>
       overflowY: 'auto',
       overflowX: 'hidden',
       flexGrow: 1,
+      minHeight: 0,
+      background: theme.bgPrimaryColor,
       '::-webkit-scrollbar': {
         background: theme.bgPrimaryColor,
       },

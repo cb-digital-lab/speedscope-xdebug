@@ -71,6 +71,7 @@ interface GLCanvasProps {
   canvasContext: CanvasContext | null
   theme: Theme
   setGLCanvas: (canvas: HTMLCanvasElement | null) => void
+  hidden?: boolean
 }
 export class GLCanvas extends StatelessComponent<GLCanvasProps> {
   private canvas: HTMLCanvasElement | null = null
@@ -128,6 +129,15 @@ export class GLCanvas extends StatelessComponent<GLCanvasProps> {
         nextProps.canvasContext.requestFrame()
       }
     }
+    if (!this.props.hidden && nextProps.hidden && nextProps.canvasContext) {
+      nextProps.canvasContext.requestFrame()
+    }
+    if (this.props.hidden && !nextProps.hidden) {
+      this.maybeResize()
+      if (nextProps.canvasContext) {
+        nextProps.canvasContext.requestFrame()
+      }
+    }
   }
   componentDidMount() {
     window.addEventListener('resize', this.onWindowResize)
@@ -141,7 +151,10 @@ export class GLCanvas extends StatelessComponent<GLCanvasProps> {
   render() {
     const style = getStyle(this.props.theme)
     return (
-      <div ref={this.containerRef} className={css(style.glCanvasView)}>
+      <div
+        ref={this.containerRef}
+        className={css(style.glCanvasView, this.props.hidden && style.hide)}
+      >
         <canvas ref={this.ref} width={1} height={1} />
       </div>
     )
@@ -594,6 +607,7 @@ export class Application extends StatelessComponent<ApplicationProps> {
 
   render() {
     const style = this.getStyle()
+    const {viewMode} = this.props
     return (
       <div
         onDrop={this.onDrop}
@@ -605,6 +619,7 @@ export class Application extends StatelessComponent<ApplicationProps> {
           setGLCanvas={this.props.setGLCanvas}
           canvasContext={this.props.canvasContext}
           theme={this.props.theme}
+          hidden={viewMode === ViewMode.TREE_VIEW}
         />
         <Toolbar
           saveFile={this.saveFile}
@@ -682,6 +697,7 @@ const getStyle = withTheme(theme =>
       overflow: 'hidden',
       flexDirection: 'column',
       flex: 1,
+      minHeight: 0,
     },
     landingContainer: {
       display: 'flex',

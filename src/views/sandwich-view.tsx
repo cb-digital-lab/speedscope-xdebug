@@ -4,7 +4,7 @@ import {ProfileTableViewContainer} from './profile-table-view'
 import {h, JSX, createContext} from 'preact'
 import {memo} from 'preact/compat'
 import {useCallback, useMemo, useContext} from 'preact/hooks'
-import {commonStyle, Sizes, FontSize} from './style'
+import {commonStyle, FontSize} from './style'
 import {InvertedCallerFlamegraphView} from './inverted-caller-flamegraph-view'
 import {CalleeFlamegraphView} from './callee-flamegraph-view'
 import {SandwichSearchView} from './sandwich-search-view'
@@ -15,6 +15,7 @@ import {Theme, useTheme, withTheme} from './themes/theme'
 import {SortField, SortDirection, profileGroupAtom, tableSortMethodAtom} from '../app-state'
 import {useAtom} from '../lib/atom'
 import {StatelessComponent} from '../lib/preact-helpers'
+import {ResizableSplitView} from './resizable-split-view'
 
 interface SandwichViewProps {
   selectedFrame: Frame | null
@@ -76,13 +77,15 @@ class SandwichView extends StatelessComponent<SandwichViewProps> {
     }
 
     return (
-      <div className={css(commonStyle.hbox, commonStyle.fillY)}>
-        <div className={css(style.tableView)}>
-          <ProfileTableViewContainer activeProfileState={this.props.activeProfileState} />
-          <SandwichSearchView />
-        </div>
-        {flamegraphViews}
-      </div>
+      <ResizableSplitView
+        left={
+          <div className={css(style.tableView)}>
+            <ProfileTableViewContainer activeProfileState={this.props.activeProfileState} />
+            <SandwichSearchView />
+          </div>
+        }
+        right={flamegraphViews}
+      />
     )
   }
 }
@@ -91,6 +94,10 @@ const getStyle = withTheme(theme =>
   StyleSheet.create({
     tableView: {
       position: 'relative',
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100%',
+      minHeight: 0,
       flex: 1,
     },
     panZoomViewWraper: {
@@ -121,7 +128,6 @@ const getStyle = withTheme(theme =>
     },
     callersAndCallees: {
       flex: 1,
-      borderLeft: `${Sizes.SEPARATOR_HEIGHT}px solid ${theme.fgSecondaryColor}`,
     },
     divider: {
       height: 2,
