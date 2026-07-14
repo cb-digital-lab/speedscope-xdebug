@@ -19,3 +19,11 @@ test('importFromCallgrind subposition compression', async () => {
 test('importFromCallgrind cfn reset', async () => {
   await checkProfileSnapshot('./sample/profiles/callgrind/callgrind.cfn-reset.log')
 })
+
+test('importFromCallgrind xdebug per-invocation context', async () => {
+  await checkProfileSnapshot('./sample/profiles/callgrind/callgrind.xdebug-context.log')
+})
+
+test('importFromCallgrind reconstruction with inconsistent costs', async () => {
+  await checkProfileSnapshot('./sample/profiles/callgrind/callgrind.inconsistent-costs.log')
+})

@@ -84,240 +84,226 @@
 // that there was at some point a call stack that looked like
 // strat;backup;write, even though that never happened in the real program
 // execution.
+//
+// This lossy behavior only applies to files that genuinely contain an
+// aggregated call graph (e.g. those produced by valgrind/callgrind). Some
+// producers -- notably Xdebug -- instead emit a separate cost record for each
+// distinct invocation, in the order the calls complete (post-order: a callee's
+// record always precedes its caller's). When that's the case, the true call
+// tree can be reconstructed exactly by matching each caller's call edge to the
+// specific callee record whose inclusive cost it reports. We detect that
+// situation and reconstruct the real tree, falling back to the lossy
+// even-distribution heuristic only for individual edges we can't resolve.
 
 import {CallTreeProfileBuilder, Frame, FrameInfo, Profile, ProfileGroup} from '../lib/profile'
-import {getOrElse, getOrInsert, KeyedSet} from '../lib/utils'
+import {getOrInsert, KeyedSet} from '../lib/utils'
 import {ByteFormatter, TimeFormatter} from '../lib/value-formatters'
 import {TextFileContent} from './utils'
 
-class CallGraph {
-  private frameSet = new KeyedSet<Frame>()
-  private totalWeights = new Map<Frame, number>()
-  private childrenTotalWeights = new Map<Frame, Map<Frame, number>>()
+interface CallgrindCallEdge {
+  callee: FrameInfo
+  // Inclusive cost of this particular call, one entry per event type.
+  inclusive: number[]
+  calls: number
+}
 
+interface CallgrindRecord {
+  frame: FrameInfo
+  // Self cost of this invocation, one entry per event type.
+  self: number[]
+  edges: CallgrindCallEdge[]
+}
+
+interface TreeNode {
+  frame: Frame
+  selfWeight: number
+  totalWeight: number
+  children: TreeNode[]
+}
+
+class CallgrindProfileBuilder {
   constructor(
     private fileName: string,
-    private fieldName: string,
+    private eventNames: string[],
+    private records: CallgrindRecord[],
   ) {}
 
-  private getOrInsertFrame(info: FrameInfo): Frame {
-    return Frame.getOrInsert(this.frameSet, info)
-  }
-
-  private addToTotalWeight(frame: Frame, weight: number) {
-    if (!this.totalWeights.has(frame)) {
-      this.totalWeights.set(frame, weight)
-    } else {
-      this.totalWeights.set(frame, this.totalWeights.get(frame)! + weight)
+  build(): Profile[] {
+    const recordsPerFrame = new Map<string | number, number>()
+    for (const record of this.records) {
+      recordsPerFrame.set(record.frame.key, (recordsPerFrame.get(record.frame.key) ?? 0) + 1)
     }
-  }
-
-  addSelfWeight(frameInfo: FrameInfo, weight: number) {
-    this.addToTotalWeight(this.getOrInsertFrame(frameInfo), weight)
-  }
-
-  addChildWithTotalWeight(parentInfo: FrameInfo, childInfo: FrameInfo, weight: number) {
-    const parent = this.getOrInsertFrame(parentInfo)
-    const child = this.getOrInsertFrame(childInfo)
-
-    const childMap = getOrInsert(this.childrenTotalWeights, parent, k => new Map())
-
-    if (!childMap.has(child)) {
-      childMap.set(child, weight)
-    } else {
-      childMap.set(child, childMap.get(child) + weight)
+    let canReconstruct = false
+    for (const count of recordsPerFrame.values()) {
+      if (count > 1) {
+        canReconstruct = true
+        break
+      }
     }
 
-    this.addToTotalWeight(parent, weight)
+    return this.eventNames.map((name, index) => this.buildForEvent(name, index, canReconstruct))
   }
 
-  toProfile(): Profile {
+  private buildForEvent(fieldName: string, eventIndex: number, canReconstruct: boolean): Profile {
+    const frameSet = new KeyedSet<Frame>()
+    const getFrame = (info: FrameInfo): Frame => Frame.getOrInsert(frameSet, info)
+
+    const totalWeights = new Map<Frame, number>()
+    const childrenTotalWeights = new Map<Frame, Map<Frame, number>>()
+    const addTotal = (frame: Frame, weight: number) => {
+      totalWeights.set(frame, (totalWeights.get(frame) ?? 0) + weight)
+    }
+
+    for (const record of this.records) {
+      const frame = getFrame(record.frame)
+      addTotal(frame, record.self[eventIndex] || 0)
+      for (const edge of record.edges) {
+        const child = getFrame(edge.callee)
+        const childMap = getOrInsert(childrenTotalWeights, frame, () => new Map<Frame, number>())
+        const weight = edge.inclusive[eventIndex] || 0
+        childMap.set(child, (childMap.get(child) ?? 0) + weight)
+        addTotal(frame, weight)
+      }
+    }
+
+    let maxWeight = 0
+    for (const [, weight] of totalWeights) {
+      maxWeight = Math.max(maxWeight, weight)
+    }
+
+    const buildHeuristicSubtree = (
+      frame: Frame,
+      subtreeTotalWeight: number,
+      currentStack: Set<Frame>,
+    ): TreeNode | null => {
+      // Call-graphs are allowed to have cycles. Call-trees are not. If we run
+      // into a cycle, avoid recursing into the same subtree more than once in a
+      // call stack; the time is instead attributed as self time in the parent.
+      if (currentStack.has(frame)) {
+        return null
+      }
+
+      // The even-distribution assumption can generate a call tree with
+      // dramatically more nodes than the call graph, so we ignore subtrees
+      // whose weight is less than 0.01% of the heaviest node in the graph.
+      if (subtreeTotalWeight < 1e-4 * maxWeight) {
+        return null
+      }
+
+      const graphTotal = totalWeights.get(frame) ?? 0
+      if (graphTotal === 0) {
+        return null
+      }
+
+      const children: TreeNode[] = []
+      let childrenTotal = 0
+
+      currentStack.add(frame)
+      for (const [child, childGraphWeight] of childrenTotalWeights.get(frame) || []) {
+        const childCallTreeWeight = subtreeTotalWeight * (childGraphWeight / graphTotal)
+        const childNode = buildHeuristicSubtree(child, childCallTreeWeight, currentStack)
+        if (childNode) {
+          children.push(childNode)
+          childrenTotal += childNode.totalWeight
+        }
+      }
+      currentStack.delete(frame)
+
+      // Any weight not actually claimed by a subtree (due to pruning or cycles)
+      // is absorbed into self, so we don't lose weight in the call tree.
+      return {
+        frame,
+        selfWeight: subtreeTotalWeight - childrenTotal,
+        totalWeight: subtreeTotalWeight,
+        children,
+      }
+    }
+
+    let forest: TreeNode[]
+    if (canReconstruct) {
+      forest = this.reconstructForest(eventIndex, getFrame)
+    } else {
+      // A node is a root of a call tree if nothing calls it. This isn't always
+      // correct for fully general call graphs, but it's right in practice.
+      const rootNodes = new Set<Frame>(frameSet)
+      for (const [, childMap] of childrenTotalWeights) {
+        for (const [child] of childMap) {
+          rootNodes.delete(child)
+        }
+      }
+
+      forest = []
+      for (const rootNode of rootNodes) {
+        const node = buildHeuristicSubtree(rootNode, totalWeights.get(rootNode) ?? 0, new Set())
+        if (node) forest.push(node)
+      }
+    }
+
     const profile = new CallTreeProfileBuilder()
-
     let unitMultiplier = 1
 
     // These are common field names used by Xdebug. Let's give them special
     // treatment to more helpfully display units.
-    if (this.fieldName === 'Time_(10ns)') {
+    if (fieldName === 'Time_(10ns)') {
       profile.setName(`${this.fileName} -- Time`)
       unitMultiplier = 10
       profile.setValueFormatter(new TimeFormatter('nanoseconds'))
-    } else if (this.fieldName == 'Memory_(bytes)') {
+    } else if (fieldName == 'Memory_(bytes)') {
       profile.setName(`${this.fileName} -- Memory`)
       profile.setValueFormatter(new ByteFormatter())
     } else {
-      profile.setName(`${this.fileName} -- ${this.fieldName}`)
+      profile.setName(`${this.fileName} -- ${fieldName}`)
     }
 
     let totalCumulative = 0
-
-    const currentStack = new Set<Frame>()
-
-    let maxWeight = 0
-    for (let [_, totalWeight] of this.totalWeights) {
-      maxWeight = Math.max(maxWeight, totalWeight)
+    const emit = (node: TreeNode) => {
+      profile.enterFrame(node.frame, Math.round(totalCumulative * unitMultiplier))
+      for (const child of node.children) {
+        emit(child)
+      }
+      totalCumulative += Math.max(0, node.selfWeight)
+      profile.leaveFrame(node.frame, Math.round(totalCumulative * unitMultiplier))
     }
-
-    const visit = (frame: Frame, subtreeTotalWeight: number) => {
-      if (currentStack.has(frame)) {
-        // Call-graphs are allowed to have cycles. Call-trees are not. In case
-        // we run into a cycle, we'll just avoid recursing into the same subtree
-        // more than once in a call stack. The result will be that the time
-        // spent in the recursive call will instead be attributed as self time
-        // in the parent.
-        return
-      }
-
-      // We need to calculate how much weight to give to a particular node in
-      // the call-tree based on information from the call-graph. A given node
-      // from the call-graph might correspond to several nodes in the call-tree,
-      // so we need to decide how to distribute the weight of the call-graph
-      // node to the various call-tree nodes.
-      //
-      // We assume that the weighting is evenly distributed. If a call-tree node
-      // X occurs with weights x1 and x2, and we know from the call-graph that
-      // child Y of X has a total weight y, then we assume the child Y of X has
-      // weight y*x1/(x1 + x2) for the first occurrence, and y*x2(y1 + x2) for
-      // the second occurrence.
-      //
-      // This assumption is incorrectly (sometimes wildly so), but we need to
-      // make *some* assumption, and this seems to me the sanest option.
-      //
-      // See the comment at the top of the file for an example where this
-      // assumption can yield especially misleading results.
-
-      if (subtreeTotalWeight < 1e-4 * maxWeight) {
-        // This assumption about even distribution can cause us to generate a
-        // call tree with dramatically more nodes than the call graph.
-        //
-        // Consider a function which is called 1000 times, where the result is
-        // cached. The first invocation has a complex call tree and may take
-        // 100ms. Let's say that this complex call tree has 250 nodes.
-        //
-        // Subsequent calls use the cached result, so take only 1ms, and have no
-        // children in their call trees. So we have, in total, (1 + 250) + 999
-        // nodes in the call-tree for a total of 1250 nodes.
-        //
-        // The information specific to each invocation is, however, lost in the
-        // call-graph representation.
-        //
-        // Because of the even distribution assumption we make, this means that
-        // the call-trees of each invocation will have the same shape. Each 1ms
-        // call-tree will look identical to the 100ms call-tree, just
-        // horizontally compacted. So instead of 1251 nodes, we have
-        // 1000*250=250,000 nodes in the resulting call graph.
-        //
-        // To mitigate this explosion of the # of nodes, we ignore subtrees
-        // whose weights are less than 0.01% of the heaviest node in the call
-        // graph.
-        return
-      }
-
-      const totalWeightForFrameInCallgraph = getOrElse(this.totalWeights, frame, () => 0)
-      if (totalWeightForFrameInCallgraph === 0) {
-        return
-      }
-
-      let selfWeightForNodeInCallTree = subtreeTotalWeight
-
-      profile.enterFrame(frame, Math.round(totalCumulative * unitMultiplier))
-
-      currentStack.add(frame)
-      for (let [child, totalWeightAsChild] of this.childrenTotalWeights.get(frame) || []) {
-        // To determine the weight of the child in the call tree, we look at the
-        // weight of the child in the call graph relative to its parent.
-        const childCallTreeWeight =
-          subtreeTotalWeight * (totalWeightAsChild / totalWeightForFrameInCallgraph)
-
-        let prevTotalCumulative = totalCumulative
-        visit(child, childCallTreeWeight)
-
-        // Even though we tried to add a child with total weight equal to
-        // childCallTreeWeight, we might have failed for a variety of data
-        // consistency reasons, or due to cycles.
-        //
-        // We want to avoid losing weight in the call tree by subtracting from
-        // the self weight on the assumption it was added to the subtree, so we
-        // only subtree from the self weight the amount that was *actually* used
-        // by the subtree, rather than the amount we *intended* for it to use.
-        const actualChildCallTreeWeight = totalCumulative - prevTotalCumulative
-        selfWeightForNodeInCallTree -= actualChildCallTreeWeight
-      }
-      currentStack.delete(frame)
-
-      totalCumulative += selfWeightForNodeInCallTree
-      profile.leaveFrame(frame, Math.round(totalCumulative * unitMultiplier))
-    }
-
-    // It's surprisingly hard to figure out which nodes in the call graph
-    // constitute the root nodes of call trees.
-    //
-    // Here are a few intuitive options, and reasons why they're not always
-    // correct or good.
-    //
-    // ## 1. Find nodes in the call graph that have no callers
-    //
-    // This is probably right 99% of the time in practice, but since the
-    // callgrind is totally general, it's totally valid to have a file
-    // representing a profile for the following code:
-    //
-    //    function a() {
-    //      b()
-    //    }
-    //    function b() {
-    //    }
-    //    a()
-    //    b()
-    //
-    // In this case, even though b has a caller, some of the real calltree for
-    // an execution trace of the program will have b on the top of the stack.
-    //
-    // ## 2. Find nodes in the call graph that still have weight if you
-    //       subtract all of the weight caused by callers.
-    //
-    // The callgraph format, in theory, provides inclusive times for every
-    // function call. That means if you have a function `alpha` with a total
-    // weight of 20, and its only in-edge in the call-graph has weight of 10,
-    // that should indicate that `alpha` exists both as the root-node of a
-    // calltree, and as a node in some other call-tree.
-    //
-    // In theory, you should be able to figure out the weight of it as a root
-    // node by subtracting the weights of all the in-edges. In practice, real
-    // callgrind files are inconsistent in how they do accounting for in-edges
-    // where you end up in weird situations where the weight of in-edges
-    // *exceeds* the weight of nodes (where the weight of a node is its
-    // self-weight plus the weight of all its out-edges).
-    //
-    // ## 3. Find the heaviest node in the call graph, build its call-tree, and
-    //       decrease the weights of other nodes in the call graph while you
-    //       build the call tree. After you've done this, repeat with the new
-    //       heaviest.
-    //
-    // I think this version is probably fully correct, but the performance is
-    // awful. The naive-version is O(n^2) because you have to re-determine which
-    // node is the heaviest after each time you finish building a call-tree. You
-    // can't just sort, because the relative ordering also changes with the
-    // construction of each call tree.
-    //
-    // There's probably a clever solution here which puts all of the nodes into
-    // a min-heap and then deletes and re-inserts nodes as their weights change,
-    // but reasoning about the performance of that is a big pain in the butt.
-    //
-    // Despite not always being correct, I'm opting for option (1).
-
-    const rootNodes = new Set<Frame>(this.frameSet)
-
-    for (let [_, childMap] of this.childrenTotalWeights) {
-      for (let [child, _] of childMap) {
-        rootNodes.delete(child)
-      }
-    }
-
-    for (let rootNode of rootNodes) {
-      visit(rootNode, this.totalWeights.get(rootNode)!)
+    for (const root of forest) {
+      emit(root)
     }
 
     return profile.build()
+  }
+
+  private reconstructForest(
+    eventIndex: number,
+    getFrame: (info: FrameInfo) => Frame,
+  ): TreeNode[] {
+    const pending: TreeNode[] = []
+
+    for (const record of this.records) {
+      const frame = getFrame(record.frame)
+      const self = record.self[eventIndex] || 0
+
+      let childCount = 0
+      for (const edge of record.edges) {
+        childCount += edge.calls > 0 ? edge.calls : 1
+      }
+      if (childCount > pending.length) {
+        childCount = pending.length
+      }
+
+      const children = childCount > 0 ? pending.splice(pending.length - childCount, childCount) : []
+      let childrenTotal = 0
+      for (const child of children) {
+        childrenTotal += child.totalWeight
+      }
+
+      pending.push({
+        frame,
+        selfWeight: self,
+        totalWeight: self + childrenTotal,
+        children,
+      })
+    }
+
+    return pending
   }
 }
 
@@ -337,8 +323,11 @@ class CallgrindParser {
   private lines: string[]
   private lineNum: number
 
-  private callGraphs: CallGraph[] | null = null
-  private eventsLine: string | null = null
+  private eventNames: string[] | null = null
+  private numEvents = 0
+
+  private records: CallgrindRecord[] = []
+  private currentRecord: CallgrindRecord | null = null
 
   private filename: string | null = null
   private functionName: string | null = null
@@ -378,20 +367,22 @@ class CallgrindParser {
         continue
       }
 
-      if (this.parseCostLine(line, 'self')) {
+      if (this.parseSelfCostLine(line)) {
         continue
       }
 
       throw new Error(`Unrecognized line "${line}" on line ${this.lineNum}`)
     }
 
-    if (!this.callGraphs) {
+    if (!this.eventNames) {
       return null
     }
+
+    const builder = new CallgrindProfileBuilder(this.importedFileName, this.eventNames, this.records)
     return {
       name: this.importedFileName,
       indexToView: 0,
-      profiles: this.callGraphs.map(cg => cg.toProfile()),
+      profiles: builder.build(),
     }
   }
 
@@ -409,6 +400,16 @@ class CallgrindParser {
     return {key, name, file}
   }
 
+  private beginRecord() {
+    const record: CallgrindRecord = {
+      frame: this.frameInfo(),
+      self: new Array(this.numEvents).fill(0),
+      edges: [],
+    }
+    this.records.push(record)
+    this.currentRecord = record
+  }
+
   private parseHeaderLine(line: string): boolean {
     const headerMatch = /^\s*(\w+):\s*(.*)+$/.exec(line)
     if (!headerMatch) return false
@@ -421,15 +422,16 @@ class CallgrindParser {
     // Line specifies the formatting of subsequent cost lines.
     const fields = headerMatch[2].split(' ')
 
-    if (this.callGraphs != null) {
+    if (this.eventNames != null) {
       throw new Error(
-        `Duplicate "events: " lines specified. First was "${this.eventsLine}", now received "${line}" on ${this.lineNum}.`,
+        `Duplicate "events: " lines specified. First was "${this.eventNames.join(
+          ' ',
+        )}", now received "${line}" on ${this.lineNum}.`,
       )
     }
 
-    this.callGraphs = fields.map(fieldName => {
-      return new CallGraph(this.importedFileName, fieldName)
-    })
+    this.eventNames = fields
+    this.numEvents = fields.length
 
     return true
   }
@@ -462,6 +464,7 @@ class CallgrindParser {
 
       case 'fn': {
         this.functionName = this.parseNameWithCompression(value, this.savedFunctionNames)
+        this.beginRecord()
         break
       }
 
@@ -479,13 +482,17 @@ class CallgrindParser {
       }
 
       case 'calls': {
-        // TODO(jlfwong): This is currently ignoring the number of calls being
-        // made. Accounting for the number of calls might be unhelpful anyway,
-        // since it'll just be copying the exact same frame over-and-over again,
-        // but that might be better than ignoring it.
-        this.parseCostLine(this.lines[this.lineNum++], 'child')
+        const calls = parseInt(value.trim().split(/\s+/)[0]) || 1
+        const nums = this.parseCostNums(this.lines[this.lineNum++])
+        if (nums != null && this.currentRecord != null) {
+          this.currentRecord.edges.push({
+            callee: this.calleeFrameInfo(),
+            inclusive: this.eventValues(nums),
+            calls,
+          })
+        }
 
-        // This isn't specified anywhere in the spec, but empirically the and
+        // This isn't specified anywhere in the spec, but empirically the
         // "cfn" scope should only persist for a single "call".
         //
         // This seems to be what KCacheGrind does too:
@@ -547,8 +554,34 @@ class CallgrindParser {
 
   private prevCostLineNumbers: number[] = []
 
-  private parseCostLine(line: string, costType: 'self' | 'child'): boolean {
+  // NOTE: We intentionally do not include the line number (the leading position
+  // field) in any frames, because callgrind uses the line number of the
+  // function invocation, not the line number of the function definition, which
+  // conflicts with how speedscope uses line numbers.
+  private static numPositionFields = 1
+
+  private eventValues(nums: number[]): number[] {
+    return nums.slice(CallgrindParser.numPositionFields)
+  }
+
+  private parseSelfCostLine(line: string): boolean {
+    const nums = this.parseCostNums(line)
+    if (nums == null) return false
+
+    if (this.currentRecord == null) {
+      this.beginRecord()
+    }
+
+    const values = this.eventValues(nums)
+    for (let i = 0; i < this.numEvents; i++) {
+      this.currentRecord!.self[i] += values[i] || 0
+    }
+    return true
+  }
+
+  private parseCostNums(line: string): number[] | null {
     // TODO(jlfwong): Allow hexadecimal encoding
+    if (line == null) return null
 
     const parts = line.split(/\s+/)
     const nums: number[] = []
@@ -557,7 +590,7 @@ class CallgrindParser {
       const part = parts[i]
 
       if (part.length === 0) {
-        return false
+        return null
       }
 
       if (part === '*' || part[0] === '-' || part[1] === '+') {
@@ -587,45 +620,18 @@ class CallgrindParser {
       } else {
         const asNum = parseInt(part)
         if (isNaN(asNum)) {
-          return false
+          return null
         }
         nums.push(asNum)
       }
     }
 
     if (nums.length == 0) {
-      return false
-    }
-
-    // TODO(jlfwong): Handle custom positions format w/ multiple parts
-    const numPositionFields = 1
-
-    // NOTE: We intentionally do not include the line number here because
-    // callgrind uses the line number of the function invocation, not the
-    // line number of the function definition, which conflicts with how
-    // speedscope uses line numbers.
-    //
-    // const lineNum = nums[0]
-
-    if (!this.callGraphs) {
-      throw new Error(
-        `Encountered a cost line on line ${this.lineNum} before event specification was provided.`,
-      )
-    }
-    for (let i = 0; i < this.callGraphs.length; i++) {
-      if (costType === 'self') {
-        this.callGraphs[i].addSelfWeight(this.frameInfo(), nums[numPositionFields + i])
-      } else if (costType === 'child') {
-        this.callGraphs[i].addChildWithTotalWeight(
-          this.frameInfo(),
-          this.calleeFrameInfo(),
-          nums[numPositionFields + i] || 0,
-        )
-      }
+      return null
     }
 
     this.prevCostLineNumbers = nums
-    return true
+    return nums
   }
 }
 

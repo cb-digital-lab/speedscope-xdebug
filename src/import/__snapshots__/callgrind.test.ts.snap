@@ -227,6 +227,58 @@ exports[`importFromCallgrind name compression: indexToView 1`] = `0`;
 
 exports[`importFromCallgrind name compression: profileGroup.name 1`] = `"callgrind.name-compression.log"`;
 
+exports[`importFromCallgrind reconstruction with inconsistent costs 1`] = `
+{
+  "frames": [
+    Frame {
+      "col": undefined,
+      "file": "x",
+      "key": "x:main",
+      "line": undefined,
+      "name": "main",
+      "selfWeight": 0,
+      "totalWeight": 1000550,
+    },
+    Frame {
+      "col": undefined,
+      "file": "x",
+      "key": "x:A",
+      "line": undefined,
+      "name": "A",
+      "selfWeight": 0,
+      "totalWeight": 1000050,
+    },
+    Frame {
+      "col": undefined,
+      "file": "x",
+      "key": "x:B",
+      "line": undefined,
+      "name": "B",
+      "selfWeight": 1000550,
+      "totalWeight": 1000550,
+    },
+    Frame {
+      "col": undefined,
+      "file": "x",
+      "key": "x:C",
+      "line": undefined,
+      "name": "C",
+      "selfWeight": 0,
+      "totalWeight": 500,
+    },
+  ],
+  "name": "callgrind.inconsistent-costs.log -- Time",
+  "stacks": [
+    "main;A;B 1,000,050",
+    "main;C;B 500",
+  ],
+}
+`;
+
+exports[`importFromCallgrind reconstruction with inconsistent costs: indexToView 1`] = `0`;
+
+exports[`importFromCallgrind reconstruction with inconsistent costs: profileGroup.name 1`] = `"callgrind.inconsistent-costs.log"`;
+
 exports[`importFromCallgrind subposition compression 1`] = `
 {
   "frames": [
@@ -271,6 +323,169 @@ exports[`importFromCallgrind subposition compression 1`] = `
 exports[`importFromCallgrind subposition compression: indexToView 1`] = `0`;
 
 exports[`importFromCallgrind subposition compression: profileGroup.name 1`] = `"callgrind.subposition-compression.log"`;
+
+exports[`importFromCallgrind xdebug per-invocation context 1`] = `
+{
+  "frames": [
+    Frame {
+      "col": undefined,
+      "file": "/var/www/html/profile.php",
+      "key": "/var/www/html/profile.php:{main}",
+      "line": undefined,
+      "name": "{main}",
+      "selfWeight": 16830,
+      "totalWeight": 1896079630,
+    },
+    Frame {
+      "col": undefined,
+      "file": "/var/www/html/profile.php",
+      "key": "/var/www/html/profile.php:get_header",
+      "line": undefined,
+      "name": "get_header",
+      "selfWeight": 23365130,
+      "totalWeight": 1620093510,
+    },
+    Frame {
+      "col": undefined,
+      "file": "/var/www/html/profile.php",
+      "key": "/var/www/html/profile.php:locate_template",
+      "line": undefined,
+      "name": "locate_template",
+      "selfWeight": 148328130,
+      "totalWeight": 148328130,
+    },
+    Frame {
+      "col": undefined,
+      "file": "/var/www/html/profile.php",
+      "key": "/var/www/html/profile.php:load_template",
+      "line": undefined,
+      "name": "load_template",
+      "selfWeight": 73784300,
+      "totalWeight": 1709535710,
+    },
+    Frame {
+      "col": undefined,
+      "file": "/var/www/html/header.php",
+      "key": "/var/www/html/header.php:require_once::/var/www/html/header.php",
+      "line": undefined,
+      "name": "require_once::/var/www/html/header.php",
+      "selfWeight": 1486076080,
+      "totalWeight": 1486076080,
+    },
+    Frame {
+      "col": undefined,
+      "file": "/var/www/html/profile.php",
+      "key": "/var/www/html/profile.php:get_footer",
+      "line": undefined,
+      "name": "get_footer",
+      "selfWeight": 14833830,
+      "totalWeight": 275969290,
+    },
+    Frame {
+      "col": undefined,
+      "file": "/var/www/html/footer.php",
+      "key": "/var/www/html/footer.php:require_once::/var/www/html/footer.php",
+      "line": undefined,
+      "name": "require_once::/var/www/html/footer.php",
+      "selfWeight": 149675330,
+      "totalWeight": 149675330,
+    },
+  ],
+  "name": "callgrind.xdebug-context.log -- Time",
+  "stacks": [
+    "{main};get_header;locate_template 73.60ms",
+    "{main};get_header;load_template;require_once::/var/www/html/header.php 1.49s",
+    "{main};get_header;load_template 37.05ms",
+    "{main};get_header 23.37ms",
+    "{main};get_footer;locate_template 74.73ms",
+    "{main};get_footer;load_template;require_once::/var/www/html/footer.php 149.68ms",
+    "{main};get_footer;load_template 36.73ms",
+    "{main};get_footer 14.83ms",
+    "{main} 16.83µs",
+  ],
+}
+`;
+
+exports[`importFromCallgrind xdebug per-invocation context 2`] = `
+{
+  "frames": [
+    Frame {
+      "col": undefined,
+      "file": "/var/www/html/profile.php",
+      "key": "/var/www/html/profile.php:{main}",
+      "line": undefined,
+      "name": "{main}",
+      "selfWeight": 0,
+      "totalWeight": 696,
+    },
+    Frame {
+      "col": undefined,
+      "file": "/var/www/html/profile.php",
+      "key": "/var/www/html/profile.php:get_header",
+      "line": undefined,
+      "name": "get_header",
+      "selfWeight": 0,
+      "totalWeight": 536,
+    },
+    Frame {
+      "col": undefined,
+      "file": "/var/www/html/profile.php",
+      "key": "/var/www/html/profile.php:locate_template",
+      "line": undefined,
+      "name": "locate_template",
+      "selfWeight": 80,
+      "totalWeight": 80,
+    },
+    Frame {
+      "col": undefined,
+      "file": "/var/www/html/profile.php",
+      "key": "/var/www/html/profile.php:load_template",
+      "line": undefined,
+      "name": "load_template",
+      "selfWeight": 616,
+      "totalWeight": 616,
+    },
+    Frame {
+      "col": undefined,
+      "file": "/var/www/html/header.php",
+      "key": "/var/www/html/header.php:require_once::/var/www/html/header.php",
+      "line": undefined,
+      "name": "require_once::/var/www/html/header.php",
+      "selfWeight": 0,
+      "totalWeight": 0,
+    },
+    Frame {
+      "col": undefined,
+      "file": "/var/www/html/profile.php",
+      "key": "/var/www/html/profile.php:get_footer",
+      "line": undefined,
+      "name": "get_footer",
+      "selfWeight": 0,
+      "totalWeight": 160,
+    },
+    Frame {
+      "col": undefined,
+      "file": "/var/www/html/footer.php",
+      "key": "/var/www/html/footer.php:require_once::/var/www/html/footer.php",
+      "line": undefined,
+      "name": "require_once::/var/www/html/footer.php",
+      "selfWeight": 0,
+      "totalWeight": 0,
+    },
+  ],
+  "name": "callgrind.xdebug-context.log -- Memory",
+  "stacks": [
+    "{main};get_header;locate_template 40 B",
+    "{main};get_header;load_template 496 B",
+    "{main};get_footer;locate_template 40 B",
+    "{main};get_footer;load_template 120 B",
+  ],
+}
+`;
+
+exports[`importFromCallgrind xdebug per-invocation context: indexToView 1`] = `0`;
+
+exports[`importFromCallgrind xdebug per-invocation context: profileGroup.name 1`] = `"callgrind.xdebug-context.log"`;
 
 exports[`importFromCallgrind: indexToView 1`] = `0`;
 

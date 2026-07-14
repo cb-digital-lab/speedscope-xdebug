@@ -1,0 +1,114 @@
+import {StringBackedTextFileContent} from '../src/import/utils'
+import {importFromCallgrind} from '../src/import/callgrind'
+import {CallTreeNode, Profile} from '../src/lib/profile'
+
+const CACHEGRIND = `version: 1
+creator: xdebug 3.5.0 (PHP 8.5.2)
+cmd: /var/www/html/profile.php
+part: 1
+positions: line
+
+events: Time_(10ns) Memory_(bytes)
+
+fl=(2) /var/www/html/profile.php
+fn=(1) locate_template
+11 7359938 40
+
+fl=(3) /var/www/html/header.php
+fn=(2) require_once::/var/www/html/header.php
+1 148607608 0
+
+fl=(2)
+fn=(3) load_template
+3 3705292 496
+cfl=(3)
+cfn=(2)
+calls=1 0 0
+8 148607608 0
+
+fl=(2)
+fn=(4) get_header
+19 2336513 0
+cfl=(2)
+cfn=(1)
+calls=1 0 0
+24 7359938 40
+cfl=(2)
+cfn=(3)
+calls=1 0 0
+25 152312900 496
+
+fl=(2)
+fn=(1)
+11 7472875 40
+
+fl=(4) /var/www/html/footer.php
+fn=(5) require_once::/var/www/html/footer.php
+1 14967533 0
+
+fl=(2)
+fn=(3)
+3 3673138 120
+cfl=(4)
+cfn=(5)
+calls=1 0 0
+8 14967533 0
+
+fl=(2)
+fn=(6) get_footer
+28 1483383 0
+cfl=(2)
+cfn=(1)
+calls=1 0 0
+33 7472875 40
+cfl=(2)
+cfn=(3)
+calls=1 0 0
+34 18640671 120
+
+fl=(2)
+fn=(7) {main}
+1 1683 0
+cfl=(2)
+cfn=(4)
+calls=1 0 0
+37 162009350 512
+cfl=(2)
+cfn=(6)
+calls=1 0 0
+38 27596929 136
+
+summary: 189644900 497624
+`
+
+function printTree(profile: Profile) {
+  const root = profile.getAppendOrderCalltreeRoot()
+  const total = profile.getTotalNonIdleWeight()
+
+  const walk = (node: CallTreeNode, depth: number) => {
+    for (const child of node.children) {
+      const totalW = child.getTotalWeight()
+      const selfW = child.getSelfWeight()
+      const pct = ((100 * totalW) / total).toFixed(1)
+      const indent = '  '.repeat(depth)
+      console.log(
+        `${indent}${child.frame.name}` +
+          `  [total ${profile.formatValue(totalW)} = ${pct}%, self ${profile.formatValue(selfW)}]`,
+      )
+      walk(child, depth + 1)
+    }
+  }
+
+  walk(root, 0)
+}
+
+const group = importFromCallgrind(new StringBackedTextFileContent(CACHEGRIND), 'context-demo')
+if (!group) {
+  console.error('Import failed')
+  process.exit(1)
+}
+
+const profile = group.profiles[group.indexToView]
+console.log(`Profile: ${profile.getName()}`)
+console.log('Reconstructed call tree (as speedscope imports it today):\n')
+printTree(profile)

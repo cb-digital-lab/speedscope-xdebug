@@ -1,0 +1,33 @@
+events: Time
+
+fl=x
+fn=B
+1 1000050
+
+fl=x
+fn=A
+1 0
+cfn=B
+calls=1 1
+1 1000050
+
+fl=x
+fn=B
+1 500
+
+fl=x
+fn=C
+1 0
+cfn=B
+calls=1 1
+1 500
+
+fl=x
+fn=main
+1 0
+cfn=A
+calls=1 1
+1 1000000
+cfn=C
+calls=1 1
+1 500
