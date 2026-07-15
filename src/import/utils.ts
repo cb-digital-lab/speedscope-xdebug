@@ -11,6 +11,7 @@ export interface TextFileContent {
   splitLines(): Iterable<string>
   firstChunk(): string
   parseAsJSON(): any
+  releaseRawBuffer?(): void
 }
 
 // V8 has a maximum string size. To support files whose contents exceeds that
@@ -184,6 +185,10 @@ export class BufferBackedTextFileContent implements TextFileContent {
       return permissivelyParseJSONString(this.chunks[0])
     }
     return permissivelyParseJSONUint8Array(this.byteArray)
+  }
+
+  releaseRawBuffer() {
+    this.byteArray = new Uint8Array(0)
   }
 }
 

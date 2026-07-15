@@ -100,18 +100,13 @@ import {getOrInsert, KeyedSet} from '../lib/utils'
 import {ByteFormatter, TimeFormatter} from '../lib/value-formatters'
 import {TextFileContent} from './utils'
 
-interface CallgrindCallEdge {
-  callee: FrameInfo
-  // Inclusive cost of this particular call, one entry per event type.
-  inclusive: number[]
-  calls: number
-}
-
 interface CallgrindRecord {
   frame: FrameInfo
-  // Self cost of this invocation, one entry per event type.
   self: number[]
-  edges: CallgrindCallEdge[]
+  childCount: number
+  edgeCallees: FrameInfo[]
+  edgeCalls: number[]
+  edgeInclusive: number[]
 }
 
 interface TreeNode {
@@ -121,30 +116,108 @@ interface TreeNode {
   children: TreeNode[]
 }
 
+interface TopologyNode {
+  frameInfo: FrameInfo
+  self: number[]
+  children: TopologyNode[]
+}
+
 class CallgrindProfileBuilder {
   constructor(
     private fileName: string,
     private eventNames: string[],
     private records: CallgrindRecord[],
+    private knownReconstructable: boolean,
   ) {}
 
   build(): Profile[] {
-    const recordsPerFrame = new Map<string | number, number>()
-    for (const record of this.records) {
-      recordsPerFrame.set(record.frame.key, (recordsPerFrame.get(record.frame.key) ?? 0) + 1)
-    }
-    let canReconstruct = false
-    for (const count of recordsPerFrame.values()) {
-      if (count > 1) {
-        canReconstruct = true
-        break
+    let canReconstruct = this.knownReconstructable
+    if (!canReconstruct) {
+      const recordsPerFrame = new Map<string | number, number>()
+      for (const record of this.records) {
+        recordsPerFrame.set(record.frame.key, (recordsPerFrame.get(record.frame.key) ?? 0) + 1)
+      }
+      for (const count of recordsPerFrame.values()) {
+        if (count > 1) {
+          canReconstruct = true
+          break
+        }
       }
     }
 
-    return this.eventNames.map((name, index) => this.buildForEvent(name, index, canReconstruct))
+    if (canReconstruct) {
+      for (const record of this.records) {
+        record.edgeCallees = []
+        record.edgeCalls = []
+        record.edgeInclusive = []
+      }
+      const topology = this.buildTopology()
+      this.records.length = 0
+      return this.eventNames.map((name, index) => this.emitFromTopology(topology, name, index))
+    }
+
+    return this.eventNames.map((name, index) => this.buildHeuristicProfile(name, index))
   }
 
-  private buildForEvent(fieldName: string, eventIndex: number, canReconstruct: boolean): Profile {
+  private buildTopology(): TopologyNode[] {
+    const pending: TopologyNode[] = []
+
+    for (const record of this.records) {
+      let childCount = record.childCount
+      if (childCount > pending.length) {
+        childCount = pending.length
+      }
+
+      const children = childCount > 0 ? pending.splice(pending.length - childCount, childCount) : []
+      pending.push({
+        frameInfo: record.frame,
+        self: record.self,
+        children,
+      })
+    }
+
+    return pending
+  }
+
+  private emitFromTopology(forest: TopologyNode[], fieldName: string, eventIndex: number): Profile {
+    const frameSet = new KeyedSet<Frame>()
+    const getFrame = (info: FrameInfo): Frame => Frame.getOrInsert(frameSet, info)
+    const profile = new CallTreeProfileBuilder()
+    const unitMultiplier = this.configureProfile(profile, fieldName)
+
+    let totalCumulative = 0
+    const emit = (node: TopologyNode) => {
+      const frame = getFrame(node.frameInfo)
+      profile.enterFrame(frame, Math.round(totalCumulative * unitMultiplier))
+      for (const child of node.children) {
+        emit(child)
+      }
+      totalCumulative += Math.max(0, node.self[eventIndex] || 0)
+      profile.leaveFrame(frame, Math.round(totalCumulative * unitMultiplier))
+    }
+    for (const root of forest) {
+      emit(root)
+    }
+
+    return profile.build()
+  }
+
+  private configureProfile(profile: CallTreeProfileBuilder, fieldName: string): number {
+    let unitMultiplier = 1
+    if (fieldName === 'Time_(10ns)') {
+      profile.setName(`${this.fileName} -- Time`)
+      unitMultiplier = 10
+      profile.setValueFormatter(new TimeFormatter('nanoseconds'))
+    } else if (fieldName == 'Memory_(bytes)') {
+      profile.setName(`${this.fileName} -- Memory`)
+      profile.setValueFormatter(new ByteFormatter())
+    } else {
+      profile.setName(`${this.fileName} -- ${fieldName}`)
+    }
+    return unitMultiplier
+  }
+
+  private buildHeuristicProfile(fieldName: string, eventIndex: number): Profile {
     const frameSet = new KeyedSet<Frame>()
     const getFrame = (info: FrameInfo): Frame => Frame.getOrInsert(frameSet, info)
 
@@ -157,10 +230,11 @@ class CallgrindProfileBuilder {
     for (const record of this.records) {
       const frame = getFrame(record.frame)
       addTotal(frame, record.self[eventIndex] || 0)
-      for (const edge of record.edges) {
-        const child = getFrame(edge.callee)
+      const numEvents = this.eventNames.length
+      for (let i = 0; i < record.edgeCallees.length; i++) {
+        const child = getFrame(record.edgeCallees[i])
         const childMap = getOrInsert(childrenTotalWeights, frame, () => new Map<Frame, number>())
-        const weight = edge.inclusive[eventIndex] || 0
+        const weight = record.edgeInclusive[i * numEvents + eventIndex] || 0
         childMap.set(child, (childMap.get(child) ?? 0) + weight)
         addTotal(frame, weight)
       }
@@ -219,41 +293,23 @@ class CallgrindProfileBuilder {
       }
     }
 
-    let forest: TreeNode[]
-    if (canReconstruct) {
-      forest = this.reconstructForest(eventIndex, getFrame)
-    } else {
-      // A node is a root of a call tree if nothing calls it. This isn't always
-      // correct for fully general call graphs, but it's right in practice.
-      const rootNodes = new Set<Frame>(frameSet)
-      for (const [, childMap] of childrenTotalWeights) {
-        for (const [child] of childMap) {
-          rootNodes.delete(child)
-        }
+    // A node is a root of a call tree if nothing calls it. This isn't always
+    // correct for fully general call graphs, but it's right in practice.
+    const rootNodes = new Set<Frame>(frameSet)
+    for (const [, childMap] of childrenTotalWeights) {
+      for (const [child] of childMap) {
+        rootNodes.delete(child)
       }
+    }
 
-      forest = []
-      for (const rootNode of rootNodes) {
-        const node = buildHeuristicSubtree(rootNode, totalWeights.get(rootNode) ?? 0, new Set())
-        if (node) forest.push(node)
-      }
+    const forest: TreeNode[] = []
+    for (const rootNode of rootNodes) {
+      const node = buildHeuristicSubtree(rootNode, totalWeights.get(rootNode) ?? 0, new Set())
+      if (node) forest.push(node)
     }
 
     const profile = new CallTreeProfileBuilder()
-    let unitMultiplier = 1
-
-    // These are common field names used by Xdebug. Let's give them special
-    // treatment to more helpfully display units.
-    if (fieldName === 'Time_(10ns)') {
-      profile.setName(`${this.fileName} -- Time`)
-      unitMultiplier = 10
-      profile.setValueFormatter(new TimeFormatter('nanoseconds'))
-    } else if (fieldName == 'Memory_(bytes)') {
-      profile.setName(`${this.fileName} -- Memory`)
-      profile.setValueFormatter(new ByteFormatter())
-    } else {
-      profile.setName(`${this.fileName} -- ${fieldName}`)
-    }
+    const unitMultiplier = this.configureProfile(profile, fieldName)
 
     let totalCumulative = 0
     const emit = (node: TreeNode) => {
@@ -270,41 +326,6 @@ class CallgrindProfileBuilder {
 
     return profile.build()
   }
-
-  private reconstructForest(
-    eventIndex: number,
-    getFrame: (info: FrameInfo) => Frame,
-  ): TreeNode[] {
-    const pending: TreeNode[] = []
-
-    for (const record of this.records) {
-      const frame = getFrame(record.frame)
-      const self = record.self[eventIndex] || 0
-
-      let childCount = 0
-      for (const edge of record.edges) {
-        childCount += edge.calls > 0 ? edge.calls : 1
-      }
-      if (childCount > pending.length) {
-        childCount = pending.length
-      }
-
-      const children = childCount > 0 ? pending.splice(pending.length - childCount, childCount) : []
-      let childrenTotal = 0
-      for (const child of children) {
-        childrenTotal += child.totalWeight
-      }
-
-      pending.push({
-        frame,
-        selfWeight: self,
-        totalWeight: self + childrenTotal,
-        children,
-      })
-    }
-
-    return pending
-  }
 }
 
 // In writing this, I initially tried to use the formal grammar described in
@@ -320,8 +341,8 @@ class CallgrindProfileBuilder {
 // So, instead, I'm not going to bother with a formal parse. Since there are no
 // real recursive structures in this file format, that should be okay.
 class CallgrindParser {
-  private lines: string[]
-  private lineNum: number
+  private lineIterator: Iterator<string>
+  private lineNum = 0
 
   private eventNames: string[] | null = null
   private numEvents = 0
@@ -336,19 +357,27 @@ class CallgrindParser {
 
   private savedFileNames: {[id: string]: string} = {}
   private savedFunctionNames: {[id: string]: string} = {}
+  private internedFrames = new Map<string, FrameInfo>()
+  private seenFrameKeys = new Set<string>()
+  private dropEdgeDetails = false
 
   constructor(
     contents: TextFileContent,
     private importedFileName: string,
   ) {
-    this.lines = [...contents.splitLines()]
-    this.lineNum = 0
+    this.lineIterator = contents.splitLines()[Symbol.iterator]()
+  }
+
+  private nextLine(): string | null {
+    const result = this.lineIterator.next()
+    if (result.done) return null
+    this.lineNum++
+    return result.value
   }
 
   parse(): ProfileGroup | null {
-    while (this.lineNum < this.lines.length) {
-      const line = this.lines[this.lineNum++]
-
+    let line: string | null
+    while ((line = this.nextLine()) !== null) {
       if (/^\s*#/.exec(line)) {
         // Line is a comment. Ignore it.
         continue
@@ -378,7 +407,14 @@ class CallgrindParser {
       return null
     }
 
-    const builder = new CallgrindProfileBuilder(this.importedFileName, this.eventNames, this.records)
+    this.internedFrames.clear()
+    this.seenFrameKeys.clear()
+    const builder = new CallgrindProfileBuilder(
+      this.importedFileName,
+      this.eventNames,
+      this.records,
+      this.dropEdgeDetails,
+    )
     return {
       name: this.importedFileName,
       indexToView: 0,
@@ -386,25 +422,50 @@ class CallgrindParser {
     }
   }
 
-  private frameInfo(): FrameInfo {
-    const file = this.filename || '(unknown)'
-    const name = this.functionName || '(unknown)'
+  private internFrame(file: string, name: string): FrameInfo {
     const key = `${file}:${name}`
-    return {key, name, file}
+    let info = this.internedFrames.get(key)
+    if (info === undefined) {
+      info = {key, name, file}
+      this.internedFrames.set(key, info)
+    }
+    return info
+  }
+
+  private frameInfo(): FrameInfo {
+    return this.internFrame(this.filename || '(unknown)', this.functionName || '(unknown)')
   }
 
   private calleeFrameInfo(): FrameInfo {
-    const file = this.calleeFilename || this.filename || '(unknown)'
-    const name = this.calleeFunctionName || '(unknown)'
-    const key = `${file}:${name}`
-    return {key, name, file}
+    return this.internFrame(
+      this.calleeFilename || this.filename || '(unknown)',
+      this.calleeFunctionName || '(unknown)',
+    )
   }
 
   private beginRecord() {
+    const frame = this.frameInfo()
+    const key = String(frame.key)
+    if (this.seenFrameKeys.has(key)) {
+      if (!this.dropEdgeDetails) {
+        this.dropEdgeDetails = true
+        for (const record of this.records) {
+          record.edgeCallees = []
+          record.edgeCalls = []
+          record.edgeInclusive = []
+        }
+      }
+    } else {
+      this.seenFrameKeys.add(key)
+    }
+
     const record: CallgrindRecord = {
-      frame: this.frameInfo(),
+      frame,
       self: new Array(this.numEvents).fill(0),
-      edges: [],
+      childCount: 0,
+      edgeCallees: [],
+      edgeCalls: [],
+      edgeInclusive: [],
     }
     this.records.push(record)
     this.currentRecord = record
@@ -483,13 +544,18 @@ class CallgrindParser {
 
       case 'calls': {
         const calls = parseInt(value.trim().split(/\s+/)[0]) || 1
-        const nums = this.parseCostNums(this.lines[this.lineNum++])
+        const nums = this.parseCostNums(this.nextLine())
         if (nums != null && this.currentRecord != null) {
-          this.currentRecord.edges.push({
-            callee: this.calleeFrameInfo(),
-            inclusive: this.eventValues(nums),
-            calls,
-          })
+          const record = this.currentRecord
+          record.childCount += calls
+          if (!this.dropEdgeDetails) {
+            record.edgeCallees.push(this.calleeFrameInfo())
+            record.edgeCalls.push(calls)
+            const values = this.eventValues(nums)
+            for (let i = 0; i < this.numEvents; i++) {
+              record.edgeInclusive.push(values[i] || 0)
+            }
+          }
         }
 
         // This isn't specified anywhere in the spec, but empirically the
@@ -579,7 +645,7 @@ class CallgrindParser {
     return true
   }
 
-  private parseCostNums(line: string): number[] | null {
+  private parseCostNums(line: string | null): number[] | null {
     // TODO(jlfwong): Allow hexadecimal encoding
     if (line == null) return null
 
@@ -639,5 +705,8 @@ export function importFromCallgrind(
   contents: TextFileContent,
   importedFileName: string,
 ): ProfileGroup | null {
+  if (contents.releaseRawBuffer) {
+    contents.releaseRawBuffer()
+  }
   return new CallgrindParser(contents, importedFileName).parse()
 }
