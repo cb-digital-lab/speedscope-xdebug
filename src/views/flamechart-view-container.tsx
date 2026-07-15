@@ -19,6 +19,11 @@ import {FlamechartSearchContextProvider} from './flamechart-search-view'
 import {Theme, useTheme} from './themes/theme'
 import {FlamechartID, FlamechartViewState} from '../app-state/profile-group'
 import {profileGroupAtom} from '../app-state'
+import {
+  forEachCallWithLOD,
+  getFlamechartLODParams,
+  getOverviewFlamechartLODParams,
+} from '../lib/flamechart-lod'
 
 interface FlamechartSetters {
   setLogicalSpaceViewportSize: (logicalSpaceViewportSize: Vec2) => void
@@ -61,6 +66,8 @@ export type FlamechartViewProps = {
   canvasContext: CanvasContext
   flamechart: Flamechart
   flamechartRenderer: FlamechartRenderer
+  overviewFlamechart?: Flamechart
+  overviewFlamechartRenderer?: FlamechartRenderer
   renderInverted: boolean
   getCSSColorForFrame: (frame: Frame) => string
 } & FlamechartSetters &
@@ -70,13 +77,27 @@ export const getChronoViewFlamechart = memoizeByShallowEquality(
   ({
     profile,
     getColorBucketForFrame,
+    quantizedViewportWidth,
+    viewLeft,
+    viewRight,
+    minFrameWidth,
   }: {
     profile: Profile
     getColorBucketForFrame: (frame: Frame) => number
+    quantizedViewportWidth: number
+    viewLeft: number
+    viewRight: number
+    minFrameWidth: number
   }): Flamechart => {
     return new Flamechart({
       getTotalWeight: profile.getTotalWeight.bind(profile),
-      forEachCall: profile.forEachCall.bind(profile),
+      forEachCall: (openFrame, closeFrame) =>
+        forEachCallWithLOD(
+          profile.getAppendOrderCalltreeRoot(),
+          {minFrameWidth, viewLeft, viewRight, quantizedViewportWidth},
+          openFrame,
+          closeFrame,
+        ),
       formatValue: profile.formatValue.bind(profile),
       getColorBucketForFrame,
     })
@@ -121,7 +142,25 @@ export const ChronoFlamechartView = memo((props: FlamechartViewContainerProps) =
   const getColorBucketForFrame = createGetColorBucketForFrame(frameToColorBucket)
   const getCSSColorForFrame = createGetCSSColorForFrame({theme, frameToColorBucket})
 
-  const flamechart = getChronoViewFlamechart({profile, getColorBucketForFrame})
+  const totalWeight = profile.getTotalWeight()
+  const overviewLOD = getOverviewFlamechartLODParams(totalWeight)
+  const detailLOD = getFlamechartLODParams(totalWeight, chronoViewState.configSpaceViewportRect)
+
+  const overviewFlamechart = getChronoViewFlamechart({
+    profile,
+    getColorBucketForFrame,
+    ...overviewLOD,
+  })
+  const overviewFlamechartRenderer = getChronoViewFlamechartRenderer({
+    canvasContext,
+    flamechart: overviewFlamechart,
+  })
+
+  const flamechart = getChronoViewFlamechart({
+    profile,
+    getColorBucketForFrame,
+    ...detailLOD,
+  })
   const flamechartRenderer = getChronoViewFlamechartRenderer({
     canvasContext,
     flamechart,
@@ -142,6 +181,8 @@ export const ChronoFlamechartView = memo((props: FlamechartViewContainerProps) =
         renderInverted={false}
         flamechart={flamechart}
         flamechartRenderer={flamechartRenderer}
+        overviewFlamechart={overviewFlamechart}
+        overviewFlamechartRenderer={overviewFlamechartRenderer}
         canvasContext={canvasContext}
         getCSSColorForFrame={getCSSColorForFrame}
         {...chronoViewState}
@@ -155,13 +196,27 @@ export const getLeftHeavyFlamechart = memoizeByShallowEquality(
   ({
     profile,
     getColorBucketForFrame,
+    quantizedViewportWidth,
+    viewLeft,
+    viewRight,
+    minFrameWidth,
   }: {
     profile: Profile
     getColorBucketForFrame: (frame: Frame) => number
+    quantizedViewportWidth: number
+    viewLeft: number
+    viewRight: number
+    minFrameWidth: number
   }): Flamechart => {
     return new Flamechart({
       getTotalWeight: profile.getTotalNonIdleWeight.bind(profile),
-      forEachCall: profile.forEachCallGrouped.bind(profile),
+      forEachCall: (openFrame, closeFrame) =>
+        forEachCallWithLOD(
+          profile.getGroupedCalltreeRoot(),
+          {minFrameWidth, viewLeft, viewRight, quantizedViewportWidth},
+          openFrame,
+          closeFrame,
+        ),
       formatValue: profile.formatValue.bind(profile),
       getColorBucketForFrame,
     })
@@ -182,9 +237,24 @@ export const LeftHeavyFlamechartView = memo((ownProps: FlamechartViewContainerPr
   const getColorBucketForFrame = createGetColorBucketForFrame(frameToColorBucket)
   const getCSSColorForFrame = createGetCSSColorForFrame({theme, frameToColorBucket})
 
+  const totalWeight = profile.getTotalNonIdleWeight()
+  const overviewLOD = getOverviewFlamechartLODParams(totalWeight)
+  const detailLOD = getFlamechartLODParams(totalWeight, leftHeavyViewState.configSpaceViewportRect)
+
+  const overviewFlamechart = getLeftHeavyFlamechart({
+    profile,
+    getColorBucketForFrame,
+    ...overviewLOD,
+  })
+  const overviewFlamechartRenderer = getLeftHeavyFlamechartRenderer({
+    canvasContext,
+    flamechart: overviewFlamechart,
+  })
+
   const flamechart = getLeftHeavyFlamechart({
     profile,
     getColorBucketForFrame,
+    ...detailLOD,
   })
   const flamechartRenderer = getLeftHeavyFlamechartRenderer({
     canvasContext,
@@ -206,6 +276,8 @@ export const LeftHeavyFlamechartView = memo((ownProps: FlamechartViewContainerPr
         renderInverted={false}
         flamechart={flamechart}
         flamechartRenderer={flamechartRenderer}
+        overviewFlamechart={overviewFlamechart}
+        overviewFlamechartRenderer={overviewFlamechartRenderer}
         canvasContext={canvasContext}
         getCSSColorForFrame={getCSSColorForFrame}
         {...leftHeavyViewState}

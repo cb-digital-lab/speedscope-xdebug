@@ -113,8 +113,10 @@ export class FlamechartView extends StatelessComponent<FlamechartViewProps> {
           theme={this.props.theme}
           configSpaceViewportRect={this.props.configSpaceViewportRect}
           transformViewport={this.transformViewport}
-          flamechart={this.props.flamechart}
-          flamechartRenderer={this.props.flamechartRenderer}
+          flamechart={this.props.overviewFlamechart || this.props.flamechart}
+          flamechartRenderer={
+            this.props.overviewFlamechartRenderer || this.props.flamechartRenderer
+          }
           canvasContext={this.props.canvasContext}
           setConfigSpaceViewportRect={this.setConfigSpaceViewportRect}
         />

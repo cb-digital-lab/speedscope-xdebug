@@ -85,7 +85,13 @@ export class Flamechart {
     // fills the screen, since that probably isn't useful. The final zoom cap is
     // determined by the minimum zoom of either 2^40x zoom or the necessary zoom
     // for the smallest frame to fill the screen three times.
-    const minWidth = clamp(3 * this.getMinFrameWidth(), maxWidth / maxZoom, maxWidth)
+    //
+    // When LOD is active, minFrameWidth reflects only currently materialized
+    // frames. Allow zooming past that so a finer LOD can load on zoom-in.
+    const minWidth = Math.min(
+      clamp(3 * this.getMinFrameWidth(), maxWidth / maxZoom, maxWidth),
+      maxWidth / 512,
+    )
 
     return clamp(viewportWidth, minWidth, maxWidth)
   }
