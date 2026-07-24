@@ -93,6 +93,12 @@ function HBarDisplay(props: HBarProps) {
   )
 }
 
+function preventDoubleClickTextSelection(ev: MouseEvent) {
+  if (ev.detail > 1) {
+    ev.preventDefault()
+  }
+}
+
 interface SandwichInvocationsViewProps {
   profile: Profile
   selectedFrame: Frame
@@ -507,6 +513,7 @@ export const SandwichInvocationsView = memo(
             elements.push(
               <tr
                 key={`stack-${node.pathKey}`}
+                onMouseDown={preventDoubleClickTextSelection}
                 onClick={() => {
                   setSelectedStackKey(node.pathKey)
                   setSelectedCallerName(null)
@@ -571,6 +578,7 @@ export const SandwichInvocationsView = memo(
             elements.push(
               <tr
                 key={`group-${group.callerName}`}
+                onMouseDown={preventDoubleClickTextSelection}
                 onClick={() => {
                   setSelectedCallerName(group.callerName)
                   setSelectedNode(null)
@@ -623,6 +631,7 @@ export const SandwichInvocationsView = memo(
           elements.push(
             <tr
               key={`inv-${i}`}
+              onMouseDown={preventDoubleClickTextSelection}
               onClick={() => {
                 setSelectedNode(row.node)
                 setSelectedCallerName(null)
@@ -945,6 +954,7 @@ const getStyle = withTheme(theme =>
       background: theme.bgPrimaryColor,
       height: Sizes.FRAME_HEIGHT,
       cursor: 'pointer',
+      userSelect: 'none',
     },
     tableRowEven: {
       background: theme.bgSecondaryColor,

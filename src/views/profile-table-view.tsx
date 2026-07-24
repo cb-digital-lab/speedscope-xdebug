@@ -385,6 +385,7 @@ const getStyle = withTheme(theme =>
     tableRow: {
       background: theme.bgPrimaryColor,
       height: Sizes.FRAME_HEIGHT,
+      userSelect: 'none',
     },
     tableRowEven: {
       background: theme.bgSecondaryColor,

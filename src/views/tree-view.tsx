@@ -135,10 +135,17 @@ function TreeTableRowView({
     }
   }
 
+  const onRowMouseDown = (ev: MouseEvent) => {
+    if (ev.detail > 1) {
+      ev.preventDefault()
+    }
+  }
+
   return (
     <tr
       key={`${index}`}
       onClick={onRowClick}
+      onMouseDown={onRowMouseDown}
       onDblClick={onRowDoubleClick}
       className={css(
         style.tableRow,
@@ -634,6 +641,7 @@ const getStyle = withTheme(theme =>
       background: theme.bgPrimaryColor,
       height: Sizes.FRAME_HEIGHT,
       cursor: 'pointer',
+      userSelect: 'none',
     },
     tableRowEven: {
       background: theme.bgSecondaryColor,
