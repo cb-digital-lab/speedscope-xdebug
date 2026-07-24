@@ -11,6 +11,7 @@ import {
   FlattenedInvocationListRow,
   flattenStackTree,
   buildInvocationStackTree,
+  formatStackTreeLabel,
   groupInvocationsByCaller,
   InvocationRow,
   InvocationSortField,
@@ -314,7 +315,7 @@ export const SandwichInvocationsView = memo(
             case 2:
               return displayRow.node.count.toLocaleString()
             case 3:
-              return displayRow.node.name
+              return formatStackTreeLabel(displayRow.node)
             default:
               return ''
           }
@@ -544,7 +545,7 @@ export const SandwichInvocationsView = memo(
                   <HBarDisplay perc={selfPerc} />
                 </td>
                 <td className={css(style.countCell)}>{node.count.toLocaleString()}</td>
-                <td className={css(style.textCell)} title={node.name}>
+                <td className={css(style.textCell)} title={formatStackTreeLabel(node)}>
                   <span
                     className={css(style.callerCellInner)}
                     style={{paddingLeft: node.depth * TREE_INDENT_PX}}
@@ -562,7 +563,7 @@ export const SandwichInvocationsView = memo(
                     ) : (
                       <span className={css(style.chevronPlaceholder)} />
                     )}
-                    {node.name}
+                    {formatStackTreeLabel(node)}
                   </span>
                 </td>
               </tr>,

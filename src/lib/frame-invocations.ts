@@ -244,6 +244,7 @@ export interface StackTreeNode {
   total: number
   self: number
   count: number
+  callSiteCount: number
   children: StackTreeNode[]
   invocation: InvocationRow | null
 }
@@ -258,6 +259,23 @@ interface StackTreeBuildNode {
   children: StackTreeBuildNode[]
   invocation: InvocationRow | null
   childMap: Map<string, StackTreeBuildNode>
+  seenCallSites: Set<CallTreeNode>
+}
+
+function getRootedCallTreePath(node: CallTreeNode): CallTreeNode[] {
+  const chain: CallTreeNode[] = []
+  for (let n: CallTreeNode | null = node; n != null && !n.isRoot(); n = n.parent) {
+    chain.push(n)
+  }
+  chain.reverse()
+  return chain
+}
+
+export function formatStackTreeLabel(node: StackTreeNode): string {
+  if (node.invocation != null || node.callSiteCount <= 1) {
+    return node.name
+  }
+  return `${node.name} (${node.callSiteCount.toLocaleString()})`
 }
 
 export function buildInvocationStackTree(rows: InvocationRow[]): StackTreeNode[] {
@@ -266,14 +284,15 @@ export function buildInvocationStackTree(rows: InvocationRow[]): StackTreeNode[]
   let leafId = 0
 
   for (const row of rows) {
-    const path = row.stackNames.slice().reverse()
-    if (path.length === 0) continue
+    const callPath = getRootedCallTreePath(row.node)
+    if (callPath.length === 0) continue
 
     let parent: StackTreeBuildNode | null = null
 
-    for (let depth = 0; depth < path.length; depth++) {
-      const name = path[depth]
-      const isLeaf = depth === path.length - 1
+    for (let depth = 0; depth < callPath.length; depth++) {
+      const callTreeNode = callPath[depth]
+      const name = callTreeNode.frame.name
+      const isLeaf = depth === callPath.length - 1
 
       if (isLeaf) {
         const parentKey = parent ? parent.pathKey : ''
@@ -287,6 +306,7 @@ export function buildInvocationStackTree(rows: InvocationRow[]): StackTreeNode[]
           children: [],
           invocation: row,
           childMap: new Map(),
+          seenCallSites: new Set([callTreeNode]),
         }
         if (parent) {
           parent.children.push(leaf)
@@ -310,6 +330,7 @@ export function buildInvocationStackTree(rows: InvocationRow[]): StackTreeNode[]
           children: [],
           invocation: null,
           childMap: new Map(),
+          seenCallSites: new Set(),
         }
         map.set(name, node)
         if (parent) {
@@ -321,6 +342,7 @@ export function buildInvocationStackTree(rows: InvocationRow[]): StackTreeNode[]
       node.total += row.total
       node.self += row.self
       node.count += 1
+      node.seenCallSites.add(callTreeNode)
       parent = node
     }
   }
@@ -333,6 +355,7 @@ export function buildInvocationStackTree(rows: InvocationRow[]): StackTreeNode[]
       total: node.total,
       self: node.self,
       count: node.count,
+      callSiteCount: node.seenCallSites.size,
       children: node.children.map(strip),
       invocation: node.invocation,
     }

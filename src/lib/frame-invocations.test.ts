@@ -7,6 +7,7 @@ import {
   flattenCallerGroups,
   flattenStackTree,
   buildInvocationStackTree,
+  formatStackTreeLabel,
   groupInvocationsByCaller,
   InvocationSortField,
   sortCallerGroups,
@@ -264,12 +265,16 @@ test('buildInvocationStackTree is rooted and aggregates along paths', () => {
   expect(tree.length).toBe(1)
   expect(tree[0].name).toBe('main')
   expect(tree[0].count).toBe(6)
+  expect(tree[0].callSiteCount).toBe(1)
   expect(tree[0].invocation).toBeNull()
 
   const byName = new Map(tree[0].children.map(c => [c.name, c]))
   expect(byName.get('parent 1')!.count).toBe(2)
+  expect(byName.get('parent 1')!.callSiteCount).toBe(2)
   expect(byName.get('other parent')!.count).toBe(1)
+  expect(byName.get('other parent')!.callSiteCount).toBe(1)
   expect(byName.get('parent 2')!.count).toBe(2)
+  expect(byName.get('parent 2')!.callSiteCount).toBe(2)
   expect(byName.get('yet another parent')!.count).toBe(1)
 
   const leafCount = (node: ReturnType<typeof buildInvocationStackTree>[0]): number => {
@@ -277,6 +282,15 @@ test('buildInvocationStackTree is rooted and aggregates along paths', () => {
     return node.children.reduce((sum, child) => sum + leafCount(child), 0)
   }
   expect(leafCount(tree[0])).toBe(6)
+})
+
+test('formatStackTreeLabel shows call-site count when a branch is merged', () => {
+  const profile = buildProfile()
+  const fnFrame = getFnFrame(profile)
+  const tree = buildInvocationStackTree(collectInvocationsSync(profile, fnFrame))
+  const parent1 = tree[0].children.find(c => c.name === 'parent 1')!
+  expect(formatStackTreeLabel(parent1)).toBe('parent 1 (2)')
+  expect(formatStackTreeLabel(tree[0])).toBe('main')
 })
 
 test('flattenStackTree expands nested paths', () => {
