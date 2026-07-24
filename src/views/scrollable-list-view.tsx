@@ -38,6 +38,9 @@ export const ScrollableListView = ({
   const [viewportScrollOffset, setViewportScrollOffset] = useState<number>(0)
 
   const viewportRef = useRef<HTMLDivElement | null>(null)
+  const lastScrollLeftRef = useRef(0)
+  const onViewportScrollRef = useRef(onViewportScroll)
+  onViewportScrollRef.current = onViewportScroll
 
   const widthOrHeight = axis === 'x' ? 'width' : 'height'
   const leftOrTop = axis === 'x' ? 'left' : 'top'
@@ -64,7 +67,7 @@ export const ScrollableListView = ({
       }
       viewportRef.current = viewport
     },
-    [setViewportSize, widthOrHeight, leftOrTop],
+    [widthOrHeight, leftOrTop],
   )
 
   const rangeResult: RangeResult | null = useMemo(() => {
@@ -83,18 +86,17 @@ export const ScrollableListView = ({
     let i = 0
     for (; i < items.length; i++) {
       const item = items[i]
-      invisiblePrefixSize = total
-      total += item.size
-      if (total >= minY) {
+      if (total + item.size > minY) {
         break
       }
+      total += item.size
+      invisiblePrefixSize = total
     }
 
     const firstVisibleIndex = i
 
     for (; i < items.length; i++) {
-      const item = items[i]
-      total += item.size
+      total += items[i].size
       if (total >= maxY) {
         break
       }
@@ -112,11 +114,16 @@ export const ScrollableListView = ({
   const totalSize = useMemo(() => items.reduce((a, b) => a + b.size, 0), [items])
 
   const onViewportScrollEvent = useCallback(() => {
-    if (viewportRef.current != null) {
-      setViewportScrollOffset(viewportRef.current[scrollLeftOrScrollTop])
-      onViewportScroll?.(viewportRef.current.scrollLeft, viewportRef.current.scrollTop)
+    if (viewportRef.current == null) return
+
+    setViewportScrollOffset(viewportRef.current[scrollLeftOrScrollTop])
+
+    const scrollLeft = viewportRef.current.scrollLeft
+    if (scrollLeft !== lastScrollLeftRef.current) {
+      lastScrollLeftRef.current = scrollLeft
+      onViewportScrollRef.current?.(scrollLeft, viewportRef.current.scrollTop)
     }
-  }, [scrollLeftOrScrollTop, onViewportScroll])
+  }, [scrollLeftOrScrollTop])
 
   useEffect(() => {
     const resizeListener = () => {
@@ -137,19 +144,14 @@ export const ScrollableListView = ({
       : null
   }, [renderItems, rangeResult])
 
-  const content = useMemo(() => {
-    return (
-      <div style={{height: totalSize}}>
-        <div style={{transform: `translateY(${rangeResult?.invisiblePrefixSize || 0}px)`}}>
-          {visibleItems}
-        </div>
-      </div>
-    )
-  }, [rangeResult, visibleItems, totalSize])
+  const prefixSize = rangeResult?.invisiblePrefixSize || 0
 
   return (
     <div className={className} ref={viewportCallback} onScroll={onViewportScrollEvent}>
-      {content}
+      <div style={{height: totalSize}}>
+        {prefixSize > 0 ? <div style={{height: prefixSize}} /> : null}
+        {visibleItems}
+      </div>
     </div>
   )
 }

@@ -409,7 +409,7 @@ export const SandwichInvocationsView = memo(
     }, [tableMinWidth, scrollLeft])
 
     const onViewportScroll = useCallback((left: number) => {
-      setScrollLeft(left)
+      setScrollLeft(prev => (prev === left ? prev : left))
     }, [])
 
     const onRowDoubleClick = useCallback((node: CallTreeNode, ev: MouseEvent) => {
