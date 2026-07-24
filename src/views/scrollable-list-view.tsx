@@ -148,8 +148,16 @@ export const ScrollableListView = ({
 
   return (
     <div className={className} ref={viewportCallback} onScroll={onViewportScrollEvent}>
-      <div style={{height: totalSize}}>
-        {prefixSize > 0 ? <div style={{height: prefixSize}} /> : null}
+      <div
+        style={{
+          height: totalSize,
+          paddingTop: prefixSize,
+          boxSizing: 'border-box',
+          overflow: 'hidden',
+          minWidth: '100%',
+          width: 'max-content',
+        }}
+      >
         {visibleItems}
       </div>
     </div>
