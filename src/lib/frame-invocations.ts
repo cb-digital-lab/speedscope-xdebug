@@ -163,6 +163,7 @@ export interface CallerGroup {
 export type FlattenedInvocationListRow =
   | {kind: 'group'; group: CallerGroup; isExpanded: boolean}
   | {kind: 'invocation'; row: InvocationRow; indented: boolean}
+  | FlattenedStackTreeRow
 
 export function groupInvocationsByCaller(rows: InvocationRow[]): CallerGroup[] {
   const groupsByCaller = new Map<string, CallerGroup>()
@@ -232,6 +233,174 @@ export function flattenCallerGroups(
         rows.push({kind: 'invocation', row: invocation, indented: true})
       }
     }
+  }
+  return rows
+}
+
+export interface StackTreeNode {
+  name: string
+  pathKey: string
+  depth: number
+  total: number
+  self: number
+  count: number
+  children: StackTreeNode[]
+  invocation: InvocationRow | null
+}
+
+interface StackTreeBuildNode {
+  name: string
+  pathKey: string
+  depth: number
+  total: number
+  self: number
+  count: number
+  children: StackTreeBuildNode[]
+  invocation: InvocationRow | null
+  childMap: Map<string, StackTreeBuildNode>
+}
+
+export function buildInvocationStackTree(rows: InvocationRow[]): StackTreeNode[] {
+  const roots: StackTreeBuildNode[] = []
+  const rootMap: Map<string, StackTreeBuildNode> = new Map()
+  let leafId = 0
+
+  for (const row of rows) {
+    const path = row.stackNames.slice().reverse()
+    if (path.length === 0) continue
+
+    let parent: StackTreeBuildNode | null = null
+
+    for (let depth = 0; depth < path.length; depth++) {
+      const name = path[depth]
+      const isLeaf = depth === path.length - 1
+
+      if (isLeaf) {
+        const parentKey = parent ? parent.pathKey : ''
+        const leaf: StackTreeBuildNode = {
+          name,
+          pathKey: `${parentKey}\0leaf:${leafId++}`,
+          depth,
+          total: row.total,
+          self: row.self,
+          count: 1,
+          children: [],
+          invocation: row,
+          childMap: new Map(),
+        }
+        if (parent) {
+          parent.children.push(leaf)
+        } else {
+          roots.push(leaf)
+        }
+        break
+      }
+
+      const pathKey: string = parent ? `${parent.pathKey}\0${name}` : name
+      const map: Map<string, StackTreeBuildNode> = parent ? parent.childMap : rootMap
+      let node: StackTreeBuildNode | undefined = map.get(name)
+      if (node == null) {
+        node = {
+          name,
+          pathKey,
+          depth,
+          total: 0,
+          self: 0,
+          count: 0,
+          children: [],
+          invocation: null,
+          childMap: new Map(),
+        }
+        map.set(name, node)
+        if (parent) {
+          parent.children.push(node)
+        } else {
+          roots.push(node)
+        }
+      }
+      node.total += row.total
+      node.self += row.self
+      node.count += 1
+      parent = node
+    }
+  }
+
+  function strip(node: StackTreeBuildNode): StackTreeNode {
+    return {
+      name: node.name,
+      pathKey: node.pathKey,
+      depth: node.depth,
+      total: node.total,
+      self: node.self,
+      count: node.count,
+      children: node.children.map(strip),
+      invocation: node.invocation,
+    }
+  }
+
+  return roots.map(strip)
+}
+
+export function sortStackTree(nodes: StackTreeNode[], sortMethod: InvocationSortMethod): void {
+  const dir = sortMethod.direction === 'DESCENDING' ? -1 : 1
+
+  nodes.sort((a, b) => {
+    let cmp = 0
+    switch (sortMethod.field) {
+      case InvocationSortField.TOTAL:
+        cmp = a.total < b.total ? -1 : a.total > b.total ? 1 : 0
+        break
+      case InvocationSortField.SELF:
+        cmp = a.self < b.self ? -1 : a.self > b.self ? 1 : 0
+        break
+      case InvocationSortField.COUNT:
+        cmp = a.count < b.count ? -1 : a.count > b.count ? 1 : 0
+        break
+      case InvocationSortField.CALLER:
+      case InvocationSortField.CALL_STACK:
+        cmp = a.name < b.name ? -1 : a.name > b.name ? 1 : 0
+        break
+    }
+    if (cmp === 0) {
+      cmp = a.name < b.name ? -1 : a.name > b.name ? 1 : 0
+      return cmp
+    }
+    return cmp * dir
+  })
+
+  for (const node of nodes) {
+    if (node.children.length > 0) {
+      sortStackTree(node.children, sortMethod)
+    }
+  }
+}
+
+export type FlattenedStackTreeRow = {
+  kind: 'stack'
+  node: StackTreeNode
+  isExpanded: boolean
+  hasChildren: boolean
+}
+
+export function flattenStackTree(
+  nodes: StackTreeNode[],
+  expandedPathKeys: Set<string>,
+): FlattenedStackTreeRow[] {
+  const rows: FlattenedStackTreeRow[] = []
+
+  function visit(node: StackTreeNode) {
+    const hasChildren = node.children.length > 0
+    const isExpanded = hasChildren && expandedPathKeys.has(node.pathKey)
+    rows.push({kind: 'stack', node, isExpanded, hasChildren})
+    if (isExpanded) {
+      for (const child of node.children) {
+        visit(child)
+      }
+    }
+  }
+
+  for (const node of nodes) {
+    visit(node)
   }
   return rows
 }

@@ -5,10 +5,13 @@ import {
   compareCallStacks,
   createChunkedInvocationCollector,
   flattenCallerGroups,
+  flattenStackTree,
+  buildInvocationStackTree,
   groupInvocationsByCaller,
   InvocationSortField,
   sortCallerGroups,
   sortInvocationRows,
+  sortStackTree,
 } from './frame-invocations'
 
 function frameInfo(key: string): FrameInfo {
@@ -251,4 +254,44 @@ test('flattenCallerGroups expands only selected callers', () => {
     expanded.slice(1, 1 + groups[0].invocations.length).every(r => r.kind === 'invocation'),
   ).toBe(true)
   expect(expanded.length).toBe(groups.length + groups[0].invocations.length)
+})
+
+test('buildInvocationStackTree is rooted and aggregates along paths', () => {
+  const profile = buildProfile()
+  const fnFrame = getFnFrame(profile)
+  const tree = buildInvocationStackTree(collectInvocationsSync(profile, fnFrame))
+
+  expect(tree.length).toBe(1)
+  expect(tree[0].name).toBe('main')
+  expect(tree[0].count).toBe(6)
+  expect(tree[0].invocation).toBeNull()
+
+  const byName = new Map(tree[0].children.map(c => [c.name, c]))
+  expect(byName.get('parent 1')!.count).toBe(2)
+  expect(byName.get('other parent')!.count).toBe(1)
+  expect(byName.get('parent 2')!.count).toBe(2)
+  expect(byName.get('yet another parent')!.count).toBe(1)
+
+  const leafCount = (node: ReturnType<typeof buildInvocationStackTree>[0]): number => {
+    if (node.invocation) return 1
+    return node.children.reduce((sum, child) => sum + leafCount(child), 0)
+  }
+  expect(leafCount(tree[0])).toBe(6)
+})
+
+test('flattenStackTree expands nested paths', () => {
+  const profile = buildProfile()
+  const fnFrame = getFnFrame(profile)
+  const tree = buildInvocationStackTree(collectInvocationsSync(profile, fnFrame))
+  sortStackTree(tree, {field: InvocationSortField.COUNT, direction: 'DESCENDING'})
+
+  const collapsed = flattenStackTree(tree, new Set())
+  expect(collapsed.length).toBe(1)
+  expect(collapsed[0].node.name).toBe('main')
+  expect(collapsed[0].hasChildren).toBe(true)
+  expect(collapsed[0].isExpanded).toBe(false)
+
+  const expanded = flattenStackTree(tree, new Set([tree[0].pathKey]))
+  expect(expanded.length).toBe(1 + tree[0].children.length)
+  expect(expanded[0].isExpanded).toBe(true)
 })
