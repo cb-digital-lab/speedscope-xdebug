@@ -7,9 +7,13 @@ import {formatPercent} from '../lib/utils'
 import {
   ChunkedCollector,
   createChunkedInvocationCollector,
+  flattenCallerGroups,
+  FlattenedInvocationListRow,
+  groupInvocationsByCaller,
   InvocationRow,
   InvocationSortField,
   InvocationSortMethod,
+  sortCallerGroups,
   sortInvocationRows,
 } from '../lib/frame-invocations'
 import {SortDirection, profileGroupAtom, viewModeAtom} from '../app-state'
@@ -22,12 +26,19 @@ import {ColumnResizeHandle, useResizableTableColumns} from './resizable-table-co
 
 const CHUNK_SIZE = 3000
 const REM = 16
-const DEFAULT_COLUMN_WIDTHS = [3 * REM, 3 * REM, 10 * REM, 12 * REM]
-const MIN_COLUMN_WIDTHS = [2 * REM, 2 * REM, 3 * REM, 3 * REM]
+const FLAT_COLUMN_WIDTHS = [3 * REM, 3 * REM, 10 * REM, 12 * REM]
+const FLAT_MIN_WIDTHS = [2 * REM, 2 * REM, 3 * REM, 3 * REM]
+const GROUPED_COLUMN_WIDTHS = [3 * REM, 3 * REM, 3 * REM, 10 * REM, 12 * REM]
+const GROUPED_MIN_WIDTHS = [2 * REM, 2 * REM, 2 * REM, 3 * REM, 3 * REM]
 
 const DEFAULT_SORT: InvocationSortMethod = {
   field: InvocationSortField.TOTAL,
   direction: 'DESCENDING',
+}
+
+enum GroupMode {
+  FLAT = 'FLAT',
+  BY_CALLER = 'BY_CALLER',
 }
 
 interface SortIconProps {
@@ -88,7 +99,10 @@ export const SandwichInvocationsView = memo(
     const [expected, setExpected] = useState(0)
     const [done, setDone] = useState(false)
     const [sortMethod, setSortMethod] = useState<InvocationSortMethod>(DEFAULT_SORT)
+    const [groupMode, setGroupMode] = useState<GroupMode>(GroupMode.FLAT)
+    const [expandedCallers, setExpandedCallers] = useState<Set<string>>(() => new Set())
     const [selectedNode, setSelectedNode] = useState<InvocationRow['node'] | null>(null)
+    const [selectedCallerName, setSelectedCallerName] = useState<string | null>(null)
     const [scrollLeft, setScrollLeft] = useState(0)
     const collectorRef = useRef<ChunkedCollector | null>(null)
     const rafRef = useRef<number | null>(null)
@@ -109,6 +123,8 @@ export const SandwichInvocationsView = memo(
       setDone(false)
       setSortMethod(DEFAULT_SORT)
       setSelectedNode(null)
+      setSelectedCallerName(null)
+      setExpandedCallers(new Set())
 
       const collector = createChunkedInvocationCollector(profile, selectedFrame)
       collectorRef.current = collector
@@ -119,9 +135,7 @@ export const SandwichInvocationsView = memo(
         setFound(result.found)
         setExpected(result.expected)
         if (result.done) {
-          const sorted = result.rows.slice()
-          sortInvocationRows(sorted, DEFAULT_SORT)
-          setRows(sorted)
+          setRows(result.rows.slice())
           setDone(true)
           collectorRef.current = null
           rafRef.current = null
@@ -145,14 +159,31 @@ export const SandwichInvocationsView = memo(
       }
     }, [profile, selectedFrame])
 
+    const displayRows: FlattenedInvocationListRow[] = useMemo(() => {
+      if (groupMode === GroupMode.FLAT) {
+        const sorted = rows.slice()
+        if (done) {
+          sortInvocationRows(sorted, sortMethod)
+        }
+        return sorted.map(row => ({kind: 'invocation' as const, row, indented: false}))
+      }
+
+      const groups = groupInvocationsByCaller(rows)
+      if (done) {
+        sortCallerGroups(groups, sortMethod)
+      }
+      return flattenCallerGroups(groups, expandedCallers)
+    }, [rows, done, sortMethod, groupMode, expandedCallers])
+
+    const showCount = groupMode === GroupMode.BY_CALLER
+    const columnWidths = showCount ? GROUPED_COLUMN_WIDTHS : FLAT_COLUMN_WIDTHS
+    const minWidths = showCount ? GROUPED_MIN_WIDTHS : FLAT_MIN_WIDTHS
+
     useEffect(() => {
-      if (!done) return
-      setRows(prev => {
-        const next = prev.slice()
-        sortInvocationRows(next, sortMethod)
-        return next
-      })
-    }, [sortMethod, done])
+      if (groupMode === GroupMode.FLAT && sortMethod.field === InvocationSortField.COUNT) {
+        setSortMethod(DEFAULT_SORT)
+      }
+    }, [groupMode, sortMethod.field])
 
     const onSortClick = useCallback(
       (field: InvocationSortField, ev: MouseEvent) => {
@@ -172,6 +203,7 @@ export const SandwichInvocationsView = memo(
               return {field, direction: 'ASCENDING'}
             case InvocationSortField.TOTAL:
             case InvocationSortField.SELF:
+            case InvocationSortField.COUNT:
               return {field, direction: 'DESCENDING'}
           }
         })
@@ -181,25 +213,108 @@ export const SandwichInvocationsView = memo(
 
     const grandTotal = profile.getTotalNonIdleWeight()
 
-    const getHeaderText = useCallback((columnIndex: number) => {
-      switch (columnIndex) {
-        case 0:
-          return 'Total'
-        case 1:
-          return 'Self'
-        case 2:
-          return 'Caller'
-        case 3:
-          return 'Call stack'
-        default:
-          return ''
-      }
-    }, [])
+    const getHeaderText = useCallback(
+      (columnIndex: number) => {
+        if (showCount) {
+          switch (columnIndex) {
+            case 0:
+              return 'Total'
+            case 1:
+              return 'Self'
+            case 2:
+              return 'Count'
+            case 3:
+              return 'Caller'
+            case 4:
+              return 'Call stack'
+            default:
+              return ''
+          }
+        }
+        switch (columnIndex) {
+          case 0:
+            return 'Total'
+          case 1:
+            return 'Self'
+          case 2:
+            return 'Caller'
+          case 3:
+            return 'Call stack'
+          default:
+            return ''
+        }
+      },
+      [showCount],
+    )
 
     const getCellText = useCallback(
       (rowIndex: number, columnIndex: number) => {
-        const row = rows[rowIndex]
-        if (!row) return ''
+        const displayRow = displayRows[rowIndex]
+        if (!displayRow) return ''
+
+        if (displayRow.kind === 'group') {
+          if (showCount) {
+            switch (columnIndex) {
+              case 0: {
+                const totalPerc =
+                  grandTotal === 0 ? 0 : (100.0 * displayRow.group.total) / grandTotal
+                return `${profile.formatValue(displayRow.group.total)} (${formatPercent(totalPerc)})`
+              }
+              case 1: {
+                const selfPerc =
+                  grandTotal === 0 ? 0 : (100.0 * displayRow.group.self) / grandTotal
+                return `${profile.formatValue(displayRow.group.self)} (${formatPercent(selfPerc)})`
+              }
+              case 2:
+                return displayRow.group.count.toLocaleString()
+              case 3:
+                return displayRow.group.callerName
+              case 4:
+                return ''
+              default:
+                return ''
+            }
+          }
+          switch (columnIndex) {
+            case 0: {
+              const totalPerc =
+                grandTotal === 0 ? 0 : (100.0 * displayRow.group.total) / grandTotal
+              return `${profile.formatValue(displayRow.group.total)} (${formatPercent(totalPerc)})`
+            }
+            case 1: {
+              const selfPerc = grandTotal === 0 ? 0 : (100.0 * displayRow.group.self) / grandTotal
+              return `${profile.formatValue(displayRow.group.self)} (${formatPercent(selfPerc)})`
+            }
+            case 2:
+              return displayRow.group.callerName
+            case 3:
+              return ''
+            default:
+              return ''
+          }
+        }
+
+        const row = displayRow.row
+        if (showCount) {
+          switch (columnIndex) {
+            case 0: {
+              const totalPerc = grandTotal === 0 ? 0 : (100.0 * row.total) / grandTotal
+              return `${profile.formatValue(row.total)} (${formatPercent(totalPerc)})`
+            }
+            case 1: {
+              const selfPerc = grandTotal === 0 ? 0 : (100.0 * row.self) / grandTotal
+              return `${profile.formatValue(row.self)} (${formatPercent(selfPerc)})`
+            }
+            case 2:
+              return ''
+            case 3:
+              return row.callerName
+            case 4:
+              return row.stackLabel
+            default:
+              return ''
+          }
+        }
         switch (columnIndex) {
           case 0: {
             const totalPerc = grandTotal === 0 ? 0 : (100.0 * row.total) / grandTotal
@@ -217,7 +332,7 @@ export const SandwichInvocationsView = memo(
             return ''
         }
       },
-      [rows, grandTotal, profile],
+      [displayRows, grandTotal, profile, showCount],
     )
 
     const {
@@ -229,23 +344,21 @@ export const SandwichInvocationsView = memo(
       autoSizeColumns,
       consumeClickSuppression,
     } = useResizableTableColumns({
-      defaultWidths: DEFAULT_COLUMN_WIDTHS,
-      minWidths: MIN_COLUMN_WIDTHS,
+      defaultWidths: columnWidths,
+      minWidths,
       getHeaderText,
       getCellText,
-      rowCount: rows.length,
+      rowCount: displayRows.length,
     })
 
-    const didAutoSizeRef = useRef(false)
-    useEffect(() => {
-      didAutoSizeRef.current = false
-    }, [selectedFrame])
+    const autoSizeColumnsRef = useRef(autoSizeColumns)
+    autoSizeColumnsRef.current = autoSizeColumns
 
     useEffect(() => {
-      if (!done || rows.length === 0 || didAutoSizeRef.current) return
-      didAutoSizeRef.current = true
-      autoSizeColumns([0, 1])
-    }, [done, rows.length, autoSizeColumns])
+      if (!done || displayRows.length === 0) return
+      const indices = showCount ? [0, 1, 2, 3] : [0, 1, 2]
+      autoSizeColumnsRef.current(indices)
+    }, [done, groupMode, showCount, displayRows.length === 0])
 
     const handleSortClick = useCallback(
       (field: InvocationSortField, ev: MouseEvent) => {
@@ -266,6 +379,10 @@ export const SandwichInvocationsView = memo(
       (ev: MouseEvent) => handleSortClick(InvocationSortField.SELF, ev),
       [handleSortClick],
     )
+    const onCountClick = useCallback(
+      (ev: MouseEvent) => handleSortClick(InvocationSortField.COUNT, ev),
+      [handleSortClick],
+    )
     const onCallerClick = useCallback(
       (ev: MouseEvent) => handleSortClick(InvocationSortField.CALLER, ev),
       [handleSortClick],
@@ -281,14 +398,14 @@ export const SandwichInvocationsView = memo(
     )
 
     const headerTableStyle = useMemo(() => {
-      const style: {width: string; minWidth: number; transform?: string} = {
+      const next: {width: string; minWidth: number; transform?: string} = {
         width: '100%',
         minWidth: tableMinWidth,
       }
       if (scrollLeft !== 0) {
-        style.transform = `translateX(-${scrollLeft}px)`
+        next.transform = `translateX(-${scrollLeft}px)`
       }
-      return style
+      return next
     }, [tableMinWidth, scrollLeft])
 
     const onViewportScroll = useCallback((left: number) => {
@@ -302,19 +419,89 @@ export const SandwichInvocationsView = memo(
       viewModeAtom.set(ViewMode.TREE_VIEW)
     }, [])
 
+    const toggleCallerExpanded = useCallback((callerName: string) => {
+      setExpandedCallers(prev => {
+        const next = new Set(prev)
+        if (next.has(callerName)) {
+          next.delete(callerName)
+        } else {
+          next.add(callerName)
+        }
+        return next
+      })
+    }, [])
+
     const renderItems = useCallback(
       (firstVisibleIndex: number, lastVisibleIndex: number) => {
         const elements: JSX.Element[] = []
         for (let i = firstVisibleIndex; i <= lastVisibleIndex; i++) {
-          const row = rows[i]
-          if (!row) continue
+          const displayRow = displayRows[i]
+          if (!displayRow) continue
+
+          if (displayRow.kind === 'group') {
+            const {group, isExpanded} = displayRow
+            const selected = selectedCallerName === group.callerName && selectedNode == null
+            const totalPerc = grandTotal === 0 ? 0 : (100.0 * group.total) / grandTotal
+            const selfPerc = grandTotal === 0 ? 0 : (100.0 * group.self) / grandTotal
+            elements.push(
+              <tr
+                key={`group-${group.callerName}`}
+                onClick={() => {
+                  setSelectedCallerName(group.callerName)
+                  setSelectedNode(null)
+                }}
+                onDblClick={ev => {
+                  ev.preventDefault()
+                  toggleCallerExpanded(group.callerName)
+                }}
+                className={css(
+                  style.tableRow,
+                  i % 2 === 1 && style.tableRowEven,
+                  selected && style.tableRowSelected,
+                )}
+              >
+                <td className={css(style.numericCell)}>
+                  {profile.formatValue(group.total)} ({formatPercent(totalPerc)})
+                  <HBarDisplay perc={totalPerc} />
+                </td>
+                <td className={css(style.numericCell)}>
+                  {profile.formatValue(group.self)} ({formatPercent(selfPerc)})
+                  <HBarDisplay perc={selfPerc} />
+                </td>
+                {showCount ? (
+                  <td className={css(style.countCell)}>{group.count.toLocaleString()}</td>
+                ) : null}
+                <td className={css(style.callerCell)} title={group.callerName}>
+                  <span className={css(style.callerCellInner)}>
+                    <span
+                      className={css(style.chevron)}
+                      onClick={ev => {
+                        ev.stopPropagation()
+                        toggleCallerExpanded(group.callerName)
+                      }}
+                    >
+                      {isExpanded ? '▼' : '▶'}
+                    </span>
+                    {group.callerName}
+                  </span>
+                </td>
+                <td className={css(style.textCell)} />
+              </tr>,
+            )
+            continue
+          }
+
+          const row = displayRow.row
           const selected = row.node === selectedNode
           const totalPerc = grandTotal === 0 ? 0 : (100.0 * row.total) / grandTotal
           const selfPerc = grandTotal === 0 ? 0 : (100.0 * row.self) / grandTotal
           elements.push(
             <tr
-              key={`${i}`}
-              onClick={() => setSelectedNode(row.node)}
+              key={`inv-${i}`}
+              onClick={() => {
+                setSelectedNode(row.node)
+                setSelectedCallerName(null)
+              }}
               onDblClick={ev => onRowDoubleClick(row.node, ev)}
               className={css(
                 style.tableRow,
@@ -330,8 +517,14 @@ export const SandwichInvocationsView = memo(
                 {profile.formatValue(row.self)} ({formatPercent(selfPerc)})
                 <HBarDisplay perc={selfPerc} />
               </td>
+              {showCount ? <td className={css(style.countCell)} /> : null}
               <td className={css(style.callerCell)} title={row.callerName}>
-                {row.callerName}
+                <span className={css(style.callerCellInner)}>
+                  {displayRow.indented ? (
+                    <span className={css(style.chevronPlaceholder)} />
+                  ) : null}
+                  {row.callerName}
+                </span>
               </td>
               <td className={css(style.textCell)} title={row.stackLabel}>
                 {row.stackLabel}
@@ -347,26 +540,33 @@ export const SandwichInvocationsView = memo(
         )
       },
       [
-        rows,
+        displayRows,
         selectedNode,
+        selectedCallerName,
         grandTotal,
         profile,
+        showCount,
         style.tableRow,
         style.tableRowEven,
         style.tableRowSelected,
         style.numericCell,
+        style.countCell,
         style.callerCell,
+        style.callerCellInner,
+        style.chevron,
+        style.chevronPlaceholder,
         style.textCell,
         style.tableView,
         renderColGroup,
         tableStyle,
         onRowDoubleClick,
+        toggleCallerExpanded,
       ],
     )
 
     const listItems: ListItem[] = useMemo(
-      () => rows.map(() => ({size: Sizes.FRAME_HEIGHT})),
-      [rows],
+      () => displayRows.map(() => ({size: Sizes.FRAME_HEIGHT})),
+      [displayRows],
     )
 
     const progressLabel = `${found.toLocaleString()} / ${expected.toLocaleString()}`
@@ -377,6 +577,25 @@ export const SandwichInvocationsView = memo(
 
     return (
       <div className={css(commonStyle.vbox, style.root)}>
+        <div className={css(style.modeTabs)}>
+          <button
+            type="button"
+            className={css(style.modeTab, groupMode === GroupMode.FLAT && style.modeTabActive)}
+            onClick={() => setGroupMode(GroupMode.FLAT)}
+          >
+            Flat
+          </button>
+          <button
+            type="button"
+            className={css(
+              style.modeTab,
+              groupMode === GroupMode.BY_CALLER && style.modeTabActive,
+            )}
+            onClick={() => setGroupMode(GroupMode.BY_CALLER)}
+          >
+            Group by Caller
+          </button>
+        </div>
         {!done && (
           <div className={css(style.progressStrip)}>
             <div className={css(style.progressLabel)}>{progressLabel}</div>
@@ -389,52 +608,64 @@ export const SandwichInvocationsView = memo(
           <table className={css(style.tableView)} style={headerTableStyle}>
             {renderColGroup()}
             <thead className={css(style.tableHeader, !done && style.tableHeaderDisabled)}>
-            <tr>
-              <th className={css(style.headerCell, style.numericCell)} onClick={onTotalClick}>
-                <SortIcon activeDirection={activeDirection(InvocationSortField.TOTAL)} />
-                Total
-                <ColumnResizeHandle
-                  columnIndex={0}
-                  active={draggingColumn === 0}
-                  onResizeStart={startResize}
-                  onAutoSize={autoSizeColumn}
-                />
-              </th>
-              <th className={css(style.headerCell, style.numericCell)} onClick={onSelfClick}>
-                <SortIcon activeDirection={activeDirection(InvocationSortField.SELF)} />
-                Self
-                <ColumnResizeHandle
-                  columnIndex={1}
-                  active={draggingColumn === 1}
-                  onResizeStart={startResize}
-                  onAutoSize={autoSizeColumn}
-                />
-              </th>
-              <th className={css(style.headerCell, style.callerCell)} onClick={onCallerClick}>
-                <SortIcon activeDirection={activeDirection(InvocationSortField.CALLER)} />
-                Caller
-                <ColumnResizeHandle
-                  columnIndex={2}
-                  active={draggingColumn === 2}
-                  onResizeStart={startResize}
-                  onAutoSize={autoSizeColumn}
-                />
-              </th>
-              <th className={css(style.headerCell, style.textCell)} onClick={onCallStackClick}>
-                <SortIcon activeDirection={activeDirection(InvocationSortField.CALL_STACK)} />
-                Call stack
-                <ColumnResizeHandle
-                  columnIndex={3}
-                  active={draggingColumn === 3}
-                  onResizeStart={startResize}
-                  onAutoSize={autoSizeColumn}
-                />
-              </th>
-            </tr>
+              <tr>
+                <th className={css(style.headerCell, style.numericCell)} onClick={onTotalClick}>
+                  <SortIcon activeDirection={activeDirection(InvocationSortField.TOTAL)} />
+                  Total
+                  <ColumnResizeHandle
+                    columnIndex={0}
+                    active={draggingColumn === 0}
+                    onResizeStart={startResize}
+                    onAutoSize={autoSizeColumn}
+                  />
+                </th>
+                <th className={css(style.headerCell, style.numericCell)} onClick={onSelfClick}>
+                  <SortIcon activeDirection={activeDirection(InvocationSortField.SELF)} />
+                  Self
+                  <ColumnResizeHandle
+                    columnIndex={1}
+                    active={draggingColumn === 1}
+                    onResizeStart={startResize}
+                    onAutoSize={autoSizeColumn}
+                  />
+                </th>
+                {showCount ? (
+                  <th className={css(style.headerCell, style.countCell)} onClick={onCountClick}>
+                    <SortIcon activeDirection={activeDirection(InvocationSortField.COUNT)} />
+                    Count
+                    <ColumnResizeHandle
+                      columnIndex={2}
+                      active={draggingColumn === 2}
+                      onResizeStart={startResize}
+                      onAutoSize={autoSizeColumn}
+                    />
+                  </th>
+                ) : null}
+                <th className={css(style.headerCell, style.callerCell)} onClick={onCallerClick}>
+                  <SortIcon activeDirection={activeDirection(InvocationSortField.CALLER)} />
+                  Caller
+                  <ColumnResizeHandle
+                    columnIndex={showCount ? 3 : 2}
+                    active={draggingColumn === (showCount ? 3 : 2)}
+                    onResizeStart={startResize}
+                    onAutoSize={autoSizeColumn}
+                  />
+                </th>
+                <th className={css(style.headerCell, style.textCell)} onClick={onCallStackClick}>
+                  <SortIcon activeDirection={activeDirection(InvocationSortField.CALL_STACK)} />
+                  Call stack
+                  <ColumnResizeHandle
+                    columnIndex={showCount ? 4 : 3}
+                    active={draggingColumn === (showCount ? 4 : 3)}
+                    onResizeStart={startResize}
+                    onAutoSize={autoSizeColumn}
+                  />
+                </th>
+              </tr>
             </thead>
           </table>
         </div>
-        {rows.length === 0 && done ? (
+        {displayRows.length === 0 && done ? (
           <div className={css(style.emptyState)}>No invocations</div>
         ) : (
           <ScrollableListView
@@ -457,6 +688,37 @@ const getStyle = withTheme(theme =>
       height: '100%',
       minHeight: 0,
       flex: 1,
+    },
+    modeTabs: {
+      display: 'flex',
+      flexDirection: 'row',
+      gap: 4,
+      padding: '6px 8px',
+      borderBottom: `1px solid ${theme.bgSecondaryColor}`,
+      flexShrink: 0,
+    },
+    modeTab: {
+      appearance: 'none',
+      border: `1px solid ${theme.fgSecondaryColor}`,
+      background: theme.bgPrimaryColor,
+      color: theme.fgSecondaryColor,
+      fontSize: FontSize.LABEL,
+      padding: '3px 10px',
+      cursor: 'pointer',
+      borderRadius: 2,
+      ':hover': {
+        color: theme.fgPrimaryColor,
+        borderColor: theme.fgPrimaryColor,
+      },
+    },
+    modeTabActive: {
+      background: theme.selectionPrimaryColor,
+      borderColor: theme.selectionPrimaryColor,
+      color: theme.altFgPrimaryColor,
+      ':hover': {
+        color: theme.altFgPrimaryColor,
+        borderColor: theme.selectionPrimaryColor,
+      },
     },
     progressStrip: {
       display: 'flex',
@@ -545,12 +807,37 @@ const getStyle = withTheme(theme =>
       textAlign: 'right',
       paddingRight: Sizes.FRAME_HEIGHT,
     },
+    countCell: {
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textAlign: 'right',
+      paddingRight: Sizes.FRAME_HEIGHT,
+    },
     callerCell: {
       textOverflow: 'ellipsis',
       overflow: 'hidden',
       whiteSpace: 'nowrap',
       paddingLeft: 4,
       paddingRight: 4,
+    },
+    callerCellInner: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      maxWidth: '100%',
+    },
+    chevron: {
+      display: 'inline-block',
+      width: Sizes.FRAME_HEIGHT,
+      flexShrink: 0,
+      textAlign: 'center',
+      cursor: 'pointer',
+      userSelect: 'none',
+    },
+    chevronPlaceholder: {
+      display: 'inline-block',
+      width: Sizes.FRAME_HEIGHT,
+      flexShrink: 0,
     },
     textCell: {
       textOverflow: 'ellipsis',

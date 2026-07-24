@@ -4,7 +4,10 @@ import {
   collectInvocationsSync,
   compareCallStacks,
   createChunkedInvocationCollector,
+  flattenCallerGroups,
+  groupInvocationsByCaller,
   InvocationSortField,
+  sortCallerGroups,
   sortInvocationRows,
 } from './frame-invocations'
 
@@ -69,12 +72,17 @@ function buildProfile() {
   return b.build()
 }
 
-test('collectInvocationsSync finds every invocation of a frame', () => {
-  const profile = buildProfile()
+function getFnFrame(profile: ReturnType<typeof buildProfile>) {
   let fnFrame: any = null
   profile.forEachFrame(f => {
     if (f.name === 'function 1') fnFrame = f
   })
+  return fnFrame
+}
+
+test('collectInvocationsSync finds every invocation of a frame', () => {
+  const profile = buildProfile()
+  const fnFrame = getFnFrame(profile)
   expect(fnFrame).not.toBeNull()
   expect(fnFrame.getCallCount()).toBe(6)
 
@@ -85,10 +93,7 @@ test('collectInvocationsSync finds every invocation of a frame', () => {
 
 test('buildInvocationRow shapes caller and reverse call stack', () => {
   const profile = buildProfile()
-  let fnFrame: any = null
-  profile.forEachFrame(f => {
-    if (f.name === 'function 1') fnFrame = f
-  })
+  const fnFrame = getFnFrame(profile)
   const rows = collectInvocationsSync(profile, fnFrame)
   const first = rows[0]
 
@@ -116,10 +121,7 @@ test('compareCallStacks is lexicographic with shorter prefix first', () => {
 
 test('sortInvocationRows by call stack groups shared prefixes', () => {
   const profile = buildProfile()
-  let fnFrame: any = null
-  profile.forEachFrame(f => {
-    if (f.name === 'function 1') fnFrame = f
-  })
+  const fnFrame = getFnFrame(profile)
   const rows = collectInvocationsSync(profile, fnFrame)
   sortInvocationRows(rows, {
     field: InvocationSortField.CALL_STACK,
@@ -135,10 +137,7 @@ test('sortInvocationRows by call stack groups shared prefixes', () => {
 
 test('sortInvocationRows by total descending', () => {
   const profile = buildProfile()
-  let fnFrame: any = null
-  profile.forEachFrame(f => {
-    if (f.name === 'function 1') fnFrame = f
-  })
+  const fnFrame = getFnFrame(profile)
   const rows = collectInvocationsSync(profile, fnFrame)
   sortInvocationRows(rows, {
     field: InvocationSortField.TOTAL,
@@ -152,10 +151,7 @@ test('sortInvocationRows by total descending', () => {
 
 test('chunked collector eventually finds all invocations', () => {
   const profile = buildProfile()
-  let fnFrame: any = null
-  profile.forEachFrame(f => {
-    if (f.name === 'function 1') fnFrame = f
-  })
+  const fnFrame = getFnFrame(profile)
 
   const collector = createChunkedInvocationCollector(profile, fnFrame)
   let result = collector.pull(2)
@@ -182,4 +178,77 @@ test('buildInvocationRow uses (root) when parent is the profile root', () => {
   })
   const row = buildInvocationRow(collectInvocationsSync(profile, mainFrame)[0].node)
   expect(row.callerName).toBe('(root)')
+})
+
+test('groupInvocationsByCaller aggregates totals and keeps children', () => {
+  const profile = buildProfile()
+  const fnFrame = getFnFrame(profile)
+  const rows = collectInvocationsSync(profile, fnFrame)
+  const groups = groupInvocationsByCaller(rows)
+
+  const byCaller = new Map(groups.map(g => [g.callerName, g]))
+  expect(byCaller.size).toBe(2)
+  expect(byCaller.get('parent 1.1')!.invocations.length).toBe(5)
+  expect(byCaller.get('other parent')!.invocations.length).toBe(1)
+
+  const parent11 = byCaller.get('parent 1.1')!
+  expect(parent11.count).toBe(5)
+  expect(parent11.total).toBe(parent11.invocations.reduce((sum, r) => sum + r.total, 0))
+  expect(parent11.self).toBe(parent11.invocations.reduce((sum, r) => sum + r.self, 0))
+})
+
+test('sortCallerGroups sorts groups and children by total descending', () => {
+  const profile = buildProfile()
+  const fnFrame = getFnFrame(profile)
+  const groups = groupInvocationsByCaller(collectInvocationsSync(profile, fnFrame))
+  sortCallerGroups(groups, {
+    field: InvocationSortField.TOTAL,
+    direction: 'DESCENDING',
+  })
+
+  for (let i = 1; i < groups.length; i++) {
+    expect(groups[i - 1].total).toBeGreaterThanOrEqual(groups[i].total)
+  }
+  for (const group of groups) {
+    for (let i = 1; i < group.invocations.length; i++) {
+      expect(group.invocations[i - 1].total).toBeGreaterThanOrEqual(group.invocations[i].total)
+    }
+  }
+})
+
+test('sortCallerGroups by count descending', () => {
+  const profile = buildProfile()
+  const fnFrame = getFnFrame(profile)
+  const groups = groupInvocationsByCaller(collectInvocationsSync(profile, fnFrame))
+  sortCallerGroups(groups, {
+    field: InvocationSortField.COUNT,
+    direction: 'DESCENDING',
+  })
+
+  expect(groups[0].callerName).toBe('parent 1.1')
+  expect(groups[0].count).toBe(5)
+  expect(groups[1].callerName).toBe('other parent')
+  expect(groups[1].count).toBe(1)
+})
+
+test('flattenCallerGroups expands only selected callers', () => {
+  const profile = buildProfile()
+  const fnFrame = getFnFrame(profile)
+  const groups = groupInvocationsByCaller(collectInvocationsSync(profile, fnFrame))
+  sortCallerGroups(groups, {
+    field: InvocationSortField.CALLER,
+    direction: 'ASCENDING',
+  })
+
+  const collapsed = flattenCallerGroups(groups, new Set())
+  expect(collapsed.every(r => r.kind === 'group')).toBe(true)
+  expect(collapsed.length).toBe(groups.length)
+
+  const expandedName = groups[0].callerName
+  const expanded = flattenCallerGroups(groups, new Set([expandedName]))
+  expect(expanded[0]).toMatchObject({kind: 'group', isExpanded: true})
+  expect(
+    expanded.slice(1, 1 + groups[0].invocations.length).every(r => r.kind === 'invocation'),
+  ).toBe(true)
+  expect(expanded.length).toBe(groups.length + groups[0].invocations.length)
 })

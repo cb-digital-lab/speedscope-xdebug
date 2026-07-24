@@ -3,6 +3,7 @@ import {CallTreeNode, Frame, Profile} from './profile'
 export enum InvocationSortField {
   TOTAL,
   SELF,
+  COUNT,
   CALLER,
   CALL_STACK,
 }
@@ -137,6 +138,9 @@ export function sortInvocationRows(rows: InvocationRow[], sortMethod: Invocation
       case InvocationSortField.SELF:
         cmp = a.self < b.self ? -1 : a.self > b.self ? 1 : 0
         break
+      case InvocationSortField.COUNT:
+        cmp = 0
+        break
       case InvocationSortField.CALLER:
         cmp = a.callerName < b.callerName ? -1 : a.callerName > b.callerName ? 1 : 0
         break
@@ -146,4 +150,88 @@ export function sortInvocationRows(rows: InvocationRow[], sortMethod: Invocation
     }
     return cmp * dir
   })
+}
+
+export interface CallerGroup {
+  callerName: string
+  total: number
+  self: number
+  count: number
+  invocations: InvocationRow[]
+}
+
+export type FlattenedInvocationListRow =
+  | {kind: 'group'; group: CallerGroup; isExpanded: boolean}
+  | {kind: 'invocation'; row: InvocationRow; indented: boolean}
+
+export function groupInvocationsByCaller(rows: InvocationRow[]): CallerGroup[] {
+  const groupsByCaller = new Map<string, CallerGroup>()
+
+  for (const row of rows) {
+    let group = groupsByCaller.get(row.callerName)
+    if (group == null) {
+      group = {
+        callerName: row.callerName,
+        total: 0,
+        self: 0,
+        count: 0,
+        invocations: [],
+      }
+      groupsByCaller.set(row.callerName, group)
+    }
+    group.invocations.push(row)
+    group.total += row.total
+    group.self += row.self
+    group.count += 1
+  }
+
+  return Array.from(groupsByCaller.values())
+}
+
+export function sortCallerGroups(groups: CallerGroup[], sortMethod: InvocationSortMethod): void {
+  for (const group of groups) {
+    sortInvocationRows(group.invocations, sortMethod)
+  }
+
+  const dir = sortMethod.direction === 'DESCENDING' ? -1 : 1
+  groups.sort((a, b) => {
+    let cmp = 0
+    switch (sortMethod.field) {
+      case InvocationSortField.TOTAL:
+        cmp = a.total < b.total ? -1 : a.total > b.total ? 1 : 0
+        break
+      case InvocationSortField.SELF:
+        cmp = a.self < b.self ? -1 : a.self > b.self ? 1 : 0
+        break
+      case InvocationSortField.COUNT:
+        cmp = a.count < b.count ? -1 : a.count > b.count ? 1 : 0
+        break
+      case InvocationSortField.CALLER:
+      case InvocationSortField.CALL_STACK:
+        cmp = a.callerName < b.callerName ? -1 : a.callerName > b.callerName ? 1 : 0
+        break
+    }
+    if (cmp === 0) {
+      cmp = a.callerName < b.callerName ? -1 : a.callerName > b.callerName ? 1 : 0
+      return cmp
+    }
+    return cmp * dir
+  })
+}
+
+export function flattenCallerGroups(
+  groups: CallerGroup[],
+  expandedCallers: Set<string>,
+): FlattenedInvocationListRow[] {
+  const rows: FlattenedInvocationListRow[] = []
+  for (const group of groups) {
+    const isExpanded = expandedCallers.has(group.callerName)
+    rows.push({kind: 'group', group, isExpanded})
+    if (isExpanded) {
+      for (const invocation of group.invocations) {
+        rows.push({kind: 'invocation', row: invocation, indented: true})
+      }
+    }
+  }
+  return rows
 }

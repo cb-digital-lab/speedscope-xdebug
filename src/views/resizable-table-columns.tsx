@@ -52,6 +52,13 @@ export function useResizableTableColumns({
   const suppressClickRef = useRef(false)
   const lastColumnIndex = defaultWidths.length - 1
 
+  useEffect(() => {
+    setColumnWidths(prev => {
+      if (prev.length === defaultWidths.length) return prev
+      return defaultWidths.slice()
+    })
+  }, [defaultWidths.length])
+
   const tableMinWidth = useMemo(
     () => columnWidths.reduce((sum, width) => sum + width, 0),
     [columnWidths],
@@ -147,14 +154,17 @@ export function useResizableTableColumns({
   const autoSizeColumns = useCallback(
     (columnIndices: number[]) => {
       setColumnWidths(prev => {
-        const next = prev.slice()
+        const next =
+          prev.length === defaultWidths.length ? prev.slice() : defaultWidths.slice()
         for (const columnIndex of columnIndices) {
-          next[columnIndex] = measureColumnWidth(columnIndex)
+          if (columnIndex >= 0 && columnIndex < next.length) {
+            next[columnIndex] = measureColumnWidth(columnIndex)
+          }
         }
         return next
       })
     },
-    [measureColumnWidth],
+    [measureColumnWidth, defaultWidths],
   )
 
   useEffect(() => {
