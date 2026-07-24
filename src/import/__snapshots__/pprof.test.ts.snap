@@ -4,6 +4,7 @@ exports[`importAsPprofProfile 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "/usr/local/Cellar/go/1.10.1/libexec/src/runtime/proc.go",
       "key": "runtime.main:/usr/local/Cellar/go/1.10.1/libexec/src/runtime/proc.go:0",
@@ -13,6 +14,7 @@ exports[`importAsPprofProfile 1`] = `
       "totalWeight": 1360000000,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "/Users/jlfwong/code/speedscope/sample/programs/go/simple.go",
       "key": "main.main:/Users/jlfwong/code/speedscope/sample/programs/go/simple.go:0",
@@ -22,6 +24,7 @@ exports[`importAsPprofProfile 1`] = `
       "totalWeight": 1360000000,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "/Users/jlfwong/code/speedscope/sample/programs/go/simple.go",
       "key": "main.delta:/Users/jlfwong/code/speedscope/sample/programs/go/simple.go:0",
@@ -31,6 +34,7 @@ exports[`importAsPprofProfile 1`] = `
       "totalWeight": 580000000,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "/Users/jlfwong/code/speedscope/sample/programs/go/simple.go",
       "key": "main.beta:/Users/jlfwong/code/speedscope/sample/programs/go/simple.go:0",
@@ -40,6 +44,7 @@ exports[`importAsPprofProfile 1`] = `
       "totalWeight": 390000000,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "/Users/jlfwong/code/speedscope/sample/programs/go/simple.go",
       "key": "main.alpha:/Users/jlfwong/code/speedscope/sample/programs/go/simple.go:0",
@@ -49,6 +54,7 @@ exports[`importAsPprofProfile 1`] = `
       "totalWeight": 480000000,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/Users/jlfwong/code/speedscope/sample/programs/go/simple.go",
       "key": "main.gamma:/Users/jlfwong/code/speedscope/sample/programs/go/simple.go:0",
@@ -58,6 +64,7 @@ exports[`importAsPprofProfile 1`] = `
       "totalWeight": 270000000,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/usr/local/Cellar/go/1.10.1/libexec/src/runtime/asm_amd64.s",
       "key": "runtime.morestack:/usr/local/Cellar/go/1.10.1/libexec/src/runtime/asm_amd64.s:0",
@@ -67,6 +74,7 @@ exports[`importAsPprofProfile 1`] = `
       "totalWeight": 110000000,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/usr/local/Cellar/go/1.10.1/libexec/src/runtime/stack.go",
       "key": "runtime.newstack:/usr/local/Cellar/go/1.10.1/libexec/src/runtime/stack.go:0",
@@ -76,6 +84,7 @@ exports[`importAsPprofProfile 1`] = `
       "totalWeight": 110000000,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/usr/local/Cellar/go/1.10.1/libexec/src/runtime/duff_amd64.s",
       "key": "runtime.duffcopy:/usr/local/Cellar/go/1.10.1/libexec/src/runtime/duff_amd64.s:0",
@@ -85,6 +94,7 @@ exports[`importAsPprofProfile 1`] = `
       "totalWeight": 110000000,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/usr/local/Cellar/go/1.10.1/libexec/src/runtime/time.go",
       "key": "runtime.timerproc:/usr/local/Cellar/go/1.10.1/libexec/src/runtime/time.go:0",
@@ -94,6 +104,7 @@ exports[`importAsPprofProfile 1`] = `
       "totalWeight": 10000000,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/usr/local/Cellar/go/1.10.1/libexec/src/runtime/time.go",
       "key": "runtime.goroutineReady:/usr/local/Cellar/go/1.10.1/libexec/src/runtime/time.go:0",
@@ -103,6 +114,7 @@ exports[`importAsPprofProfile 1`] = `
       "totalWeight": 10000000,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/usr/local/Cellar/go/1.10.1/libexec/src/runtime/proc.go",
       "key": "runtime.goready:/usr/local/Cellar/go/1.10.1/libexec/src/runtime/proc.go:0",
@@ -112,6 +124,7 @@ exports[`importAsPprofProfile 1`] = `
       "totalWeight": 10000000,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/usr/local/Cellar/go/1.10.1/libexec/src/runtime/asm_amd64.s",
       "key": "runtime.systemstack:/usr/local/Cellar/go/1.10.1/libexec/src/runtime/asm_amd64.s:0",
@@ -121,6 +134,7 @@ exports[`importAsPprofProfile 1`] = `
       "totalWeight": 10000000,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/usr/local/Cellar/go/1.10.1/libexec/src/runtime/proc.go",
       "key": "runtime.goready.func1:/usr/local/Cellar/go/1.10.1/libexec/src/runtime/proc.go:0",
@@ -130,6 +144,7 @@ exports[`importAsPprofProfile 1`] = `
       "totalWeight": 10000000,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/usr/local/Cellar/go/1.10.1/libexec/src/runtime/proc.go",
       "key": "runtime.ready:/usr/local/Cellar/go/1.10.1/libexec/src/runtime/proc.go:0",
@@ -139,6 +154,7 @@ exports[`importAsPprofProfile 1`] = `
       "totalWeight": 10000000,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/usr/local/Cellar/go/1.10.1/libexec/src/runtime/proc.go",
       "key": "runtime.wakep:/usr/local/Cellar/go/1.10.1/libexec/src/runtime/proc.go:0",
@@ -148,6 +164,7 @@ exports[`importAsPprofProfile 1`] = `
       "totalWeight": 10000000,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/usr/local/Cellar/go/1.10.1/libexec/src/runtime/proc.go",
       "key": "runtime.startm:/usr/local/Cellar/go/1.10.1/libexec/src/runtime/proc.go:0",
@@ -157,6 +174,7 @@ exports[`importAsPprofProfile 1`] = `
       "totalWeight": 10000000,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/usr/local/Cellar/go/1.10.1/libexec/src/runtime/lock_sema.go",
       "key": "runtime.notewakeup:/usr/local/Cellar/go/1.10.1/libexec/src/runtime/lock_sema.go:0",
@@ -166,6 +184,7 @@ exports[`importAsPprofProfile 1`] = `
       "totalWeight": 10000000,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/usr/local/Cellar/go/1.10.1/libexec/src/runtime/os_darwin.go",
       "key": "runtime.semawakeup:/usr/local/Cellar/go/1.10.1/libexec/src/runtime/os_darwin.go:0",
@@ -175,6 +194,7 @@ exports[`importAsPprofProfile 1`] = `
       "totalWeight": 10000000,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/usr/local/Cellar/go/1.10.1/libexec/src/runtime/os_darwin.go",
       "key": "runtime.mach_semrelease:/usr/local/Cellar/go/1.10.1/libexec/src/runtime/os_darwin.go:0",
@@ -184,6 +204,7 @@ exports[`importAsPprofProfile 1`] = `
       "totalWeight": 10000000,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/usr/local/Cellar/go/1.10.1/libexec/src/runtime/sys_darwin_amd64.s",
       "key": "runtime.mach_semaphore_signal:/usr/local/Cellar/go/1.10.1/libexec/src/runtime/sys_darwin_amd64.s:0",
@@ -193,6 +214,7 @@ exports[`importAsPprofProfile 1`] = `
       "totalWeight": 10000000,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/usr/local/Cellar/go/1.10.1/libexec/src/runtime/proc.go",
       "key": "runtime.mstart:/usr/local/Cellar/go/1.10.1/libexec/src/runtime/proc.go:0",
@@ -202,6 +224,7 @@ exports[`importAsPprofProfile 1`] = `
       "totalWeight": 20000000,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/usr/local/Cellar/go/1.10.1/libexec/src/runtime/proc.go",
       "key": "runtime.mstart1:/usr/local/Cellar/go/1.10.1/libexec/src/runtime/proc.go:0",
@@ -211,6 +234,7 @@ exports[`importAsPprofProfile 1`] = `
       "totalWeight": 20000000,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/usr/local/Cellar/go/1.10.1/libexec/src/runtime/proc.go",
       "key": "runtime.sysmon:/usr/local/Cellar/go/1.10.1/libexec/src/runtime/proc.go:0",
@@ -220,6 +244,7 @@ exports[`importAsPprofProfile 1`] = `
       "totalWeight": 20000000,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/usr/local/Cellar/go/1.10.1/libexec/src/runtime/sys_darwin_amd64.s",
       "key": "runtime.usleep:/usr/local/Cellar/go/1.10.1/libexec/src/runtime/sys_darwin_amd64.s:0",

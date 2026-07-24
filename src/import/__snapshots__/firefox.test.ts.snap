@@ -4,6 +4,7 @@ exports[`importFromFirefox 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "file:///Users/jlfwong/code/speedscope/sample/simple.js",
       "key": "a (file:///Users/jlfwong/code/speedscope/sample/simple.js:1)",
@@ -13,6 +14,7 @@ exports[`importFromFirefox 1`] = `
       "totalWeight": 31.992820999992546,
     },
     Frame {
+      "callCount": 7,
       "col": undefined,
       "file": "file:///Users/jlfwong/code/speedscope/sample/simple.js",
       "key": "b (file:///Users/jlfwong/code/speedscope/sample/simple.js:8)",
@@ -22,6 +24,7 @@ exports[`importFromFirefox 1`] = `
       "totalWeight": 20.971447000018088,
     },
     Frame {
+      "callCount": 13,
       "col": undefined,
       "file": "file:///Users/jlfwong/code/speedscope/sample/simple.js",
       "key": "d (file:///Users/jlfwong/code/speedscope/sample/simple.js:20)",
@@ -31,6 +34,7 @@ exports[`importFromFirefox 1`] = `
       "totalWeight": 31.992820999992546,
     },
     Frame {
+      "callCount": 6,
       "col": undefined,
       "file": "file:///Users/jlfwong/code/speedscope/sample/simple.js",
       "key": "c (file:///Users/jlfwong/code/speedscope/sample/simple.js:14)",
@@ -64,6 +68,7 @@ exports[`importFromFirefox ignore self-hosted 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": 15,
       "file": "http://localhost:8000/simple.js",
       "key": "alpha (http://localhost:8000/simple.js:1:14)",
@@ -73,6 +78,7 @@ exports[`importFromFirefox ignore self-hosted 1`] = `
       "totalWeight": 26.983816999942064,
     },
     Frame {
+      "callCount": 7,
       "col": 15,
       "file": "http://localhost:8000/simple.js",
       "key": "delta (http://localhost:8000/simple.js:14:14)",
@@ -82,6 +88,7 @@ exports[`importFromFirefox ignore self-hosted 1`] = `
       "totalWeight": 11.946324001066387,
     },
     Frame {
+      "callCount": 14,
       "col": 15,
       "file": "http://localhost:8000/simple.js",
       "key": "gamma (http://localhost:8000/simple.js:20:14)",
@@ -91,6 +98,7 @@ exports[`importFromFirefox ignore self-hosted 1`] = `
       "totalWeight": 26.983816999942064,
     },
     Frame {
+      "callCount": 7,
       "col": 14,
       "file": "http://localhost:8000/simple.js",
       "key": "beta (http://localhost:8000/simple.js:8:13)",
@@ -129,6 +137,7 @@ exports[`importFromFirefox recursion 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "file:///Users/jlfwong/code/speedscope/sample/programs/javascript/recursion.js",
       "key": "main (file:///Users/jlfwong/code/speedscope/sample/programs/javascript/recursion.js:31)",
@@ -138,6 +147,7 @@ exports[`importFromFirefox recursion 1`] = `
       "totalWeight": 11.149112000013702,
     },
     Frame {
+      "callCount": 9,
       "col": undefined,
       "file": "file:///Users/jlfwong/code/speedscope/sample/programs/javascript/recursion.js",
       "key": "alpha (file:///Users/jlfwong/code/speedscope/sample/programs/javascript/recursion.js:1)",
@@ -147,6 +157,7 @@ exports[`importFromFirefox recursion 1`] = `
       "totalWeight": 9.954629999992903,
     },
     Frame {
+      "callCount": 8,
       "col": undefined,
       "file": "file:///Users/jlfwong/code/speedscope/sample/programs/javascript/recursion.js",
       "key": "beta (file:///Users/jlfwong/code/speedscope/sample/programs/javascript/recursion.js:10)",
@@ -156,6 +167,7 @@ exports[`importFromFirefox recursion 1`] = `
       "totalWeight": 8.962158999987878,
     },
     Frame {
+      "callCount": 5,
       "col": undefined,
       "file": "file:///Users/jlfwong/code/speedscope/sample/programs/javascript/recursion.js",
       "key": "delta (file:///Users/jlfwong/code/speedscope/sample/programs/javascript/recursion.js:17)",
@@ -165,6 +177,7 @@ exports[`importFromFirefox recursion 1`] = `
       "totalWeight": 6.859736999962479,
     },
     Frame {
+      "callCount": 8,
       "col": undefined,
       "file": "file:///Users/jlfwong/code/speedscope/sample/programs/javascript/recursion.js",
       "key": "gamma (file:///Users/jlfwong/code/speedscope/sample/programs/javascript/recursion.js:23)",

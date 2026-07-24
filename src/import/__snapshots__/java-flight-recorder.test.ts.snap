@@ -4,6 +4,7 @@ exports[`importFromJfr 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "Heavy:main",
@@ -13,6 +14,7 @@ exports[`importFromJfr 1`] = `
       "totalWeight": 346,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.IntPipeline:toArray",
@@ -22,6 +24,7 @@ exports[`importFromJfr 1`] = `
       "totalWeight": 346,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.AbstractPipeline:evaluateToArrayNode",
@@ -31,6 +34,7 @@ exports[`importFromJfr 1`] = `
       "totalWeight": 346,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.AbstractPipeline:evaluate",
@@ -40,6 +44,7 @@ exports[`importFromJfr 1`] = `
       "totalWeight": 346,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.AbstractPipeline:wrapAndCopyInto",
@@ -49,6 +54,7 @@ exports[`importFromJfr 1`] = `
       "totalWeight": 346,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.AbstractPipeline:copyInto",
@@ -58,6 +64,7 @@ exports[`importFromJfr 1`] = `
       "totalWeight": 346,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.AbstractPipeline:copyIntoWithCancel",
@@ -67,6 +74,7 @@ exports[`importFromJfr 1`] = `
       "totalWeight": 346,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.IntPipeline:forEachWithCancel",
@@ -76,6 +84,7 @@ exports[`importFromJfr 1`] = `
       "totalWeight": 39,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.SliceOps$2$1:cancellationRequested",
@@ -85,6 +94,7 @@ exports[`importFromJfr 1`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 6,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.StreamSpliterators$InfiniteSupplyingSpliterator$OfInt:tryAdvance",
@@ -94,6 +104,7 @@ exports[`importFromJfr 1`] = `
       "totalWeight": 32,
     },
     Frame {
+      "callCount": 6,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.SliceOps$2$1:accept",
@@ -103,6 +114,7 @@ exports[`importFromJfr 1`] = `
       "totalWeight": 7,
     },
     Frame {
+      "callCount": 6,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.SortedOps$IntSortingSink:accept",
@@ -112,6 +124,7 @@ exports[`importFromJfr 1`] = `
       "totalWeight": 7,
     },
     Frame {
+      "callCount": 9,
       "col": undefined,
       "file": undefined,
       "key": "Heavy$$Lambda+0x000001c39a007200.2136288211:getAsInt",
@@ -121,6 +134,7 @@ exports[`importFromJfr 1`] = `
       "totalWeight": 25,
     },
     Frame {
+      "callCount": 9,
       "col": undefined,
       "file": undefined,
       "key": "java.util.Random:nextInt",
@@ -130,6 +144,7 @@ exports[`importFromJfr 1`] = `
       "totalWeight": 25,
     },
     Frame {
+      "callCount": 9,
       "col": undefined,
       "file": undefined,
       "key": "java.util.Random:next",
@@ -139,6 +154,7 @@ exports[`importFromJfr 1`] = `
       "totalWeight": 25,
     },
     Frame {
+      "callCount": 9,
       "col": undefined,
       "file": undefined,
       "key": "java.util.concurrent.atomic.AtomicLong:compareAndSet",
@@ -148,6 +164,7 @@ exports[`importFromJfr 1`] = `
       "totalWeight": 25,
     },
     Frame {
+      "callCount": 7,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.SpinedBuffer$OfInt:accept",
@@ -157,6 +174,7 @@ exports[`importFromJfr 1`] = `
       "totalWeight": 10,
     },
     Frame {
+      "callCount": 7,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.SpinedBuffer$OfPrimitive:preAccept",
@@ -166,6 +184,7 @@ exports[`importFromJfr 1`] = `
       "totalWeight": 10,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.Sink$ChainedInt:end",
@@ -175,6 +194,7 @@ exports[`importFromJfr 1`] = `
       "totalWeight": 307,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.SortedOps$IntSortingSink:end",
@@ -184,6 +204,7 @@ exports[`importFromJfr 1`] = `
       "totalWeight": 307,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "java.util.Arrays:sort",
@@ -193,6 +214,7 @@ exports[`importFromJfr 1`] = `
       "totalWeight": 298,
     },
     Frame {
+      "callCount": 703,
       "col": undefined,
       "file": undefined,
       "key": "java.util.DualPivotQuicksort:sort",
@@ -202,6 +224,7 @@ exports[`importFromJfr 1`] = `
       "totalWeight": 298,
     },
     Frame {
+      "callCount": 85,
       "col": undefined,
       "file": undefined,
       "key": "java.util.DualPivotQuicksort:mixedInsertionSort",
@@ -211,6 +234,7 @@ exports[`importFromJfr 1`] = `
       "totalWeight": 87,
     },
     Frame {
+      "callCount": 3,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.Nodes$IntSpinedNodeBuilder:accept",
@@ -512,6 +536,7 @@ exports[`importFromJfr 2`] = `
 {
   "frames": [
     Frame {
+      "callCount": 38,
       "col": undefined,
       "file": undefined,
       "key": "Heavy:main",
@@ -521,6 +546,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 346,
     },
     Frame {
+      "callCount": 38,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.IntPipeline:toArray",
@@ -530,6 +556,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 346,
     },
     Frame {
+      "callCount": 38,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.AbstractPipeline:evaluateToArrayNode",
@@ -539,6 +566,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 346,
     },
     Frame {
+      "callCount": 38,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.AbstractPipeline:evaluate",
@@ -548,6 +576,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 346,
     },
     Frame {
+      "callCount": 38,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.AbstractPipeline:wrapAndCopyInto",
@@ -557,6 +586,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 346,
     },
     Frame {
+      "callCount": 38,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.AbstractPipeline:copyInto",
@@ -566,6 +596,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 346,
     },
     Frame {
+      "callCount": 38,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.AbstractPipeline:copyIntoWithCancel",
@@ -575,6 +606,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 346,
     },
     Frame {
+      "callCount": 15,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.IntPipeline:forEachWithCancel",
@@ -584,6 +616,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 39,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.SliceOps$2$1:cancellationRequested",
@@ -593,6 +626,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 15,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.StreamSpliterators$InfiniteSupplyingSpliterator$OfInt:tryAdvance",
@@ -602,6 +636,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 32,
     },
     Frame {
+      "callCount": 7,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.SliceOps$2$1:accept",
@@ -611,6 +646,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 7,
     },
     Frame {
+      "callCount": 7,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.SortedOps$IntSortingSink:accept",
@@ -620,6 +656,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 7,
     },
     Frame {
+      "callCount": 16,
       "col": undefined,
       "file": undefined,
       "key": "Heavy$$Lambda+0x000001c39a007200.2136288211:getAsInt",
@@ -629,6 +666,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 25,
     },
     Frame {
+      "callCount": 16,
       "col": undefined,
       "file": undefined,
       "key": "java.util.Random:nextInt",
@@ -638,6 +676,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 25,
     },
     Frame {
+      "callCount": 16,
       "col": undefined,
       "file": undefined,
       "key": "java.util.Random:next",
@@ -647,6 +686,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 25,
     },
     Frame {
+      "callCount": 16,
       "col": undefined,
       "file": undefined,
       "key": "java.util.concurrent.atomic.AtomicLong:compareAndSet",
@@ -656,6 +696,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 25,
     },
     Frame {
+      "callCount": 8,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.SpinedBuffer$OfInt:accept",
@@ -665,6 +706,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 10,
     },
     Frame {
+      "callCount": 8,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.SpinedBuffer$OfPrimitive:preAccept",
@@ -674,6 +716,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 10,
     },
     Frame {
+      "callCount": 37,
       "col": undefined,
       "file": undefined,
       "key": "java.lang.Thread:run",
@@ -683,6 +726,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 44,
     },
     Frame {
+      "callCount": 37,
       "col": undefined,
       "file": undefined,
       "key": "java.lang.Thread:runWith",
@@ -692,6 +736,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 44,
     },
     Frame {
+      "callCount": 37,
       "col": undefined,
       "file": undefined,
       "key": "jdk.jfr.internal.PlatformRecorder$$Lambda+0x000001c39a042338.1457410641:run",
@@ -701,6 +746,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 44,
     },
     Frame {
+      "callCount": 37,
       "col": undefined,
       "file": undefined,
       "key": "jdk.jfr.internal.PlatformRecorder:lambda$startDiskMonitor$1",
@@ -710,6 +756,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 44,
     },
     Frame {
+      "callCount": 37,
       "col": undefined,
       "file": undefined,
       "key": "jdk.jfr.internal.PlatformRecorder:periodicTask",
@@ -719,6 +766,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 44,
     },
     Frame {
+      "callCount": 37,
       "col": undefined,
       "file": undefined,
       "key": "jdk.jfr.internal.periodic.PeriodicEvents:doPeriodic",
@@ -728,6 +776,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 44,
     },
     Frame {
+      "callCount": 37,
       "col": undefined,
       "file": undefined,
       "key": "jdk.jfr.internal.periodic.PeriodicTask:run",
@@ -737,6 +786,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 44,
     },
     Frame {
+      "callCount": 37,
       "col": undefined,
       "file": undefined,
       "key": "jdk.jfr.internal.periodic.JVMEventTask:execute",
@@ -746,6 +796,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 44,
     },
     Frame {
+      "callCount": 37,
       "col": undefined,
       "file": undefined,
       "key": "jdk.jfr.internal.JVM:emitEvent",
@@ -755,6 +806,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 44,
     },
     Frame {
+      "callCount": 23,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.Sink$ChainedInt:end",
@@ -764,6 +816,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 307,
     },
     Frame {
+      "callCount": 23,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.SortedOps$IntSortingSink:end",
@@ -773,6 +826,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 307,
     },
     Frame {
+      "callCount": 23,
       "col": undefined,
       "file": undefined,
       "key": "java.util.Arrays:sort",
@@ -782,6 +836,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 298,
     },
     Frame {
+      "callCount": 774,
       "col": undefined,
       "file": undefined,
       "key": "java.util.DualPivotQuicksort:sort",
@@ -791,6 +846,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 298,
     },
     Frame {
+      "callCount": 85,
       "col": undefined,
       "file": undefined,
       "key": "java.util.DualPivotQuicksort:mixedInsertionSort",
@@ -800,6 +856,7 @@ exports[`importFromJfr 2`] = `
       "totalWeight": 87,
     },
     Frame {
+      "callCount": 3,
       "col": undefined,
       "file": undefined,
       "key": "java.util.stream.Nodes$IntSpinedNodeBuilder:accept",

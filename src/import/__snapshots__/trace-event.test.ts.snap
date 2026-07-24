@@ -4,6 +4,7 @@ exports[`importTraceEvents BEX interaction 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "A",
@@ -13,6 +14,7 @@ exports[`importTraceEvents BEX interaction 1`] = `
       "totalWeight": 2,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "B",
@@ -22,6 +24,7 @@ exports[`importTraceEvents BEX interaction 1`] = `
       "totalWeight": 2,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "D",
@@ -31,6 +34,7 @@ exports[`importTraceEvents BEX interaction 1`] = `
       "totalWeight": 2,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "C",
@@ -40,6 +44,7 @@ exports[`importTraceEvents BEX interaction 1`] = `
       "totalWeight": 2,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "F",
@@ -49,6 +54,7 @@ exports[`importTraceEvents BEX interaction 1`] = `
       "totalWeight": 2,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "E",
@@ -58,6 +64,7 @@ exports[`importTraceEvents BEX interaction 1`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "G",
@@ -67,6 +74,7 @@ exports[`importTraceEvents BEX interaction 1`] = `
       "totalWeight": 2,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "H",
@@ -76,6 +84,7 @@ exports[`importTraceEvents BEX interaction 1`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "J",
@@ -85,6 +94,7 @@ exports[`importTraceEvents BEX interaction 1`] = `
       "totalWeight": 2,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "I",
@@ -94,6 +104,7 @@ exports[`importTraceEvents BEX interaction 1`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "K",
@@ -103,6 +114,7 @@ exports[`importTraceEvents BEX interaction 1`] = `
       "totalWeight": 2,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "L",
@@ -141,6 +153,7 @@ exports[`importTraceEvents bad E events 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "alpha",
@@ -150,6 +163,7 @@ exports[`importTraceEvents bad E events 1`] = `
       "totalWeight": 14,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "beta",
@@ -176,6 +190,7 @@ exports[`importTraceEvents different number of start and end calls to same funct
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "anonymous",
@@ -185,6 +200,7 @@ exports[`importTraceEvents different number of start and end calls to same funct
       "totalWeight": 5,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": undefined,
       "key": "anonymous {"parent":1}",
@@ -194,6 +210,7 @@ exports[`importTraceEvents different number of start and end calls to same funct
       "totalWeight": 4,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "function1 {"parent":2}",
@@ -203,6 +220,7 @@ exports[`importTraceEvents different number of start and end calls to same funct
       "totalWeight": 2,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "anonymous {"parent":3}",
@@ -212,6 +230,7 @@ exports[`importTraceEvents different number of start and end calls to same funct
       "totalWeight": 2,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "anonymous {"parent":8}",
@@ -238,6 +257,7 @@ exports[`importTraceEvents end event with empty stack 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "alpha",
@@ -262,6 +282,7 @@ exports[`importTraceEvents end-non-top-of-stack 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "A {"x":1}",
@@ -271,6 +292,7 @@ exports[`importTraceEvents end-non-top-of-stack 1`] = `
       "totalWeight": 11,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "B {"x":2}",
@@ -280,6 +302,7 @@ exports[`importTraceEvents end-non-top-of-stack 1`] = `
       "totalWeight": 10,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "Z {"x":1}",
@@ -306,6 +329,7 @@ exports[`importTraceEvents event re-ordering 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": undefined,
       "key": "A",
@@ -315,6 +339,7 @@ exports[`importTraceEvents event re-ordering 1`] = `
       "totalWeight": 6,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": undefined,
       "key": "B",
@@ -324,6 +349,7 @@ exports[`importTraceEvents event re-ordering 1`] = `
       "totalWeight": 4,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": undefined,
       "key": "C",
@@ -333,6 +359,7 @@ exports[`importTraceEvents event re-ordering 1`] = `
       "totalWeight": 2,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "X",
@@ -364,6 +391,7 @@ exports[`importTraceEvents event reordering name match 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "alpha {"x":0}",
@@ -373,6 +401,7 @@ exports[`importTraceEvents event reordering name match 1`] = `
       "totalWeight": 10,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "beta {"x":0}",
@@ -382,6 +411,7 @@ exports[`importTraceEvents event reordering name match 1`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "gamma {"x":0}",
@@ -408,6 +438,7 @@ exports[`importTraceEvents hermes profile with multiple frames 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": null,
       "file": null,
       "key": "[root]:null:null:null",
@@ -417,6 +448,7 @@ exports[`importTraceEvents hermes profile with multiple frames 1`] = `
       "totalWeight": 14,
     },
     Frame {
+      "callCount": 1,
       "col": 12,
       "file": "/Users/example/test_project/node_modules/metro-runtime/src/polyfills/require.js",
       "key": "beta:/Users/example/test_project/node_modules/metro-runtime/src/polyfills/require.js:54:12",
@@ -443,6 +475,7 @@ exports[`importTraceEvents invalid x nesting 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "alpha",
@@ -452,6 +485,7 @@ exports[`importTraceEvents invalid x nesting 1`] = `
       "totalWeight": 15,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "beta",
@@ -477,6 +511,7 @@ exports[`importTraceEvents matching x 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "alpha",
@@ -486,6 +521,7 @@ exports[`importTraceEvents matching x 1`] = `
       "totalWeight": 10,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": undefined,
       "key": "beta",
@@ -495,6 +531,7 @@ exports[`importTraceEvents matching x 1`] = `
       "totalWeight": 2,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": undefined,
       "key": "gamma",
@@ -523,6 +560,7 @@ exports[`importTraceEvents mismatched args 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "A {"x":1}",
@@ -547,6 +585,7 @@ exports[`importTraceEvents mismatched name 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "alpha",
@@ -569,6 +608,7 @@ exports[`importTraceEvents multi-thread profile with samples 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "[root]:root",
@@ -578,6 +618,7 @@ exports[`importTraceEvents multi-thread profile with samples 1`] = `
       "totalWeight": 34096,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "function1:JavaScript",
@@ -599,6 +640,7 @@ exports[`importTraceEvents multi-thread profile with samples 2`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "[root thread 2]:root",
@@ -608,6 +650,7 @@ exports[`importTraceEvents multi-thread profile with samples 2`] = `
       "totalWeight": 54096,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "function3:JavaScript",
@@ -617,6 +660,7 @@ exports[`importTraceEvents multi-thread profile with samples 2`] = `
       "totalWeight": 13326,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "function4:Metadata",
@@ -644,6 +688,7 @@ exports[`importTraceEvents multiprocess 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "alpha",
@@ -664,6 +709,7 @@ exports[`importTraceEvents multiprocess 2`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "beta",
@@ -684,6 +730,7 @@ exports[`importTraceEvents multiprocess 3`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "gamma",
@@ -704,6 +751,7 @@ exports[`importTraceEvents multiprocess 4`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "delta",
@@ -724,6 +772,7 @@ exports[`importTraceEvents multiprocess 5`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "epsilon",
@@ -744,6 +793,7 @@ exports[`importTraceEvents multiprocess 6`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "phi",
@@ -764,6 +814,7 @@ exports[`importTraceEvents multiprocess 7`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "zeta",
@@ -784,6 +835,7 @@ exports[`importTraceEvents multiprocess 8`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "eta",
@@ -808,6 +860,7 @@ exports[`importTraceEvents not enough end events 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": undefined,
       "key": "A {"x":1}",
@@ -817,6 +870,7 @@ exports[`importTraceEvents not enough end events 1`] = `
       "totalWeight": 11,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "A {"x":2}",
@@ -843,6 +897,7 @@ exports[`importTraceEvents not out-of-order 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "A",
@@ -852,6 +907,7 @@ exports[`importTraceEvents not out-of-order 1`] = `
       "totalWeight": 10,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "B",
@@ -861,6 +917,7 @@ exports[`importTraceEvents not out-of-order 1`] = `
       "totalWeight": 8,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "C",
@@ -885,6 +942,7 @@ exports[`importTraceEvents not out-of-order unbalanced name 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "alpha",
@@ -894,6 +952,7 @@ exports[`importTraceEvents not out-of-order unbalanced name 1`] = `
       "totalWeight": 10,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "beta",
@@ -923,6 +982,7 @@ exports[`importTraceEvents only begin events 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "A {"x":1}",
@@ -932,6 +992,7 @@ exports[`importTraceEvents only begin events 1`] = `
       "totalWeight": 2,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "B {"x":2}",
@@ -941,6 +1002,7 @@ exports[`importTraceEvents only begin events 1`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "C {"x":2}",
@@ -966,6 +1028,7 @@ exports[`importTraceEvents partial json import 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "alpha",
@@ -975,6 +1038,7 @@ exports[`importTraceEvents partial json import 1`] = `
       "totalWeight": 14,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "beta",
@@ -984,6 +1048,7 @@ exports[`importTraceEvents partial json import 1`] = `
       "totalWeight": 12,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "gamma {"detail":"foobar"}",
@@ -993,6 +1058,7 @@ exports[`importTraceEvents partial json import 1`] = `
       "totalWeight": 5,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "epsilon",
@@ -1018,6 +1084,7 @@ exports[`importTraceEvents partial json import chunked 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "alpha",
@@ -1027,6 +1094,7 @@ exports[`importTraceEvents partial json import chunked 1`] = `
       "totalWeight": 14,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "beta",
@@ -1036,6 +1104,7 @@ exports[`importTraceEvents partial json import chunked 1`] = `
       "totalWeight": 12,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "gamma {"detail":"foobar"}",
@@ -1045,6 +1114,7 @@ exports[`importTraceEvents partial json import chunked 1`] = `
       "totalWeight": 5,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "epsilon",
@@ -1074,6 +1144,7 @@ exports[`importTraceEvents partial json import trailing comma 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "alpha",
@@ -1083,6 +1154,7 @@ exports[`importTraceEvents partial json import trailing comma 1`] = `
       "totalWeight": 14,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "beta",
@@ -1092,6 +1164,7 @@ exports[`importTraceEvents partial json import trailing comma 1`] = `
       "totalWeight": 12,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "gamma {"detail":"foobar"}",
@@ -1101,6 +1174,7 @@ exports[`importTraceEvents partial json import trailing comma 1`] = `
       "totalWeight": 5,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "epsilon",
@@ -1126,6 +1200,7 @@ exports[`importTraceEvents partial json import trailing comma chunked 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "alpha",
@@ -1135,6 +1210,7 @@ exports[`importTraceEvents partial json import trailing comma chunked 1`] = `
       "totalWeight": 14,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "beta",
@@ -1144,6 +1220,7 @@ exports[`importTraceEvents partial json import trailing comma chunked 1`] = `
       "totalWeight": 12,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "gamma {"detail":"foobar"}",
@@ -1153,6 +1230,7 @@ exports[`importTraceEvents partial json import trailing comma chunked 1`] = `
       "totalWeight": 5,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "epsilon",
@@ -1186,6 +1264,7 @@ exports[`importTraceEvents partial json import whitespace padding 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "alpha",
@@ -1195,6 +1274,7 @@ exports[`importTraceEvents partial json import whitespace padding 1`] = `
       "totalWeight": 14,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "beta",
@@ -1204,6 +1284,7 @@ exports[`importTraceEvents partial json import whitespace padding 1`] = `
       "totalWeight": 12,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "gamma {"detail":"foobar"}",
@@ -1213,6 +1294,7 @@ exports[`importTraceEvents partial json import whitespace padding 1`] = `
       "totalWeight": 5,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "epsilon",
@@ -1238,6 +1320,7 @@ exports[`importTraceEvents partial json import whitespace padding chunked 1`] = 
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "alpha",
@@ -1247,6 +1330,7 @@ exports[`importTraceEvents partial json import whitespace padding chunked 1`] = 
       "totalWeight": 14,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "beta",
@@ -1256,6 +1340,7 @@ exports[`importTraceEvents partial json import whitespace padding chunked 1`] = 
       "totalWeight": 12,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "gamma {"detail":"foobar"}",
@@ -1265,6 +1350,7 @@ exports[`importTraceEvents partial json import whitespace padding chunked 1`] = 
       "totalWeight": 5,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "epsilon",
@@ -1302,6 +1388,7 @@ exports[`importTraceEvents simple 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "alpha",
@@ -1311,6 +1398,7 @@ exports[`importTraceEvents simple 1`] = `
       "totalWeight": 14,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "beta",
@@ -1320,6 +1408,7 @@ exports[`importTraceEvents simple 1`] = `
       "totalWeight": 12,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "gamma {"detail":"foobar"}",
@@ -1329,6 +1418,7 @@ exports[`importTraceEvents simple 1`] = `
       "totalWeight": 5,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "epsilon",
@@ -1354,6 +1444,7 @@ exports[`importTraceEvents simple hermes profile 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": null,
       "file": null,
       "key": "[root]:null:null:null",
@@ -1363,6 +1454,7 @@ exports[`importTraceEvents simple hermes profile 1`] = `
       "totalWeight": 14,
     },
     Frame {
+      "callCount": 1,
       "col": 12,
       "file": "/Users/example/test_project/node_modules/metro-runtime/src/polyfills/require.js",
       "key": "beta:/Users/example/test_project/node_modules/metro-runtime/src/polyfills/require.js:54:12",
@@ -1389,6 +1481,7 @@ exports[`importTraceEvents simple object 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "alpha",
@@ -1398,6 +1491,7 @@ exports[`importTraceEvents simple object 1`] = `
       "totalWeight": 14,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "beta",
@@ -1407,6 +1501,7 @@ exports[`importTraceEvents simple object 1`] = `
       "totalWeight": 12,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "(unnamed)",
@@ -1435,6 +1530,7 @@ exports[`importTraceEvents simple profile with samples 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "[root]:root",
@@ -1444,6 +1540,7 @@ exports[`importTraceEvents simple profile with samples 1`] = `
       "totalWeight": 64710,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "function1(http://localhost:8081/index.bundle?platform=android&dev=false&minify=false&app=org.toshi&modulesOnly=false&runModule=true:1:1):JavaScript",
@@ -1453,6 +1550,7 @@ exports[`importTraceEvents simple profile with samples 1`] = `
       "totalWeight": 13326,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "function2(http://localhost:8081/index.bundle?platform=android&dev=false&minify=false&app=org.toshi&modulesOnly=false&runModule=true:418874:4):JavaScript",
@@ -1462,6 +1560,7 @@ exports[`importTraceEvents simple profile with samples 1`] = `
       "totalWeight": 10605,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "function3(http://localhost:8081/index.bundle?platform=android&dev=false&minify=false&app=org.toshi&modulesOnly=false&runModule=true:17:3):JavaScript",
@@ -1471,6 +1570,7 @@ exports[`importTraceEvents simple profile with samples 1`] = `
       "totalWeight": 10605,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "[GC Young Gen]:Metadata",
@@ -1503,6 +1603,7 @@ exports[`importTraceEvents unbalanced args 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "A {"x":1}",
@@ -1512,6 +1613,7 @@ exports[`importTraceEvents unbalanced args 1`] = `
       "totalWeight": 10,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "A {"x":2}",
@@ -1538,6 +1640,7 @@ exports[`importTraceEvents unbalanced name 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "alpha",
@@ -1547,6 +1650,7 @@ exports[`importTraceEvents unbalanced name 1`] = `
       "totalWeight": 10,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "beta",
@@ -1572,6 +1676,7 @@ exports[`importTraceEvents x events matching end 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "alpha",
@@ -1581,6 +1686,7 @@ exports[`importTraceEvents x events matching end 1`] = `
       "totalWeight": 20,
     },
     Frame {
+      "callCount": 4,
       "col": undefined,
       "file": undefined,
       "key": "beta",
@@ -1590,6 +1696,7 @@ exports[`importTraceEvents x events matching end 1`] = `
       "totalWeight": 6,
     },
     Frame {
+      "callCount": 4,
       "col": undefined,
       "file": undefined,
       "key": "gamma",
@@ -1626,6 +1733,7 @@ exports[`importTraceEvents x events matching start 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "alpha",
@@ -1635,6 +1743,7 @@ exports[`importTraceEvents x events matching start 1`] = `
       "totalWeight": 20,
     },
     Frame {
+      "callCount": 4,
       "col": undefined,
       "file": undefined,
       "key": "beta",
@@ -1644,6 +1753,7 @@ exports[`importTraceEvents x events matching start 1`] = `
       "totalWeight": 6,
     },
     Frame {
+      "callCount": 4,
       "col": undefined,
       "file": undefined,
       "key": "gamma",
@@ -1680,6 +1790,7 @@ exports[`importTraceEvents zero duration events 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "A",
@@ -1689,6 +1800,7 @@ exports[`importTraceEvents zero duration events 1`] = `
       "totalWeight": 10,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "B",
@@ -1698,6 +1810,7 @@ exports[`importTraceEvents zero duration events 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "C",
@@ -1707,6 +1820,7 @@ exports[`importTraceEvents zero duration events 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "D",

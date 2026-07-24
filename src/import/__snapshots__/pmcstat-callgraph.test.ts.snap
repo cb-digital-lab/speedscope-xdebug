@@ -4,6 +4,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "/boot/kernel/kernel",
       "key": "fork_exit",
@@ -13,6 +14,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 7448,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/kernel",
       "key": "taskqueue_thread_loop",
@@ -22,6 +24,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 7447,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/kernel",
       "key": "taskqueue_run_locked",
@@ -31,6 +34,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 7447,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "zio_execute",
@@ -40,6 +44,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 7447,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "zio_write_compress",
@@ -49,6 +54,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 7447,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "zio_compress_data",
@@ -58,6 +64,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 7447,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "zfs_lz4_compress",
@@ -67,6 +74,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 7447,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/kernel",
       "key": "amd64_syscall",
@@ -76,6 +84,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 1489,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/kernel",
       "key": "sys_pwrite",
@@ -85,6 +94,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 1489,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/kernel",
       "key": "kern_pwritev",
@@ -94,6 +104,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 1489,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/kernel",
       "key": "dofilewrite",
@@ -103,6 +114,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 1489,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/kernel",
       "key": "vn_io_fault",
@@ -112,6 +124,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 1489,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/kernel",
       "key": "vn_io_fault1",
@@ -121,6 +134,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 1489,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/kernel",
       "key": "vn_io_fault_doio",
@@ -130,6 +144,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 1489,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/kernel",
       "key": "vn_write",
@@ -139,6 +154,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 1489,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/kernel",
       "key": "VOP_WRITE_APV",
@@ -148,6 +164,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 1489,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "zfs_freebsd_write",
@@ -157,6 +174,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 1489,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "zfs_write",
@@ -166,6 +184,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 1489,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "dmu_write_uio_dnode",
@@ -175,6 +194,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 1489,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "dmu_buf_will_dirty_impl",
@@ -184,6 +204,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 1490,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "arc_buf_thaw",
@@ -193,6 +214,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 1490,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "arc_cksum_verify",
@@ -202,6 +224,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 1490,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "fletcher_2_native",
@@ -211,6 +234,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 1490,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "txg_sync_thread",
@@ -220,6 +244,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "spa_sync",
@@ -229,6 +254,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "spa_flush_metaslabs",
@@ -238,6 +264,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "metaslab_unflushed_bump",
@@ -247,6 +274,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "metaslab_set_unflushed_txg",
@@ -256,6 +284,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "dmu_write",
@@ -265,6 +294,7 @@ exports[`importFromPMCStatCallGraph 1`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "dmu_write_impl",
@@ -287,6 +317,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "/boot/kernel/kernel",
       "key": "fork_exit",
@@ -296,6 +327,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 7448,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/kernel",
       "key": "taskqueue_thread_loop",
@@ -305,6 +337,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 7447,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/kernel",
       "key": "taskqueue_run_locked",
@@ -314,6 +347,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 7447,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "zio_execute",
@@ -323,6 +357,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 7447,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "zio_write_compress",
@@ -332,6 +367,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 7447,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "zio_compress_data",
@@ -341,6 +377,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 7447,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "zfs_lz4_compress",
@@ -350,6 +387,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 7447,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/kernel",
       "key": "amd64_syscall",
@@ -359,6 +397,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 1489,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/kernel",
       "key": "sys_pwrite",
@@ -368,6 +407,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 1489,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/kernel",
       "key": "kern_pwritev",
@@ -377,6 +417,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 1489,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/kernel",
       "key": "dofilewrite",
@@ -386,6 +427,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 1489,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/kernel",
       "key": "vn_io_fault",
@@ -395,6 +437,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 1489,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/kernel",
       "key": "vn_io_fault1",
@@ -404,6 +447,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 1489,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/kernel",
       "key": "vn_io_fault_doio",
@@ -413,6 +457,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 1489,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/kernel",
       "key": "vn_write",
@@ -422,6 +467,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 1489,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/kernel",
       "key": "VOP_WRITE_APV",
@@ -431,6 +477,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 1489,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "zfs_freebsd_write",
@@ -440,6 +487,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 1489,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "zfs_write",
@@ -449,6 +497,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 1489,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "dmu_write_uio_dnode",
@@ -458,6 +507,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 1489,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "dmu_buf_will_dirty_impl",
@@ -467,6 +517,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 1490,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "arc_buf_thaw",
@@ -476,6 +527,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 1490,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "arc_cksum_verify",
@@ -485,6 +537,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 1490,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "fletcher_2_native",
@@ -494,6 +547,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 1490,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "txg_sync_thread",
@@ -503,6 +557,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "spa_sync",
@@ -512,6 +567,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "spa_flush_metaslabs",
@@ -521,6 +577,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "metaslab_unflushed_bump",
@@ -530,6 +587,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "metaslab_set_unflushed_txg",
@@ -539,6 +597,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "dmu_write",
@@ -548,6 +607,7 @@ exports[`importFromPMCStatCallGraph with invalid lines 1`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/boot/kernel/zfs.ko",
       "key": "dmu_write_impl",

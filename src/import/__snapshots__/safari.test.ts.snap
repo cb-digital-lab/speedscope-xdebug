@@ -4,6 +4,7 @@ exports[`importFromSafari 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": 13,
       "file": "__InjectedScript_InjectedScriptSource.js",
       "key": "injectModule:__InjectedScript_InjectedScriptSource.js:109:13",
@@ -13,6 +14,7 @@ exports[`importFromSafari 1`] = `
       "totalWeight": 0.001,
     },
     Frame {
+      "callCount": 1,
       "col": 10,
       "file": "__InjectedScript_CommandLineAPIModuleSource.js",
       "key": ":__InjectedScript_CommandLineAPIModuleSource.js:2:10",
@@ -22,6 +24,7 @@ exports[`importFromSafari 1`] = `
       "totalWeight": 0.001,
     },
     Frame {
+      "callCount": 2,
       "col": 1,
       "file": "file:///speedscope/sample/programs/javascript/simple.js",
       "key": "(program):file:///speedscope/sample/programs/javascript/simple.js:1:1",
@@ -31,6 +34,7 @@ exports[`importFromSafari 1`] = `
       "totalWeight": 0.03248933597933502,
     },
     Frame {
+      "callCount": 2,
       "col": 15,
       "file": "file:///speedscope/sample/programs/javascript/simple.js",
       "key": "alpha:file:///speedscope/sample/programs/javascript/simple.js:1:15",
@@ -40,6 +44,7 @@ exports[`importFromSafari 1`] = `
       "totalWeight": 0.03248933597933502,
     },
     Frame {
+      "callCount": 5,
       "col": 15,
       "file": "file:///speedscope/sample/programs/javascript/simple.js",
       "key": "delta:file:///speedscope/sample/programs/javascript/simple.js:14:15",
@@ -49,6 +54,7 @@ exports[`importFromSafari 1`] = `
       "totalWeight": 0.020112446082445484,
     },
     Frame {
+      "callCount": 8,
       "col": 15,
       "file": "file:///speedscope/sample/programs/javascript/simple.js",
       "key": "gamma:file:///speedscope/sample/programs/javascript/simple.js:20:15",
@@ -58,6 +64,7 @@ exports[`importFromSafari 1`] = `
       "totalWeight": 0.029395113505112636,
     },
     Frame {
+      "callCount": 4,
       "col": 14,
       "file": "file:///speedscope/sample/programs/javascript/simple.js",
       "key": "beta:file:///speedscope/sample/programs/javascript/simple.js:8:14",
@@ -67,6 +74,7 @@ exports[`importFromSafari 1`] = `
       "totalWeight": 0.012376889896889526,
     },
     Frame {
+      "callCount": 1,
       "col": 102,
       "file": "",
       "key": "firstOpenSearchURLString::4:102",
@@ -100,6 +108,7 @@ exports[`importFromSafari 26.4 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": 1,
       "file": "file:///./speedscope/sample/programs/javascript/simple.js",
       "key": "(program):file:///./speedscope/sample/programs/javascript/simple.js:1:1",
@@ -109,6 +118,7 @@ exports[`importFromSafari 26.4 1`] = `
       "totalWeight": 0.012226333332364447,
     },
     Frame {
+      "callCount": 1,
       "col": 15,
       "file": "file:///./speedscope/sample/programs/javascript/simple.js",
       "key": "alpha:file:///./speedscope/sample/programs/javascript/simple.js:1:15",
@@ -118,6 +128,7 @@ exports[`importFromSafari 26.4 1`] = `
       "totalWeight": 0.012226333332364447,
     },
     Frame {
+      "callCount": 2,
       "col": 14,
       "file": "file:///./speedscope/sample/programs/javascript/simple.js",
       "key": "beta:file:///./speedscope/sample/programs/javascript/simple.js:8:14",
@@ -127,6 +138,7 @@ exports[`importFromSafari 26.4 1`] = `
       "totalWeight": 0.006986476189922541,
     },
     Frame {
+      "callCount": 4,
       "col": 15,
       "file": "file:///./speedscope/sample/programs/javascript/simple.js",
       "key": "gamma:file:///./speedscope/sample/programs/javascript/simple.js:20:15",
@@ -136,6 +148,7 @@ exports[`importFromSafari 26.4 1`] = `
       "totalWeight": 0.012226333332364447,
     },
     Frame {
+      "callCount": 2,
       "col": 15,
       "file": "file:///./speedscope/sample/programs/javascript/simple.js",
       "key": "delta:file:///./speedscope/sample/programs/javascript/simple.js:14:15",
@@ -145,6 +158,7 @@ exports[`importFromSafari 26.4 1`] = `
       "totalWeight": 0.005239857142441906,
     },
     Frame {
+      "callCount": 1,
       "col": 11,
       "file": "",
       "key": "createInspectorInjectedScript::1:11",
@@ -154,6 +168,7 @@ exports[`importFromSafari 26.4 1`] = `
       "totalWeight": 0.001,
     },
     Frame {
+      "callCount": 1,
       "col": 11,
       "file": "",
       "key": "createObjectWithoutPrototype::1:11",
@@ -163,6 +178,7 @@ exports[`importFromSafari 26.4 1`] = `
       "totalWeight": 0.001,
     },
     Frame {
+      "callCount": 1,
       "col": 1,
       "file": "__InjectedScript_FormMetadata.js",
       "key": "(program):__InjectedScript_FormMetadata.js:1:1",
@@ -172,6 +188,7 @@ exports[`importFromSafari 26.4 1`] = `
       "totalWeight": 0.001,
     },
     Frame {
+      "callCount": 1,
       "col": 33612,
       "file": "__InjectedScript_FormMetadata.js",
       "key": "FormMetadata:__InjectedScript_FormMetadata.js:3:33612",
@@ -181,6 +198,7 @@ exports[`importFromSafari 26.4 1`] = `
       "totalWeight": 0.001,
     },
     Frame {
+      "callCount": 1,
       "col": 11,
       "file": "",
       "key": "reduce::1:11",
@@ -190,6 +208,7 @@ exports[`importFromSafari 26.4 1`] = `
       "totalWeight": 0.001,
     },
     Frame {
+      "callCount": 1,
       "col": 34295,
       "file": "__InjectedScript_FormMetadata.js",
       "key": ":__InjectedScript_FormMetadata.js:3:34295",
@@ -199,6 +218,7 @@ exports[`importFromSafari 26.4 1`] = `
       "totalWeight": 0.001,
     },
     Frame {
+      "callCount": 1,
       "col": 66678,
       "file": "__InjectedScript_ReaderArticleFinder.js",
       "key": "findTextSamplesByVisualExamination:__InjectedScript_ReaderArticleFinder.js:13:66678",

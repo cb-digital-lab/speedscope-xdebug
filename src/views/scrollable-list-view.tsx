@@ -23,6 +23,7 @@ interface ScrollableListViewProps {
   ) => JSX.Element | JSX.Element[] | null
   className?: string
   initialIndexInView?: number | null
+  onViewportScroll?: (scrollLeft: number, scrollTop: number) => void
 }
 
 export const ScrollableListView = ({
@@ -31,6 +32,7 @@ export const ScrollableListView = ({
   renderItems,
   className,
   initialIndexInView,
+  onViewportScroll,
 }: ScrollableListViewProps) => {
   const [viewportSize, setViewportSize] = useState<number | null>(null)
   const [viewportScrollOffset, setViewportScrollOffset] = useState<number>(0)
@@ -109,11 +111,12 @@ export const ScrollableListView = ({
 
   const totalSize = useMemo(() => items.reduce((a, b) => a + b.size, 0), [items])
 
-  const onViewportScroll = useCallback(() => {
+  const onViewportScrollEvent = useCallback(() => {
     if (viewportRef.current != null) {
       setViewportScrollOffset(viewportRef.current[scrollLeftOrScrollTop])
+      onViewportScroll?.(viewportRef.current.scrollLeft, viewportRef.current.scrollTop)
     }
-  }, [scrollLeftOrScrollTop])
+  }, [scrollLeftOrScrollTop, onViewportScroll])
 
   useEffect(() => {
     const resizeListener = () => {
@@ -145,7 +148,7 @@ export const ScrollableListView = ({
   }, [rangeResult, visibleItems, totalSize])
 
   return (
-    <div className={className} ref={viewportCallback} onScroll={onViewportScroll}>
+    <div className={className} ref={viewportCallback} onScroll={onViewportScrollEvent}>
       {content}
     </div>
   )

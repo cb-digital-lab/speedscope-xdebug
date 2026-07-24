@@ -4,6 +4,7 @@ exports[`importFromChromeCPUProfile 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": 1,
       "file": "",
       "key": "(anonymous)::1:1",
@@ -13,6 +14,7 @@ exports[`importFromChromeCPUProfile 1`] = `
       "totalWeight": 34345,
     },
     Frame {
+      "callCount": 1,
       "col": 11,
       "file": "",
       "key": "a::1:11",
@@ -22,6 +24,7 @@ exports[`importFromChromeCPUProfile 1`] = `
       "totalWeight": 33285,
     },
     Frame {
+      "callCount": 1,
       "col": 11,
       "file": "",
       "key": "b::6:11",
@@ -31,6 +34,7 @@ exports[`importFromChromeCPUProfile 1`] = `
       "totalWeight": 17002,
     },
     Frame {
+      "callCount": 2,
       "col": 11,
       "file": "",
       "key": "d::14:11",
@@ -40,6 +44,7 @@ exports[`importFromChromeCPUProfile 1`] = `
       "totalWeight": 33285,
     },
     Frame {
+      "callCount": 1,
       "col": 11,
       "file": "",
       "key": "c::10:11",
@@ -67,6 +72,7 @@ exports[`importFromChromeTimeline 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 11,
       "col": 0,
       "file": "",
       "key": "(program)::0:0",
@@ -76,6 +82,7 @@ exports[`importFromChromeTimeline 1`] = `
       "totalWeight": 2299,
     },
     Frame {
+      "callCount": 1,
       "col": 11,
       "file": "file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js",
       "key": "a:file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js:1:11",
@@ -85,6 +92,7 @@ exports[`importFromChromeTimeline 1`] = `
       "totalWeight": 33186,
     },
     Frame {
+      "callCount": 67,
       "col": 11,
       "file": "file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js",
       "key": "c:file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js:14:11",
@@ -94,6 +102,7 @@ exports[`importFromChromeTimeline 1`] = `
       "totalWeight": 16275,
     },
     Frame {
+      "callCount": 66,
       "col": 11,
       "file": "file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js",
       "key": "b:file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js:8:11",
@@ -266,6 +275,7 @@ exports[`importFromChromeTimeline Chrome 69 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": 1,
       "file": "extensions::SafeBuiltins",
       "key": "(anonymous extensions::SafeBuiltins:1):extensions::SafeBuiltins:1:1",
@@ -275,6 +285,7 @@ exports[`importFromChromeTimeline Chrome 69 1`] = `
       "totalWeight": 3188,
     },
     Frame {
+      "callCount": 1,
       "col": 10,
       "file": "extensions::SafeBuiltins",
       "key": "(anonymous extensions::SafeBuiltins:1):extensions::SafeBuiltins:1:10",
@@ -284,6 +295,7 @@ exports[`importFromChromeTimeline Chrome 69 1`] = `
       "totalWeight": 3188,
     },
     Frame {
+      "callCount": 1,
       "col": 21,
       "file": "extensions::SafeBuiltins",
       "key": "saveBuiltin:extensions::SafeBuiltins:25:21",
@@ -293,6 +305,7 @@ exports[`importFromChromeTimeline Chrome 69 1`] = `
       "totalWeight": 3188,
     },
     Frame {
+      "callCount": 9,
       "col": undefined,
       "file": undefined,
       "key": "(program):undefined:undefined:undefined",
@@ -302,6 +315,7 @@ exports[`importFromChromeTimeline Chrome 69 1`] = `
       "totalWeight": 6862,
     },
     Frame {
+      "callCount": 1,
       "col": 1,
       "file": "file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js",
       "key": "(anonymous simple.js:1):file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js:1:1",
@@ -311,6 +325,7 @@ exports[`importFromChromeTimeline Chrome 69 1`] = `
       "totalWeight": 37217,
     },
     Frame {
+      "callCount": 1,
       "col": 15,
       "file": "file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js",
       "key": "alpha:file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js:1:15",
@@ -320,6 +335,7 @@ exports[`importFromChromeTimeline Chrome 69 1`] = `
       "totalWeight": 37081,
     },
     Frame {
+      "callCount": 58,
       "col": 14,
       "file": "file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js",
       "key": "beta:file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js:8:14",
@@ -329,6 +345,7 @@ exports[`importFromChromeTimeline Chrome 69 1`] = `
       "totalWeight": 17562,
     },
     Frame {
+      "callCount": 71,
       "col": 15,
       "file": "file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js",
       "key": "gamma:file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js:20:15",
@@ -338,6 +355,7 @@ exports[`importFromChromeTimeline Chrome 69 1`] = `
       "totalWeight": 20018,
     },
     Frame {
+      "callCount": 60,
       "col": 15,
       "file": "file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js",
       "key": "delta:file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js:14:15",
@@ -347,6 +365,7 @@ exports[`importFromChromeTimeline Chrome 69 1`] = `
       "totalWeight": 18646,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "(garbage collector):undefined:undefined:undefined",
@@ -519,6 +538,7 @@ exports[`importFromChromeTimeline Chrome 116 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 5,
       "col": undefined,
       "file": undefined,
       "key": "(program):undefined:undefined:undefined",
@@ -528,6 +548,7 @@ exports[`importFromChromeTimeline Chrome 116 1`] = `
       "totalWeight": 9312,
     },
     Frame {
+      "callCount": 1,
       "col": 1,
       "file": "file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js",
       "key": "(anonymous simple.js:1):file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js:1:1",
@@ -537,6 +558,7 @@ exports[`importFromChromeTimeline Chrome 116 1`] = `
       "totalWeight": 25866,
     },
     Frame {
+      "callCount": 1,
       "col": 15,
       "file": "file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js",
       "key": "alpha:file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js:1:15",
@@ -546,6 +568,7 @@ exports[`importFromChromeTimeline Chrome 116 1`] = `
       "totalWeight": 25866,
     },
     Frame {
+      "callCount": 52,
       "col": 14,
       "file": "file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js",
       "key": "beta:file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js:8:14",
@@ -555,6 +578,7 @@ exports[`importFromChromeTimeline Chrome 116 1`] = `
       "totalWeight": 12703,
     },
     Frame {
+      "callCount": 42,
       "col": 15,
       "file": "file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js",
       "key": "gamma:file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js:20:15",
@@ -564,6 +588,7 @@ exports[`importFromChromeTimeline Chrome 116 1`] = `
       "totalWeight": 8593,
     },
     Frame {
+      "callCount": 53,
       "col": 15,
       "file": "file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js",
       "key": "delta:file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js:14:15",
@@ -705,6 +730,7 @@ exports[`importFromChromeTimeline Workers Chrome 66 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 35,
       "col": 0,
       "file": "",
       "key": "(program)::0:0",
@@ -714,6 +740,7 @@ exports[`importFromChromeTimeline Workers Chrome 66 1`] = `
       "totalWeight": 108131,
     },
     Frame {
+      "callCount": 1,
       "col": 9,
       "file": "",
       "key": "(anonymous)::248:9",
@@ -723,6 +750,7 @@ exports[`importFromChromeTimeline Workers Chrome 66 1`] = `
       "totalWeight": 2766,
     },
     Frame {
+      "callCount": 1,
       "col": 0,
       "file": "",
       "key": "addEventListener::0:0",
@@ -732,6 +760,7 @@ exports[`importFromChromeTimeline Workers Chrome 66 1`] = `
       "totalWeight": 2215,
     },
     Frame {
+      "callCount": 1,
       "col": 18,
       "file": "",
       "key": "onLoaded::867:18",
@@ -741,6 +770,7 @@ exports[`importFromChromeTimeline Workers Chrome 66 1`] = `
       "totalWeight": 5158,
     },
     Frame {
+      "callCount": 3,
       "col": 1,
       "file": "",
       "key": "(anonymous)::1:1",
@@ -750,6 +780,7 @@ exports[`importFromChromeTimeline Workers Chrome 66 1`] = `
       "totalWeight": 25649,
     },
     Frame {
+      "callCount": 3,
       "col": 18,
       "file": "",
       "key": "dispatch::846:18",
@@ -759,6 +790,7 @@ exports[`importFromChromeTimeline Workers Chrome 66 1`] = `
       "totalWeight": 25649,
     },
     Frame {
+      "callCount": 1,
       "col": 21,
       "file": "",
       "key": "setPlatform::840:21",
@@ -768,6 +800,7 @@ exports[`importFromChromeTimeline Workers Chrome 66 1`] = `
       "totalWeight": 902,
     },
     Frame {
+      "callCount": 1,
       "col": 0,
       "file": "",
       "key": "add::0:0",
@@ -777,6 +810,7 @@ exports[`importFromChromeTimeline Workers Chrome 66 1`] = `
       "totalWeight": 902,
     },
     Frame {
+      "callCount": 1,
       "col": 15,
       "file": "",
       "key": "reset::434:15",
@@ -786,6 +820,7 @@ exports[`importFromChromeTimeline Workers Chrome 66 1`] = `
       "totalWeight": 2438,
     },
     Frame {
+      "callCount": 1,
       "col": 0,
       "file": "",
       "key": "getContext::0:0",
@@ -795,6 +830,7 @@ exports[`importFromChromeTimeline Workers Chrome 66 1`] = `
       "totalWeight": 598,
     },
     Frame {
+      "callCount": 1,
       "col": 21,
       "file": "",
       "key": "resetCanvas::424:21",
@@ -804,6 +840,7 @@ exports[`importFromChromeTimeline Workers Chrome 66 1`] = `
       "totalWeight": 553,
     },
     Frame {
+      "callCount": 1,
       "col": 0,
       "file": "",
       "key": "scale::0:0",
@@ -813,6 +850,7 @@ exports[`importFromChromeTimeline Workers Chrome 66 1`] = `
       "totalWeight": 183,
     },
     Frame {
+      "callCount": 1,
       "col": 9,
       "file": "http://172.30.3.176:7777/worker.html",
       "key": "(anonymous worker.html:1):http://172.30.3.176:7777/worker.html:1:9",
@@ -822,6 +860,7 @@ exports[`importFromChromeTimeline Workers Chrome 66 1`] = `
       "totalWeight": 2524,
     },
     Frame {
+      "callCount": 1,
       "col": 0,
       "file": "",
       "key": "Worker::0:0",
@@ -831,6 +870,7 @@ exports[`importFromChromeTimeline Workers Chrome 66 1`] = `
       "totalWeight": 2524,
     },
     Frame {
+      "callCount": 11,
       "col": 30,
       "file": "http://172.30.3.176:7777/worker.html",
       "key": "worker.onmessage:http://172.30.3.176:7777/worker.html:20:30",
@@ -840,6 +880,7 @@ exports[`importFromChromeTimeline Workers Chrome 66 1`] = `
       "totalWeight": 60859,
     },
     Frame {
+      "callCount": 18,
       "col": 17,
       "file": "http://172.30.3.176:7777/worker.html",
       "key": "apple:http://172.30.3.176:7777/worker.html:10:17",
@@ -849,6 +890,7 @@ exports[`importFromChromeTimeline Workers Chrome 66 1`] = `
       "totalWeight": 58863,
     },
     Frame {
+      "callCount": 29,
       "col": 18,
       "file": "http://172.30.3.176:7777/worker.html",
       "key": "banana:http://172.30.3.176:7777/worker.html:2:18",
@@ -858,6 +900,7 @@ exports[`importFromChromeTimeline Workers Chrome 66 1`] = `
       "totalWeight": 53816,
     },
     Frame {
+      "callCount": 2,
       "col": 0,
       "file": "",
       "key": "postMessage::0:0",
@@ -867,6 +910,7 @@ exports[`importFromChromeTimeline Workers Chrome 66 1`] = `
       "totalWeight": 348,
     },
     Frame {
+      "callCount": 1,
       "col": 0,
       "file": "",
       "key": "(garbage collector)::0:0",
@@ -1012,6 +1056,7 @@ exports[`importFromChromeTimeline Workers Chrome 66 2`] = `
 {
   "frames": [
     Frame {
+      "callCount": 11,
       "col": 0,
       "file": "",
       "key": "(program)::0:0",
@@ -1021,6 +1066,7 @@ exports[`importFromChromeTimeline Workers Chrome 66 2`] = `
       "totalWeight": 819120,
     },
     Frame {
+      "callCount": 1,
       "col": 21,
       "file": "http://172.30.3.176:7777/worker.js",
       "key": "onmessage:http://172.30.3.176:7777/worker.js:15:21",
@@ -1030,6 +1076,7 @@ exports[`importFromChromeTimeline Workers Chrome 66 2`] = `
       "totalWeight": 857719,
     },
     Frame {
+      "callCount": 7,
       "col": 15,
       "file": "http://172.30.3.176:7777/worker.js",
       "key": "alpha:http://172.30.3.176:7777/worker.js:9:15",
@@ -1039,6 +1086,7 @@ exports[`importFromChromeTimeline Workers Chrome 66 2`] = `
       "totalWeight": 835149,
     },
     Frame {
+      "callCount": 8,
       "col": 15,
       "file": "http://172.30.3.176:7777/worker.js",
       "key": "gamma:http://172.30.3.176:7777/worker.js:1:15",
@@ -1048,6 +1096,7 @@ exports[`importFromChromeTimeline Workers Chrome 66 2`] = `
       "totalWeight": 30000,
     },
     Frame {
+      "callCount": 5,
       "col": 0,
       "file": "",
       "key": "postMessage::0:0",
@@ -1107,6 +1156,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 3,
       "col": 1,
       "file": "extensions::SafeBuiltins",
       "key": "(anonymous extensions::SafeBuiltins:1):extensions::SafeBuiltins:1:1",
@@ -1116,6 +1166,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 37463,
     },
     Frame {
+      "callCount": 3,
       "col": 10,
       "file": "extensions::SafeBuiltins",
       "key": "(anonymous extensions::SafeBuiltins:1):extensions::SafeBuiltins:1:10",
@@ -1125,6 +1176,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 37463,
     },
     Frame {
+      "callCount": 3,
       "col": 21,
       "file": "extensions::SafeBuiltins",
       "key": "saveBuiltin:extensions::SafeBuiltins:25:21",
@@ -1134,6 +1186,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 9858,
     },
     Frame {
+      "callCount": 3,
       "col": 22,
       "file": "extensions::SafeBuiltins",
       "key": "makeCallable:extensions::SafeBuiltins:7:22",
@@ -1143,6 +1196,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 7007,
     },
     Frame {
+      "callCount": 2,
       "col": 33,
       "file": "extensions::SafeBuiltins",
       "key": "(anonymous extensions::SafeBuiltins:8):extensions::SafeBuiltins:8:33",
@@ -1152,6 +1206,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 234,
     },
     Frame {
+      "callCount": 35,
       "col": undefined,
       "file": undefined,
       "key": "(program):undefined:undefined:undefined",
@@ -1161,6 +1216,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 48827,
     },
     Frame {
+      "callCount": 4,
       "col": undefined,
       "file": undefined,
       "key": "(garbage collector):undefined:undefined:undefined",
@@ -1170,6 +1226,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 3380,
     },
     Frame {
+      "callCount": 1,
       "col": 1,
       "file": "chrome-extension://aomjjhallfgjeglblehebfpbcfeobpgk/injected.min.js",
       "key": "(anonymous injected.min.js:1):chrome-extension://aomjjhallfgjeglblehebfpbcfeobpgk/injected.min.js:1:1",
@@ -1179,6 +1236,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 15220,
     },
     Frame {
+      "callCount": 1,
       "col": 467,
       "file": "chrome-extension://aomjjhallfgjeglblehebfpbcfeobpgk/injected.min.js",
       "key": "La:chrome-extension://aomjjhallfgjeglblehebfpbcfeobpgk/injected.min.js:35:467",
@@ -1188,6 +1246,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 11272,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": undefined,
       "key": "get webstore:undefined:undefined:undefined",
@@ -1197,6 +1256,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 15564,
     },
     Frame {
+      "callCount": 2,
       "col": 10,
       "file": "extensions::runtime",
       "key": "(anonymous extensions::runtime:1):extensions::runtime:1:10",
@@ -1206,6 +1266,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 15277,
     },
     Frame {
+      "callCount": 17,
       "col": undefined,
       "file": undefined,
       "key": "privates:undefined:undefined:undefined",
@@ -1215,6 +1276,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 6636,
     },
     Frame {
+      "callCount": 2,
       "col": 10,
       "file": "extensions::binding",
       "key": "(anonymous extensions::binding:1):extensions::binding:1:10",
@@ -1224,6 +1286,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 4994,
     },
     Frame {
+      "callCount": 2,
       "col": 10,
       "file": "extensions::event_bindings",
       "key": "(anonymous extensions::event_bindings:1):extensions::event_bindings:1:10",
@@ -1233,6 +1296,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 4068,
     },
     Frame {
+      "callCount": 2,
       "col": 10,
       "file": "extensions::sendRequest",
       "key": "(anonymous extensions::sendRequest:1):extensions::sendRequest:1:10",
@@ -1242,6 +1306,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 2844,
     },
     Frame {
+      "callCount": 2,
       "col": 10,
       "file": "extensions::schemaUtils",
       "key": "(anonymous extensions::schemaUtils:1):extensions::schemaUtils:1:10",
@@ -1251,6 +1316,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 1814,
     },
     Frame {
+      "callCount": 2,
       "col": 10,
       "file": "extensions::json_schema",
       "key": "(anonymous extensions::json_schema:1):extensions::json_schema:1:10",
@@ -1260,6 +1326,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 834,
     },
     Frame {
+      "callCount": 2,
       "col": 16,
       "file": "extensions::utils",
       "key": "expose:extensions::utils:98:16",
@@ -1269,6 +1336,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 293,
     },
     Frame {
+      "callCount": 16,
       "col": 36,
       "file": "extensions::SafeBuiltins",
       "key": "target.(anonymous function):extensions::SafeBuiltins:10:36",
@@ -1278,6 +1346,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 7136,
     },
     Frame {
+      "callCount": 15,
       "col": undefined,
       "file": undefined,
       "key": "Apply:undefined:undefined:undefined",
@@ -1287,6 +1356,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 6547,
     },
     Frame {
+      "callCount": 2,
       "col": 10,
       "file": "extensions::messaging",
       "key": "(anonymous extensions::messaging:1):extensions::messaging:1:10",
@@ -1296,6 +1366,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 428,
     },
     Frame {
+      "callCount": 2,
       "col": 21,
       "file": "extensions::binding",
       "key": "generate:extensions::binding:199:21",
@@ -1305,6 +1376,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 7002,
     },
     Frame {
+      "callCount": 1,
       "col": 37,
       "file": "extensions::binding",
       "key": "shouldCheckUnprivileged:extensions::binding:209:37",
@@ -1314,6 +1386,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 146,
     },
     Frame {
+      "callCount": 2,
       "col": 44,
       "file": "extensions::binding",
       "key": "(anonymous extensions::binding:253):extensions::binding:253:44",
@@ -1323,6 +1396,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 3651,
     },
     Frame {
+      "callCount": 1,
       "col": 50,
       "file": "extensions::json_schema",
       "key": "JSONSchemaValidator.addTypes:extensions::json_schema:174:50",
@@ -1332,6 +1406,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 149,
     },
     Frame {
+      "callCount": 2,
       "col": 46,
       "file": "extensions::binding",
       "key": "(anonymous extensions::binding:271):extensions::binding:271:46",
@@ -1341,6 +1416,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 3349,
     },
     Frame {
+      "callCount": 2,
       "col": 48,
       "file": "extensions::binding",
       "key": "(anonymous extensions::binding:323):extensions::binding:323:48",
@@ -1350,6 +1426,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 586,
     },
     Frame {
+      "callCount": 2,
       "col": 45,
       "file": "extensions::binding",
       "key": "(anonymous extensions::binding:397):extensions::binding:397:45",
@@ -1359,6 +1436,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 802,
     },
     Frame {
+      "callCount": 2,
       "col": 17,
       "file": "extensions::event_bindings",
       "key": "Event:extensions::event_bindings:513:17",
@@ -1368,6 +1446,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 527,
     },
     Frame {
+      "callCount": 2,
       "col": 52,
       "file": "extensions::utils",
       "key": "privates.constructPrivate:extensions::utils:102:52",
@@ -1377,6 +1456,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 388,
     },
     Frame {
+      "callCount": 2,
       "col": 21,
       "file": "extensions::event_bindings",
       "key": "EventImpl:extensions::event_bindings:213:21",
@@ -1386,6 +1466,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 251,
     },
     Frame {
+      "callCount": 2,
       "col": 27,
       "file": "extensions::binding",
       "key": "addProperties:extensions::binding:425:27",
@@ -1395,6 +1476,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 710,
     },
     Frame {
+      "callCount": 2,
       "col": 17,
       "file": "extensions::utils",
       "key": "forEach:extensions::utils:27:17",
@@ -1404,6 +1486,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 561,
     },
     Frame {
+      "callCount": 1,
       "col": 22,
       "file": "extensions::binding",
       "key": "runHooks_:extensions::binding:180:22",
@@ -1413,6 +1496,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 273,
     },
     Frame {
+      "callCount": 1,
       "col": 47,
       "file": "extensions::binding",
       "key": "(anonymous extensions::binding:181):extensions::binding:181:47",
@@ -1422,6 +1506,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 273,
     },
     Frame {
+      "callCount": 1,
       "col": 36,
       "file": "extensions::runtime",
       "key": "(anonymous extensions::runtime:17):extensions::runtime:17:36",
@@ -1431,6 +1516,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 132,
     },
     Frame {
+      "callCount": 1,
       "col": 261,
       "file": "chrome-extension://aomjjhallfgjeglblehebfpbcfeobpgk/injected.min.js",
       "key": "l:chrome-extension://aomjjhallfgjeglblehebfpbcfeobpgk/injected.min.js:38:261",
@@ -1440,6 +1526,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 127,
     },
     Frame {
+      "callCount": 1,
       "col": 44,
       "file": "extensions::utils",
       "key": "publicClassPrototype.(anonymous function):extensions::utils:136:44",
@@ -1449,6 +1536,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 276,
     },
     Frame {
+      "callCount": 1,
       "col": 45,
       "file": "extensions::event_bindings",
       "key": "EventImpl.addListener:extensions::event_bindings:273:45",
@@ -1458,6 +1546,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 135,
     },
     Frame {
+      "callCount": 1,
       "col": 162,
       "file": "chrome-extension://aomjjhallfgjeglblehebfpbcfeobpgk/injected.min.js",
       "key": "bb:chrome-extension://aomjjhallfgjeglblehebfpbcfeobpgk/injected.min.js:58:162",
@@ -1467,6 +1556,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 146,
     },
     Frame {
+      "callCount": 1,
       "col": 10,
       "file": "chrome-extension://aomjjhallfgjeglblehebfpbcfeobpgk/injected.min.js",
       "key": "(anonymous injected.min.js:65):chrome-extension://aomjjhallfgjeglblehebfpbcfeobpgk/injected.min.js:65:10",
@@ -1476,6 +1566,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 1071,
     },
     Frame {
+      "callCount": 1,
       "col": 47,
       "file": "extensions::SafeBuiltins",
       "key": "(anonymous extensions::SafeBuiltins:66):extensions::SafeBuiltins:66:47",
@@ -1485,6 +1576,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 27605,
     },
     Frame {
+      "callCount": 1,
       "col": 1,
       "file": "chrome-extension://denbgaamihkadbghdceggmchnflmhpmk/contentScript.js",
       "key": "(anonymous contentScript.js:1):chrome-extension://denbgaamihkadbghdceggmchnflmhpmk/contentScript.js:1:1",
@@ -1494,6 +1586,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 6115,
     },
     Frame {
+      "callCount": 1,
       "col": 26,
       "file": "chrome-extension://denbgaamihkadbghdceggmchnflmhpmk/contentScript.js",
       "key": "insertTextScript:chrome-extension://denbgaamihkadbghdceggmchnflmhpmk/contentScript.js:31:26",
@@ -1503,6 +1596,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 874,
     },
     Frame {
+      "callCount": 1,
       "col": 26,
       "file": "chrome-extension://denbgaamihkadbghdceggmchnflmhpmk/contentScript.js",
       "key": "insertHeaderNode:chrome-extension://denbgaamihkadbghdceggmchnflmhpmk/contentScript.js:58:26",
@@ -1512,6 +1606,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 482,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": undefined,
       "key": "appendChild:undefined:undefined:undefined",
@@ -1521,6 +1616,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 293,
     },
     Frame {
+      "callCount": 1,
       "col": 1,
       "file": undefined,
       "key": "(anonymous):undefined:1:1",
@@ -1530,6 +1626,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 148,
     },
     Frame {
+      "callCount": 1,
       "col": 14,
       "file": undefined,
       "key": "(anonymous):undefined:7:14",
@@ -1539,6 +1636,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 148,
     },
     Frame {
+      "callCount": 1,
       "col": 26,
       "file": "chrome-extension://denbgaamihkadbghdceggmchnflmhpmk/contentScript.js",
       "key": "listenForMessage:chrome-extension://denbgaamihkadbghdceggmchnflmhpmk/contentScript.js:25:26",
@@ -1548,6 +1646,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 4699,
     },
     Frame {
+      "callCount": 1,
       "col": 10,
       "file": "extensions::uncaught_exception_handler",
       "key": "(anonymous extensions::uncaught_exception_handler:1):extensions::uncaught_exception_handler:1:10",
@@ -1557,6 +1656,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 121,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "(anonymous):undefined:undefined:undefined",
@@ -1566,6 +1666,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 135,
     },
     Frame {
+      "callCount": 1,
       "col": 9,
       "file": "http://127.0.0.1:8081/worker.html",
       "key": "(anonymous worker.html:1):http://127.0.0.1:8081/worker.html:1:9",
@@ -1575,6 +1676,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 939,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "Worker:undefined:undefined:undefined",
@@ -1584,6 +1686,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 939,
     },
     Frame {
+      "callCount": 1,
       "col": 12,
       "file": "chrome-extension://aomjjhallfgjeglblehebfpbcfeobpgk/injected.min.js",
       "key": "cb:chrome-extension://aomjjhallfgjeglblehebfpbcfeobpgk/injected.min.js:50:12",
@@ -1593,6 +1696,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 359,
     },
     Frame {
+      "callCount": 1,
       "col": 315,
       "file": "chrome-extension://aomjjhallfgjeglblehebfpbcfeobpgk/injected.min.js",
       "key": "$a:chrome-extension://aomjjhallfgjeglblehebfpbcfeobpgk/injected.min.js:47:315",
@@ -1602,6 +1706,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 359,
     },
     Frame {
+      "callCount": 1,
       "col": 52,
       "file": "chrome-extension://aomjjhallfgjeglblehebfpbcfeobpgk/injected.min.js",
       "key": "(anonymous injected.min.js:51):chrome-extension://aomjjhallfgjeglblehebfpbcfeobpgk/injected.min.js:51:52",
@@ -1611,6 +1716,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 683,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": undefined,
       "key": "setTimeout:undefined:undefined:undefined",
@@ -1620,6 +1726,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 704,
     },
     Frame {
+      "callCount": 1,
       "col": 145,
       "file": "chrome-extension://aomjjhallfgjeglblehebfpbcfeobpgk/injected.min.js",
       "key": "(anonymous injected.min.js:51):chrome-extension://aomjjhallfgjeglblehebfpbcfeobpgk/injected.min.js:51:145",
@@ -1629,6 +1736,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 678,
     },
     Frame {
+      "callCount": 11,
       "col": 30,
       "file": "http://127.0.0.1:8081/worker.html",
       "key": "worker.onmessage:http://127.0.0.1:8081/worker.html:20:30",
@@ -1638,6 +1746,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 21103,
     },
     Frame {
+      "callCount": 11,
       "col": 17,
       "file": "http://127.0.0.1:8081/worker.html",
       "key": "apple:http://127.0.0.1:8081/worker.html:10:17",
@@ -1647,6 +1756,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 20852,
     },
     Frame {
+      "callCount": 16,
       "col": 18,
       "file": "http://127.0.0.1:8081/worker.html",
       "key": "banana:http://127.0.0.1:8081/worker.html:2:18",
@@ -1656,6 +1766,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 1`] = `
       "totalWeight": 20192,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": undefined,
       "key": "postMessage:undefined:undefined:undefined",
@@ -1853,6 +1964,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 2`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": 21,
       "file": "http://127.0.0.1:8081/worker.js",
       "key": "onmessage:http://127.0.0.1:8081/worker.js:15:21",
@@ -1862,6 +1974,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 2`] = `
       "totalWeight": 187278,
     },
     Frame {
+      "callCount": 6,
       "col": 15,
       "file": "http://127.0.0.1:8081/worker.js",
       "key": "alpha:http://127.0.0.1:8081/worker.js:9:15",
@@ -1871,6 +1984,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 2`] = `
       "totalWeight": 177837,
     },
     Frame {
+      "callCount": 8,
       "col": 15,
       "file": "http://127.0.0.1:8081/worker.js",
       "key": "gamma:http://127.0.0.1:8081/worker.js:1:15",
@@ -1880,6 +1994,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 2`] = `
       "totalWeight": 21888,
     },
     Frame {
+      "callCount": 11,
       "col": undefined,
       "file": undefined,
       "key": "(program):undefined:undefined:undefined",
@@ -1889,6 +2004,7 @@ exports[`importFromChromeTimeline Workers Chrome 70 2`] = `
       "totalWeight": 164753,
     },
     Frame {
+      "callCount": 3,
       "col": undefined,
       "file": undefined,
       "key": "postMessage:undefined:undefined:undefined",
@@ -1946,6 +2062,7 @@ exports[`importFromChromeTimeline chunked 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 11,
       "col": 0,
       "file": "",
       "key": "(program)::0:0",
@@ -1955,6 +2072,7 @@ exports[`importFromChromeTimeline chunked 1`] = `
       "totalWeight": 2299,
     },
     Frame {
+      "callCount": 1,
       "col": 11,
       "file": "file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js",
       "key": "a:file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js:1:11",
@@ -1964,6 +2082,7 @@ exports[`importFromChromeTimeline chunked 1`] = `
       "totalWeight": 33186,
     },
     Frame {
+      "callCount": 67,
       "col": 11,
       "file": "file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js",
       "key": "c:file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js:14:11",
@@ -1973,6 +2092,7 @@ exports[`importFromChromeTimeline chunked 1`] = `
       "totalWeight": 16275,
     },
     Frame {
+      "callCount": 66,
       "col": 11,
       "file": "file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js",
       "key": "b:file:///Users/jlfwong/code/speedscope/sample/programs/javascript/simple.js:8:11",
@@ -2153,6 +2273,7 @@ exports[`importFromV8Profiler Node 10 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": 1,
       "file": "",
       "key": "(anonymous)::1:1",
@@ -2162,6 +2283,7 @@ exports[`importFromV8Profiler Node 10 1`] = `
       "totalWeight": 44777,
     },
     Frame {
+      "callCount": 1,
       "col": 1,
       "file": "",
       "key": "a::1:1",
@@ -2171,6 +2293,7 @@ exports[`importFromV8Profiler Node 10 1`] = `
       "totalWeight": 33202,
     },
     Frame {
+      "callCount": 1,
       "col": 1,
       "file": "",
       "key": "b::6:1",
@@ -2180,6 +2303,7 @@ exports[`importFromV8Profiler Node 10 1`] = `
       "totalWeight": 16788,
     },
     Frame {
+      "callCount": 2,
       "col": 1,
       "file": "",
       "key": "d::14:1",
@@ -2189,6 +2313,7 @@ exports[`importFromV8Profiler Node 10 1`] = `
       "totalWeight": 33202,
     },
     Frame {
+      "callCount": 1,
       "col": 1,
       "file": "",
       "key": "c::10:1",
@@ -2216,6 +2341,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "(program):undefined:undefined:undefined",
@@ -2225,6 +2351,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
       "totalWeight": 53210,
     },
     Frame {
+      "callCount": 1,
       "col": 644580,
       "file": "https://example.com/example-1.js",
       "key": "(anonymous example-1.js:93):https://example.com/example-1.js:93:644580",
@@ -2234,6 +2361,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
       "totalWeight": 668,
     },
     Frame {
+      "callCount": 1,
       "col": 589207,
       "file": "https://example.com/example-1.js",
       "key": "800492:https://example.com/example-1.js:93:589207",
@@ -2243,6 +2371,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
       "totalWeight": 1984,
     },
     Frame {
+      "callCount": 6,
       "col": 44,
       "file": "https://example.com/example-2.js",
       "key": "a:https://example.com/example-2.js:3:44",
@@ -2252,6 +2381,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
       "totalWeight": 1984,
     },
     Frame {
+      "callCount": 1,
       "col": 619289,
       "file": "https://example.com/example-1.js",
       "key": "467222:https://example.com/example-1.js:93:619289",
@@ -2261,6 +2391,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
       "totalWeight": 1595,
     },
     Frame {
+      "callCount": 1,
       "col": 617051,
       "file": "https://example.com/example-1.js",
       "key": "305089:https://example.com/example-1.js:93:617051",
@@ -2270,6 +2401,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
       "totalWeight": 123,
     },
     Frame {
+      "callCount": 1,
       "col": 198328,
       "file": "https://example.com/example-3.js",
       "key": "620076:https://example.com/example-3.js:128:198328",
@@ -2279,6 +2411,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
       "totalWeight": 123,
     },
     Frame {
+      "callCount": 1,
       "col": 179387,
       "file": "https://example.com/example-3.js",
       "key": "617233:https://example.com/example-3.js:128:179387",
@@ -2288,6 +2421,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
       "totalWeight": 123,
     },
     Frame {
+      "callCount": 1,
       "col": 283228,
       "file": "https://example.com/example-3.js",
       "key": "645507:https://example.com/example-3.js:128:283228",
@@ -2297,6 +2431,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
       "totalWeight": 123,
     },
     Frame {
+      "callCount": 1,
       "col": 196754,
       "file": "https://example.com/example-3.js",
       "key": "376719:https://example.com/example-3.js:128:196754",
@@ -2306,6 +2441,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
       "totalWeight": 123,
     },
     Frame {
+      "callCount": 4,
       "col": 617873,
       "file": "https://example.com/example-1.js",
       "key": "new:https://example.com/example-1.js:93:617873",
@@ -2315,6 +2451,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
       "totalWeight": 1201,
     },
     Frame {
+      "callCount": 5,
       "col": 617968,
       "file": "https://example.com/example-1.js",
       "key": "fields:https://example.com/example-1.js:93:617968",
@@ -2324,6 +2461,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
       "totalWeight": 1340,
     },
     Frame {
+      "callCount": 5,
       "col": 277748,
       "file": "https://example.com/example-3.js",
       "key": "a:https://example.com/example-3.js:128:277748",
@@ -2333,6 +2471,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
       "totalWeight": 1340,
     },
     Frame {
+      "callCount": 5,
       "col": 166544,
       "file": "https://example.com/example-3.js",
       "key": "s:https://example.com/example-3.js:128:166544",
@@ -2342,6 +2481,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
       "totalWeight": 1340,
     },
     Frame {
+      "callCount": 5,
       "col": 179046,
       "file": "https://example.com/example-3.js",
       "key": "(anonymous example-3.js:128):https://example.com/example-3.js:128:179046",
@@ -2351,6 +2491,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
       "totalWeight": 1340,
     },
     Frame {
+      "callCount": 5,
       "col": 277791,
       "file": "https://example.com/example-3.js",
       "key": "(anonymous example-3.js:128):https://example.com/example-3.js:128:277791",
@@ -2360,6 +2501,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
       "totalWeight": 1340,
     },
     Frame {
+      "callCount": 5,
       "col": 617992,
       "file": "https://example.com/example-1.js",
       "key": "(anonymous example-1.js:93):https://example.com/example-1.js:93:617992",
@@ -2369,6 +2511,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
       "totalWeight": 1340,
     },
     Frame {
+      "callCount": 5,
       "col": 618591,
       "file": "https://example.com/example-1.js",
       "key": "new:https://example.com/example-1.js:93:618591",
@@ -2378,6 +2521,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
       "totalWeight": 1340,
     },
     Frame {
+      "callCount": 5,
       "col": 618167,
       "file": "https://example.com/example-1.js",
       "key": "u:https://example.com/example-1.js:93:618167",
@@ -2387,6 +2531,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
       "totalWeight": 1207,
     },
     Frame {
+      "callCount": 6,
       "col": 618556,
       "file": "https://example.com/example-1.js",
       "key": "(anonymous example-1.js:93):https://example.com/example-1.js:93:618556",
@@ -2396,6 +2541,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
       "totalWeight": 944,
     },
     Frame {
+      "callCount": 7,
       "col": 179492,
       "file": "https://example.com/example-3.js",
       "key": "(anonymous example-3.js:128):https://example.com/example-3.js:128:179492",
@@ -2405,6 +2551,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
       "totalWeight": 1074,
     },
     Frame {
+      "callCount": 3,
       "col": 283300,
       "file": "https://example.com/example-3.js",
       "key": "h:https://example.com/example-3.js:128:283300",
@@ -2414,6 +2561,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
       "totalWeight": 664,
     },
     Frame {
+      "callCount": 2,
       "col": 197827,
       "file": "https://example.com/example-3.js",
       "key": "R:https://example.com/example-3.js:128:197827",
@@ -2423,6 +2571,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
       "totalWeight": 525,
     },
     Frame {
+      "callCount": 2,
       "col": 161914,
       "file": "https://example.com/example-3.js",
       "key": "r:https://example.com/example-3.js:128:161914",
@@ -2432,6 +2581,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
       "totalWeight": 131,
     },
     Frame {
+      "callCount": 1,
       "col": 198374,
       "file": "https://example.com/example-3.js",
       "key": "(anonymous example-3.js:128):https://example.com/example-3.js:128:198374",
@@ -2441,6 +2591,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
       "totalWeight": 131,
     },
     Frame {
+      "callCount": 1,
       "col": 198490,
       "file": "https://example.com/example-3.js",
       "key": "s:https://example.com/example-3.js:128:198490",
@@ -2450,6 +2601,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
       "totalWeight": 131,
     },
     Frame {
+      "callCount": 1,
       "col": 179266,
       "file": "https://example.com/example-3.js",
       "key": "(anonymous example-3.js:128):https://example.com/example-3.js:128:179266",
@@ -2459,6 +2611,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
       "totalWeight": 131,
     },
     Frame {
+      "callCount": 2,
       "col": 280331,
       "file": "https://example.com/example-3.js",
       "key": "(anonymous example-3.js:128):https://example.com/example-3.js:128:280331",
@@ -2468,6 +2621,7 @@ exports[`importTraceEvents Chrome 141 profile with missing arg data 1`] = `
       "totalWeight": 135,
     },
     Frame {
+      "callCount": 1,
       "col": 625395,
       "file": "https://example.com/example-1.js",
       "key": "y:https://example.com/example-1.js:93:625395",

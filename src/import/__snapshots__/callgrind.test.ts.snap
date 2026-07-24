@@ -4,6 +4,7 @@ exports[`importFromCallgrind 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "file1.c",
       "key": "file1.c:main",
@@ -13,6 +14,7 @@ exports[`importFromCallgrind 1`] = `
       "totalWeight": 820,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "file1.c",
       "key": "file1.c:func1",
@@ -22,6 +24,7 @@ exports[`importFromCallgrind 1`] = `
       "totalWeight": 400,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "file2.c",
       "key": "file2.c:func2",
@@ -45,6 +48,7 @@ exports[`importFromCallgrind cfn reset 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "alpha.c",
       "key": "alpha.c:alpha",
@@ -54,6 +58,7 @@ exports[`importFromCallgrind cfn reset 1`] = `
       "totalWeight": 50,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "beta.c",
       "key": "beta.c:beta",
@@ -63,6 +68,7 @@ exports[`importFromCallgrind cfn reset 1`] = `
       "totalWeight": 10,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "alpha.c",
       "key": "alpha.c:gamma",
@@ -72,6 +78,7 @@ exports[`importFromCallgrind cfn reset 1`] = `
       "totalWeight": 20,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "alpha.c",
       "key": "alpha.c:delta",
@@ -100,6 +107,7 @@ exports[`importFromCallgrind multiple event types 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "file1.c",
       "key": "file1.c:main",
@@ -109,6 +117,7 @@ exports[`importFromCallgrind multiple event types 1`] = `
       "totalWeight": 8200,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "file1.c",
       "key": "file1.c:func1",
@@ -118,6 +127,7 @@ exports[`importFromCallgrind multiple event types 1`] = `
       "totalWeight": 4000,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "file2.c",
       "key": "file2.c:func2",
@@ -141,6 +151,7 @@ exports[`importFromCallgrind multiple event types 2`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "file1.c",
       "key": "file1.c:main",
@@ -150,6 +161,7 @@ exports[`importFromCallgrind multiple event types 2`] = `
       "totalWeight": 38000,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "file1.c",
       "key": "file1.c:func1",
@@ -159,6 +171,7 @@ exports[`importFromCallgrind multiple event types 2`] = `
       "totalWeight": 20000,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "file2.c",
       "key": "file2.c:func2",
@@ -186,6 +199,7 @@ exports[`importFromCallgrind name compression 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "file1.c",
       "key": "file1.c:main",
@@ -195,6 +209,7 @@ exports[`importFromCallgrind name compression 1`] = `
       "totalWeight": 820,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "file1.c",
       "key": "file1.c:func1",
@@ -204,6 +219,7 @@ exports[`importFromCallgrind name compression 1`] = `
       "totalWeight": 400,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "file2.c",
       "key": "file2.c:func2",
@@ -231,6 +247,7 @@ exports[`importFromCallgrind reconstruction with inconsistent costs 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "x",
       "key": "x:main",
@@ -240,6 +257,7 @@ exports[`importFromCallgrind reconstruction with inconsistent costs 1`] = `
       "totalWeight": 1000550,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "x",
       "key": "x:A",
@@ -249,6 +267,7 @@ exports[`importFromCallgrind reconstruction with inconsistent costs 1`] = `
       "totalWeight": 1000050,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "x",
       "key": "x:B",
@@ -258,6 +277,7 @@ exports[`importFromCallgrind reconstruction with inconsistent costs 1`] = `
       "totalWeight": 1000550,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "x",
       "key": "x:C",
@@ -283,6 +303,7 @@ exports[`importFromCallgrind subposition compression 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "file1.c",
       "key": "file1.c:main",
@@ -292,6 +313,7 @@ exports[`importFromCallgrind subposition compression 1`] = `
       "totalWeight": 820,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "file1.c",
       "key": "file1.c:func1",
@@ -301,6 +323,7 @@ exports[`importFromCallgrind subposition compression 1`] = `
       "totalWeight": 400,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "file2.c",
       "key": "file2.c:func2",
@@ -328,6 +351,7 @@ exports[`importFromCallgrind xdebug per-invocation context 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/var/www/html/profile.php",
       "key": "/var/www/html/profile.php:{main}",
@@ -337,6 +361,7 @@ exports[`importFromCallgrind xdebug per-invocation context 1`] = `
       "totalWeight": 1896079630,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/var/www/html/profile.php",
       "key": "/var/www/html/profile.php:get_header",
@@ -346,6 +371,7 @@ exports[`importFromCallgrind xdebug per-invocation context 1`] = `
       "totalWeight": 1620093510,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "/var/www/html/profile.php",
       "key": "/var/www/html/profile.php:locate_template",
@@ -355,6 +381,7 @@ exports[`importFromCallgrind xdebug per-invocation context 1`] = `
       "totalWeight": 148328130,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "/var/www/html/profile.php",
       "key": "/var/www/html/profile.php:load_template",
@@ -364,6 +391,7 @@ exports[`importFromCallgrind xdebug per-invocation context 1`] = `
       "totalWeight": 1709535710,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/var/www/html/header.php",
       "key": "/var/www/html/header.php:require_once::/var/www/html/header.php",
@@ -373,6 +401,7 @@ exports[`importFromCallgrind xdebug per-invocation context 1`] = `
       "totalWeight": 1486076080,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/var/www/html/profile.php",
       "key": "/var/www/html/profile.php:get_footer",
@@ -382,6 +411,7 @@ exports[`importFromCallgrind xdebug per-invocation context 1`] = `
       "totalWeight": 275969290,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/var/www/html/footer.php",
       "key": "/var/www/html/footer.php:require_once::/var/www/html/footer.php",
@@ -410,6 +440,7 @@ exports[`importFromCallgrind xdebug per-invocation context 2`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/var/www/html/profile.php",
       "key": "/var/www/html/profile.php:{main}",
@@ -419,6 +450,7 @@ exports[`importFromCallgrind xdebug per-invocation context 2`] = `
       "totalWeight": 696,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/var/www/html/profile.php",
       "key": "/var/www/html/profile.php:get_header",
@@ -428,6 +460,7 @@ exports[`importFromCallgrind xdebug per-invocation context 2`] = `
       "totalWeight": 536,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "/var/www/html/profile.php",
       "key": "/var/www/html/profile.php:locate_template",
@@ -437,6 +470,7 @@ exports[`importFromCallgrind xdebug per-invocation context 2`] = `
       "totalWeight": 80,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "/var/www/html/profile.php",
       "key": "/var/www/html/profile.php:load_template",
@@ -446,6 +480,7 @@ exports[`importFromCallgrind xdebug per-invocation context 2`] = `
       "totalWeight": 616,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/var/www/html/header.php",
       "key": "/var/www/html/header.php:require_once::/var/www/html/header.php",
@@ -455,6 +490,7 @@ exports[`importFromCallgrind xdebug per-invocation context 2`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/var/www/html/profile.php",
       "key": "/var/www/html/profile.php:get_footer",
@@ -464,6 +500,7 @@ exports[`importFromCallgrind xdebug per-invocation context 2`] = `
       "totalWeight": 160,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/var/www/html/footer.php",
       "key": "/var/www/html/footer.php:require_once::/var/www/html/footer.php",

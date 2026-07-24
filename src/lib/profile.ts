@@ -63,6 +63,21 @@ export class Frame extends HasWeights {
   // Column in the file
   col?: number
 
+  private callCount = 0
+
+  getCallCount() {
+    return this.callCount
+  }
+
+  addToCallCount(delta: number) {
+    this.callCount += delta
+  }
+
+  overwriteWith(other: Frame) {
+    this.overwriteWeightWith(other)
+    this.callCount = other.callCount
+  }
+
   private constructor(info: FrameInfo) {
     super()
     this.key = info.key
@@ -324,7 +339,7 @@ export class Profile {
     // is flattened. To work around that, we'll just copy the weights directly from the
     // un-flattened profile.
     this.forEachFrame(f => {
-      flattenedProfile.frames.getOrInsert(f).overwriteWeightWith(f)
+      flattenedProfile.frames.getOrInsert(f).overwriteWith(f)
     })
 
     return flattenedProfile
@@ -461,6 +476,9 @@ export class StackListProfileBuilder extends Profile {
         const parent = node
         node = new CallTreeNode(frame, node)
         parent.children.push(node)
+        if (useAppendOrder) {
+          frame.addToCallCount(1)
+        }
       }
       node.addToTotalWeight(weight)
 
@@ -613,6 +631,9 @@ export class CallTreeProfileBuilder extends Profile {
       } else {
         node = new CallTreeNode(frame, prevTop)
         prevTop.children.push(node)
+        if (useAppendOrder) {
+          frame.addToCallCount(1)
+        }
       }
       stack.push(node)
     }

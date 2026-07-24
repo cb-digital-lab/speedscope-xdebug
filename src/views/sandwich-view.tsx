@@ -4,10 +4,9 @@ import {ProfileTableViewContainer} from './profile-table-view'
 import {h, JSX, createContext} from 'preact'
 import {memo} from 'preact/compat'
 import {useCallback, useMemo, useContext} from 'preact/hooks'
-import {commonStyle, FontSize} from './style'
-import {InvertedCallerFlamegraphView} from './inverted-caller-flamegraph-view'
-import {CalleeFlamegraphView} from './callee-flamegraph-view'
+import {commonStyle} from './style'
 import {SandwichSearchView} from './sandwich-search-view'
+import {SandwichInvocationsView} from './sandwich-invocations-view'
 import {ActiveProfileState} from '../app-state/active-profile-state'
 import {sortBy} from '../lib/utils'
 import {ProfileSearchContext} from './search-view'
@@ -48,30 +47,15 @@ class SandwichView extends StatelessComponent<SandwichViewProps> {
     const style = getStyle(this.props.theme)
 
     const {selectedFrame} = this.props
-    let flamegraphViews: JSX.Element | null = null
+    let invocationsView: JSX.Element | null = null
 
     if (selectedFrame) {
-      flamegraphViews = (
-        <div className={css(commonStyle.fillY, style.callersAndCallees, commonStyle.vbox)}>
-          <div className={css(commonStyle.hbox, style.panZoomViewWraper)}>
-            <div className={css(style.flamechartLabelParent)}>
-              <div className={css(style.flamechartLabel)}>Callers</div>
-            </div>
-            <InvertedCallerFlamegraphView
-              glCanvas={this.props.glCanvas}
-              activeProfileState={this.props.activeProfileState}
-            />
-          </div>
-          <div className={css(style.divider)} />
-          <div className={css(commonStyle.hbox, style.panZoomViewWraper)}>
-            <div className={css(style.flamechartLabelParent, style.flamechartLabelParentBottom)}>
-              <div className={css(style.flamechartLabel, style.flamechartLabelBottom)}>Callees</div>
-            </div>
-            <CalleeFlamegraphView
-              glCanvas={this.props.glCanvas}
-              activeProfileState={this.props.activeProfileState}
-            />
-          </div>
+      invocationsView = (
+        <div className={css(commonStyle.fillY, style.invocationsPanel, commonStyle.vbox)}>
+          <SandwichInvocationsView
+            profile={this.props.activeProfileState.profile}
+            selectedFrame={selectedFrame}
+          />
         </div>
       )
     }
@@ -84,13 +68,13 @@ class SandwichView extends StatelessComponent<SandwichViewProps> {
             <SandwichSearchView />
           </div>
         }
-        right={flamegraphViews}
+        right={invocationsView}
       />
     )
   }
 }
 
-const getStyle = withTheme(theme =>
+const getStyle = withTheme(_theme =>
   StyleSheet.create({
     tableView: {
       position: 'relative',
@@ -100,38 +84,9 @@ const getStyle = withTheme(theme =>
       minHeight: 0,
       flex: 1,
     },
-    panZoomViewWraper: {
+    invocationsPanel: {
       flex: 1,
-    },
-    flamechartLabelParent: {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'flex-end',
-      alignItems: 'flex-start',
-      fontSize: FontSize.TITLE,
-      width: FontSize.TITLE * 1.2,
-      borderRight: `1px solid ${theme.fgSecondaryColor}`,
-    },
-    flamechartLabelParentBottom: {
-      justifyContent: 'flex-start',
-    },
-    flamechartLabel: {
-      transform: 'rotate(-90deg)',
-      transformOrigin: '50% 50% 0',
-      width: FontSize.TITLE * 1.2,
-      flexShrink: 1,
-    },
-    flamechartLabelBottom: {
-      transform: 'rotate(-90deg)',
-      display: 'flex',
-      justifyContent: 'flex-end',
-    },
-    callersAndCallees: {
-      flex: 1,
-    },
-    divider: {
-      height: 2,
-      background: theme.fgSecondaryColor,
+      minHeight: 0,
     },
   }),
 )
@@ -188,6 +143,10 @@ export const SandwichViewContainer = memo((ownProps: SandwichViewContainerProps)
       }
       case SortField.TOTAL: {
         sortBy(rowList, f => f.getTotalWeight())
+        break
+      }
+      case SortField.COUNT: {
+        sortBy(rowList, f => f.getCallCount())
         break
       }
     }

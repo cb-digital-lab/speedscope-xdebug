@@ -1,6 +1,7 @@
 import {Atom} from '../lib/atom'
 import {clamp, Rect, Vec2} from '../lib/math'
 import {CallTreeNode, Frame, Profile, ProfileGroup} from '../lib/profile'
+import {getAncestorNodes} from '../lib/call-tree-rows'
 import {objectsHaveShallowEquality} from '../lib/utils'
 
 export interface FlamechartViewState {
@@ -155,6 +156,20 @@ export class ProfileGroupAtom extends Atom<ProfileGroupState> {
       ...treeViewState,
       expandedNodes,
     }))
+  }
+
+  focusTreeNode = (node: CallTreeNode) => {
+    this.updateActiveTreeViewState(treeViewState => {
+      const expandedNodes = new Set(treeViewState.expandedNodes)
+      for (let ancestor of getAncestorNodes(node)) {
+        expandedNodes.add(ancestor)
+      }
+      return {
+        ...treeViewState,
+        expandedNodes,
+        selectedNode: node,
+      }
+    })
   }
 
   setSelectedFrame = (frame: Frame | null) => {

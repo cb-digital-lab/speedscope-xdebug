@@ -216,6 +216,31 @@ test('CallTreeProfileBuilder', () => {
   verifyProfile(profile)
 })
 
+test('Frame call counts track distinct invocations', () => {
+  const b = new CallTreeProfileBuilder()
+
+  b.enterFrame(fa, 0)
+  b.enterFrame(fb, 1)
+  b.leaveFrame(fb, 2)
+  b.leaveFrame(fa, 2)
+
+  b.enterFrame(fa, 2)
+  b.enterFrame(fb, 3)
+  b.leaveFrame(fb, 4)
+  b.leaveFrame(fa, 4)
+
+  b.enterFrame(fc, 4)
+  b.leaveFrame(fc, 5)
+
+  const profile = b.build()
+  const counts = new Map<string, number>()
+  profile.forEachFrame(f => counts.set(String(f.key), f.getCallCount()))
+
+  expect(counts.get('a')).toBe(2)
+  expect(counts.get('b')).toBe(2)
+  expect(counts.get('c')).toBe(1)
+})
+
 test('CallTreeProfileBuilder separates non-contiguous', () => {
   const b = new CallTreeProfileBuilder()
 

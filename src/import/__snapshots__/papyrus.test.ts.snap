@@ -4,6 +4,7 @@ exports[`importFromPapyrus script profile 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": undefined,
       "key": "STACK 3053",
@@ -13,6 +14,7 @@ exports[`importFromPapyrus script profile 1`] = `
       "totalWeight": 1250,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": undefined,
       "key": "abc_example_quest..exampleFunction1",
@@ -22,6 +24,7 @@ exports[`importFromPapyrus script profile 1`] = `
       "totalWeight": 1050,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "abc_example_quest..exampleFunction2",
@@ -31,6 +34,7 @@ exports[`importFromPapyrus script profile 1`] = `
       "totalWeight": 50,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "STACK 3208",
@@ -40,6 +44,7 @@ exports[`importFromPapyrus script profile 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "abc_example_quest..exampleFunction3",
@@ -49,6 +54,7 @@ exports[`importFromPapyrus script profile 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "abc_example_quest..exampleFunction4",
@@ -58,6 +64,7 @@ exports[`importFromPapyrus script profile 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "STACK 3947",
@@ -67,6 +74,7 @@ exports[`importFromPapyrus script profile 1`] = `
       "totalWeight": 1500,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "abc_example_quest..exampleFunction5",
@@ -76,6 +84,7 @@ exports[`importFromPapyrus script profile 1`] = `
       "totalWeight": 1000,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "STACK 3949",
@@ -85,6 +94,7 @@ exports[`importFromPapyrus script profile 1`] = `
       "totalWeight": 250,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "abc_example_quest..exampleFunction6",
@@ -117,6 +127,7 @@ exports[`importFromPapyrus stack profile 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "STACK 3185",
@@ -126,6 +137,7 @@ exports[`importFromPapyrus stack profile 1`] = `
       "totalWeight": 617,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "Debug..StartStackProfiling",
@@ -135,6 +147,7 @@ exports[`importFromPapyrus stack profile 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": undefined,
       "key": "Form..GetFormID",
@@ -144,6 +157,7 @@ exports[`importFromPapyrus stack profile 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "abc_example_mod_quest..exampleFunction1",
@@ -153,6 +167,7 @@ exports[`importFromPapyrus stack profile 1`] = `
       "totalWeight": 17,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "Game..GetModName",
@@ -162,6 +177,7 @@ exports[`importFromPapyrus stack profile 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "Cell..IsInterior",
@@ -171,6 +187,7 @@ exports[`importFromPapyrus stack profile 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": "utility..WaitMenuMode",

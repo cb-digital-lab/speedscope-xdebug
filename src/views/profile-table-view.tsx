@@ -131,6 +131,7 @@ const ProfileTableRowView = ({
         {profile.formatValue(selfWeight)} ({formatPercent(selfPerc)})
         <HBarDisplay perc={selfPerc} />
       </td>
+      <td className={css(style.countCell)}>{frame.getCallCount().toLocaleString()}</td>
       <td title={frame.file} className={css(style.textCell)}>
         <ColorChit color={getCSSColorForFrame(frame)} />
         {matchedRanges
@@ -194,6 +195,10 @@ export const ProfileTableView = memo(
               break
             }
             case SortField.TOTAL: {
+              setSortMethod({field, direction: SortDirection.DESCENDING})
+              break
+            }
+            case SortField.COUNT: {
               setSortMethod({field, direction: SortDirection.DESCENDING})
               break
             }
@@ -276,6 +281,10 @@ export const ProfileTableView = memo(
       (ev: MouseEvent) => onSortClick(SortField.SELF, ev),
       [onSortClick],
     )
+    const onCountClick = useCallback(
+      (ev: MouseEvent) => onSortClick(SortField.COUNT, ev),
+      [onSortClick],
+    )
     const onSymbolNameClick = useCallback(
       (ev: MouseEvent) => onSortClick(SortField.SYMBOL_NAME, ev),
       [onSortClick],
@@ -301,6 +310,14 @@ export const ProfileTableView = memo(
                   }
                 />
                 Self
+              </th>
+              <th className={css(style.countCell)} onClick={onCountClick}>
+                <SortIcon
+                  activeDirection={
+                    sortMethod.field === SortField.COUNT ? sortMethod.direction : null
+                  }
+                />
+                Count
               </th>
               <th className={css(style.textCell)} onClick={onSymbolNameClick}>
                 <SortIcon
@@ -385,6 +402,15 @@ const getStyle = withTheme(theme =>
       paddingRight: Sizes.FRAME_HEIGHT,
       width: 6 * Sizes.FRAME_HEIGHT,
       minWidth: 6 * Sizes.FRAME_HEIGHT,
+    },
+    countCell: {
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textAlign: 'right',
+      paddingRight: Sizes.FRAME_HEIGHT,
+      width: 4 * Sizes.FRAME_HEIGHT,
+      minWidth: 4 * Sizes.FRAME_HEIGHT,
     },
     textCell: {
       textOverflow: 'ellipsis',

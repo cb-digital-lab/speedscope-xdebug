@@ -4,6 +4,7 @@ exports[`importFromLinuxPerf forks.linux-perf.txt 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "[unknown]",
       "key": "[unknown] ([unknown])",
@@ -13,6 +14,7 @@ exports[`importFromLinuxPerf forks.linux-perf.txt 1`] = `
       "totalWeight": 0.13909899999271147,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/lib/x86_64-linux-gnu/libc-2.27.so",
       "key": "__libc_start_main (/lib/x86_64-linux-gnu/libc-2.27.so)",
@@ -22,6 +24,7 @@ exports[`importFromLinuxPerf forks.linux-perf.txt 1`] = `
       "totalWeight": 0.13909899999271147,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/workdir/forks",
       "key": "main (/workdir/forks)",
@@ -31,6 +34,7 @@ exports[`importFromLinuxPerf forks.linux-perf.txt 1`] = `
       "totalWeight": 0.13909899999271147,
     },
     Frame {
+      "callCount": 26,
       "col": undefined,
       "file": "/workdir/forks",
       "key": "_Z5gammav (/workdir/forks)",
@@ -40,6 +44,7 @@ exports[`importFromLinuxPerf forks.linux-perf.txt 1`] = `
       "totalWeight": 0.0249014999717474,
     },
     Frame {
+      "callCount": 38,
       "col": undefined,
       "file": "/workdir/forks",
       "key": "_Z5deltav (/workdir/forks)",
@@ -49,6 +54,7 @@ exports[`importFromLinuxPerf forks.linux-perf.txt 1`] = `
       "totalWeight": 0.0690374999830965,
     },
     Frame {
+      "callCount": 43,
       "col": undefined,
       "file": "/workdir/forks",
       "key": "_Z4betav (/workdir/forks)",
@@ -58,6 +64,7 @@ exports[`importFromLinuxPerf forks.linux-perf.txt 1`] = `
       "totalWeight": 0.04688100004568696,
     },
     Frame {
+      "callCount": 42,
       "col": undefined,
       "file": "/workdir/forks",
       "key": "_Z5alphav (/workdir/forks)",
@@ -210,6 +217,7 @@ exports[`importFromLinuxPerf forks.linux-perf.txt 2`] = `
 {
   "frames": [
     Frame {
+      "callCount": 292,
       "col": undefined,
       "file": "[kernel.kallsyms]",
       "key": "[unknown] ([kernel.kallsyms])",
@@ -219,6 +227,7 @@ exports[`importFromLinuxPerf forks.linux-perf.txt 2`] = `
       "totalWeight": 0.1390899999823887,
     },
     Frame {
+      "callCount": 62,
       "col": undefined,
       "file": "[unknown]",
       "key": "[unknown] ([unknown])",
@@ -403,6 +412,7 @@ exports[`importFromLinuxPerf forks.linux-perf.txt 3`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "[unknown]",
       "key": "[unknown] ([unknown])",
@@ -412,6 +422,7 @@ exports[`importFromLinuxPerf forks.linux-perf.txt 3`] = `
       "totalWeight": 0.05253200000151992,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/lib/x86_64-linux-gnu/libc-2.27.so",
       "key": "__libc_start_main (/lib/x86_64-linux-gnu/libc-2.27.so)",
@@ -421,6 +432,7 @@ exports[`importFromLinuxPerf forks.linux-perf.txt 3`] = `
       "totalWeight": 0.05253200000151992,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/workdir/forks",
       "key": "main (/workdir/forks)",
@@ -430,6 +442,7 @@ exports[`importFromLinuxPerf forks.linux-perf.txt 3`] = `
       "totalWeight": 0.05253200000151992,
     },
     Frame {
+      "callCount": 9,
       "col": undefined,
       "file": "/workdir/forks",
       "key": "_Z4betav (/workdir/forks)",
@@ -439,6 +452,7 @@ exports[`importFromLinuxPerf forks.linux-perf.txt 3`] = `
       "totalWeight": 0.023026500042760745,
     },
     Frame {
+      "callCount": 8,
       "col": undefined,
       "file": "/workdir/forks",
       "key": "_Z5alphav (/workdir/forks)",
@@ -448,6 +462,7 @@ exports[`importFromLinuxPerf forks.linux-perf.txt 3`] = `
       "totalWeight": 0.029505499958759174,
     },
     Frame {
+      "callCount": 14,
       "col": undefined,
       "file": "[kernel.kallsyms]",
       "key": "[unknown] ([kernel.kallsyms])",
@@ -487,6 +502,7 @@ exports[`importFromLinuxPerf forks.linux-perf.txt 4`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "[unknown]",
       "key": "[unknown] ([unknown])",
@@ -496,6 +512,7 @@ exports[`importFromLinuxPerf forks.linux-perf.txt 4`] = `
       "totalWeight": 0.049998999980743974,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/lib/x86_64-linux-gnu/libc-2.27.so",
       "key": "__libc_start_main (/lib/x86_64-linux-gnu/libc-2.27.so)",
@@ -505,6 +522,7 @@ exports[`importFromLinuxPerf forks.linux-perf.txt 4`] = `
       "totalWeight": 0.049998999980743974,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/workdir/forks",
       "key": "main (/workdir/forks)",
@@ -514,6 +532,7 @@ exports[`importFromLinuxPerf forks.linux-perf.txt 4`] = `
       "totalWeight": 0.049998999980743974,
     },
     Frame {
+      "callCount": 9,
       "col": undefined,
       "file": "/workdir/forks",
       "key": "_Z5alphav (/workdir/forks)",
@@ -523,6 +542,7 @@ exports[`importFromLinuxPerf forks.linux-perf.txt 4`] = `
       "totalWeight": 0.0259504999849014,
     },
     Frame {
+      "callCount": 9,
       "col": undefined,
       "file": "/workdir/forks",
       "key": "_Z4betav (/workdir/forks)",
@@ -532,6 +552,7 @@ exports[`importFromLinuxPerf forks.linux-perf.txt 4`] = `
       "totalWeight": 0.024048499995842576,
     },
     Frame {
+      "callCount": 3,
       "col": undefined,
       "file": "[kernel.kallsyms]",
       "key": "[unknown] ([kernel.kallsyms])",
@@ -575,6 +596,7 @@ exports[`importFromLinuxPerf one-sample.linux-perf.txt 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "[unknown]",
       "key": "[unknown] ([unknown])",
@@ -584,6 +606,7 @@ exports[`importFromLinuxPerf one-sample.linux-perf.txt 1`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/lib/x86_64-linux-gnu/libc-2.27.so",
       "key": "__libc_start_main (/lib/x86_64-linux-gnu/libc-2.27.so)",
@@ -593,6 +616,7 @@ exports[`importFromLinuxPerf one-sample.linux-perf.txt 1`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/workdir/simple-terminates",
       "key": "main (/workdir/simple-terminates)",
@@ -602,6 +626,7 @@ exports[`importFromLinuxPerf one-sample.linux-perf.txt 1`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/workdir/simple-terminates",
       "key": "_Z5deltav (/workdir/simple-terminates)",
@@ -611,6 +636,7 @@ exports[`importFromLinuxPerf one-sample.linux-perf.txt 1`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/workdir/simple-terminates",
       "key": "_Z4betav (/workdir/simple-terminates)",
@@ -635,6 +661,7 @@ exports[`importFromLinuxPerf simple.linux-perf.txt 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "[unknown]",
       "key": "[unknown] ([unknown])",
@@ -644,6 +671,7 @@ exports[`importFromLinuxPerf simple.linux-perf.txt 1`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/lib/x86_64-linux-gnu/libc-2.27.so",
       "key": "__libc_start_main (/lib/x86_64-linux-gnu/libc-2.27.so)",
@@ -653,6 +681,7 @@ exports[`importFromLinuxPerf simple.linux-perf.txt 1`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/workdir/simple-terminates",
       "key": "main (/workdir/simple-terminates)",
@@ -662,6 +691,7 @@ exports[`importFromLinuxPerf simple.linux-perf.txt 1`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/workdir/simple-terminates",
       "key": "_Z5deltav (/workdir/simple-terminates)",
@@ -671,6 +701,7 @@ exports[`importFromLinuxPerf simple.linux-perf.txt 1`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/workdir/simple-terminates",
       "key": "_Z4betav (/workdir/simple-terminates)",
@@ -695,6 +726,7 @@ exports[`importFromLinuxPerf simple-with-header.linux-perf.txt 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "[unknown]",
       "key": "[unknown] ([unknown])",
@@ -704,6 +736,7 @@ exports[`importFromLinuxPerf simple-with-header.linux-perf.txt 1`] = `
       "totalWeight": 0.13538200000766665,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/lib/x86_64-linux-gnu/libc-2.27.so",
       "key": "__libc_start_main (/lib/x86_64-linux-gnu/libc-2.27.so)",
@@ -713,6 +746,7 @@ exports[`importFromLinuxPerf simple-with-header.linux-perf.txt 1`] = `
       "totalWeight": 0.13538200000766665,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/workdir/simple-terminates",
       "key": "main (/workdir/simple-terminates)",
@@ -722,6 +756,7 @@ exports[`importFromLinuxPerf simple-with-header.linux-perf.txt 1`] = `
       "totalWeight": 0.13538200000766665,
     },
     Frame {
+      "callCount": 37,
       "col": undefined,
       "file": "/workdir/simple-terminates",
       "key": "_Z5deltav (/workdir/simple-terminates)",
@@ -731,6 +766,7 @@ exports[`importFromLinuxPerf simple-with-header.linux-perf.txt 1`] = `
       "totalWeight": 0.06896450009662658,
     },
     Frame {
+      "callCount": 46,
       "col": undefined,
       "file": "/workdir/simple-terminates",
       "key": "_Z4betav (/workdir/simple-terminates)",
@@ -740,6 +776,7 @@ exports[`importFromLinuxPerf simple-with-header.linux-perf.txt 1`] = `
       "totalWeight": 0.04615200011176057,
     },
     Frame {
+      "callCount": 42,
       "col": undefined,
       "file": "/workdir/simple-terminates",
       "key": "_Z5alphav (/workdir/simple-terminates)",
@@ -749,6 +786,7 @@ exports[`importFromLinuxPerf simple-with-header.linux-perf.txt 1`] = `
       "totalWeight": 0.04411000004620291,
     },
     Frame {
+      "callCount": 22,
       "col": undefined,
       "file": "/workdir/simple-terminates",
       "key": "_Z5gammav (/workdir/simple-terminates)",
@@ -904,6 +942,7 @@ exports[`importFromLinuxPerf simple-with-pids.linux-perf.txt 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "[unknown]",
       "key": "[unknown] ([unknown])",
@@ -913,6 +952,7 @@ exports[`importFromLinuxPerf simple-with-pids.linux-perf.txt 1`] = `
       "totalWeight": 0.13586300000315532,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/lib/x86_64-linux-gnu/libc-2.27.so",
       "key": "__libc_start_main (/lib/x86_64-linux-gnu/libc-2.27.so)",
@@ -922,6 +962,7 @@ exports[`importFromLinuxPerf simple-with-pids.linux-perf.txt 1`] = `
       "totalWeight": 0.13586300000315532,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/workdir/simple-terminates",
       "key": "main (/workdir/simple-terminates)",
@@ -931,6 +972,7 @@ exports[`importFromLinuxPerf simple-with-pids.linux-perf.txt 1`] = `
       "totalWeight": 0.13586300000315532,
     },
     Frame {
+      "callCount": 37,
       "col": undefined,
       "file": "/workdir/simple-terminates",
       "key": "_Z5deltav (/workdir/simple-terminates)",
@@ -940,6 +982,7 @@ exports[`importFromLinuxPerf simple-with-pids.linux-perf.txt 1`] = `
       "totalWeight": 0.06494599996949546,
     },
     Frame {
+      "callCount": 54,
       "col": undefined,
       "file": "/workdir/simple-terminates",
       "key": "_Z4betav (/workdir/simple-terminates)",
@@ -949,6 +992,7 @@ exports[`importFromLinuxPerf simple-with-pids.linux-perf.txt 1`] = `
       "totalWeight": 0.05723400003626011,
     },
     Frame {
+      "callCount": 22,
       "col": undefined,
       "file": "/workdir/simple-terminates",
       "key": "_Z5gammav (/workdir/simple-terminates)",
@@ -958,6 +1002,7 @@ exports[`importFromLinuxPerf simple-with-pids.linux-perf.txt 1`] = `
       "totalWeight": 0.022971499915001914,
     },
     Frame {
+      "callCount": 36,
       "col": undefined,
       "file": "/workdir/simple-terminates",
       "key": "_Z5alphav (/workdir/simple-terminates)",
@@ -967,6 +1012,7 @@ exports[`importFromLinuxPerf simple-with-pids.linux-perf.txt 1`] = `
       "totalWeight": 0.036470500024734065,
     },
     Frame {
+      "callCount": 13,
       "col": undefined,
       "file": "[kernel.kallsyms]",
       "key": "[unknown] ([kernel.kallsyms])",
@@ -1122,6 +1168,7 @@ exports[`importFromLinuxPerf system-wide.linux-perf.txt 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "[unknown]",
       "key": "[unknown] ([unknown])",
@@ -1131,6 +1178,7 @@ exports[`importFromLinuxPerf system-wide.linux-perf.txt 1`] = `
       "totalWeight": 0.13823499999125488,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/lib/x86_64-linux-gnu/libc-2.27.so",
       "key": "__libc_start_main (/lib/x86_64-linux-gnu/libc-2.27.so)",
@@ -1140,6 +1188,7 @@ exports[`importFromLinuxPerf system-wide.linux-perf.txt 1`] = `
       "totalWeight": 0.13823499999125488,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/workdir/simple-terminates",
       "key": "main (/workdir/simple-terminates)",
@@ -1149,6 +1198,7 @@ exports[`importFromLinuxPerf system-wide.linux-perf.txt 1`] = `
       "totalWeight": 0.13823499999125488,
     },
     Frame {
+      "callCount": 40,
       "col": undefined,
       "file": "/workdir/simple-terminates",
       "key": "_Z5alphav (/workdir/simple-terminates)",
@@ -1158,6 +1208,7 @@ exports[`importFromLinuxPerf system-wide.linux-perf.txt 1`] = `
       "totalWeight": 0.04059999997843988,
     },
     Frame {
+      "callCount": 38,
       "col": undefined,
       "file": "/workdir/simple-terminates",
       "key": "_Z5deltav (/workdir/simple-terminates)",
@@ -1167,6 +1218,7 @@ exports[`importFromLinuxPerf system-wide.linux-perf.txt 1`] = `
       "totalWeight": 0.07264250004664063,
     },
     Frame {
+      "callCount": 53,
       "col": undefined,
       "file": "/workdir/simple-terminates",
       "key": "_Z4betav (/workdir/simple-terminates)",
@@ -1176,6 +1228,7 @@ exports[`importFromLinuxPerf system-wide.linux-perf.txt 1`] = `
       "totalWeight": 0.05447799988905899,
     },
     Frame {
+      "callCount": 20,
       "col": undefined,
       "file": "/workdir/simple-terminates",
       "key": "_Z5gammav (/workdir/simple-terminates)",
@@ -1185,6 +1238,7 @@ exports[`importFromLinuxPerf system-wide.linux-perf.txt 1`] = `
       "totalWeight": 0.01991300002555363,
     },
     Frame {
+      "callCount": 7,
       "col": undefined,
       "file": "[kernel.kallsyms]",
       "key": "[unknown] ([kernel.kallsyms])",
@@ -1339,6 +1393,7 @@ exports[`importFromLinuxPerf system-wide.linux-perf.txt 2`] = `
 {
   "frames": [
     Frame {
+      "callCount": 42,
       "col": undefined,
       "file": "[kernel.kallsyms]",
       "key": "[unknown] ([kernel.kallsyms])",
@@ -1348,6 +1403,7 @@ exports[`importFromLinuxPerf system-wide.linux-perf.txt 2`] = `
       "totalWeight": 0.1372890000056941,
     },
     Frame {
+      "callCount": 28,
       "col": undefined,
       "file": "[unknown]",
       "key": "[unknown] ([unknown])",
@@ -1380,6 +1436,7 @@ exports[`importFromLinuxPerf system-wide.linux-perf.txt chunked 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "[unknown]",
       "key": "[unknown] ([unknown])",
@@ -1389,6 +1446,7 @@ exports[`importFromLinuxPerf system-wide.linux-perf.txt chunked 1`] = `
       "totalWeight": 0.13823499999125488,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/lib/x86_64-linux-gnu/libc-2.27.so",
       "key": "__libc_start_main (/lib/x86_64-linux-gnu/libc-2.27.so)",
@@ -1398,6 +1456,7 @@ exports[`importFromLinuxPerf system-wide.linux-perf.txt chunked 1`] = `
       "totalWeight": 0.13823499999125488,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "/workdir/simple-terminates",
       "key": "main (/workdir/simple-terminates)",
@@ -1407,6 +1466,7 @@ exports[`importFromLinuxPerf system-wide.linux-perf.txt chunked 1`] = `
       "totalWeight": 0.13823499999125488,
     },
     Frame {
+      "callCount": 40,
       "col": undefined,
       "file": "/workdir/simple-terminates",
       "key": "_Z5alphav (/workdir/simple-terminates)",
@@ -1416,6 +1476,7 @@ exports[`importFromLinuxPerf system-wide.linux-perf.txt chunked 1`] = `
       "totalWeight": 0.04059999997843988,
     },
     Frame {
+      "callCount": 38,
       "col": undefined,
       "file": "/workdir/simple-terminates",
       "key": "_Z5deltav (/workdir/simple-terminates)",
@@ -1425,6 +1486,7 @@ exports[`importFromLinuxPerf system-wide.linux-perf.txt chunked 1`] = `
       "totalWeight": 0.07264250004664063,
     },
     Frame {
+      "callCount": 53,
       "col": undefined,
       "file": "/workdir/simple-terminates",
       "key": "_Z4betav (/workdir/simple-terminates)",
@@ -1434,6 +1496,7 @@ exports[`importFromLinuxPerf system-wide.linux-perf.txt chunked 1`] = `
       "totalWeight": 0.05447799988905899,
     },
     Frame {
+      "callCount": 20,
       "col": undefined,
       "file": "/workdir/simple-terminates",
       "key": "_Z5gammav (/workdir/simple-terminates)",
@@ -1443,6 +1506,7 @@ exports[`importFromLinuxPerf system-wide.linux-perf.txt chunked 1`] = `
       "totalWeight": 0.01991300002555363,
     },
     Frame {
+      "callCount": 7,
       "col": undefined,
       "file": "[kernel.kallsyms]",
       "key": "[unknown] ([kernel.kallsyms])",
@@ -1597,6 +1661,7 @@ exports[`importFromLinuxPerf system-wide.linux-perf.txt chunked 2`] = `
 {
   "frames": [
     Frame {
+      "callCount": 42,
       "col": undefined,
       "file": "[kernel.kallsyms]",
       "key": "[unknown] ([kernel.kallsyms])",
@@ -1606,6 +1671,7 @@ exports[`importFromLinuxPerf system-wide.linux-perf.txt chunked 2`] = `
       "totalWeight": 0.1372890000056941,
     },
     Frame {
+      "callCount": 28,
       "col": undefined,
       "file": "[unknown]",
       "key": "[unknown] ([unknown])",

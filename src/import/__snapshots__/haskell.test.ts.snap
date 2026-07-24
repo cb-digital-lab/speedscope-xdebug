@@ -4,6 +4,7 @@ exports[`importFromHaskell 1`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 144,
@@ -13,6 +14,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 798,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 56,
@@ -22,6 +24,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 73,
@@ -31,6 +34,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 75,
@@ -40,6 +44,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 84,
@@ -49,6 +54,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 119,
@@ -58,6 +64,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 26,
@@ -67,6 +74,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 12,
       "col": undefined,
       "file": "src/Main.hs:(21,1)-(38,42)",
       "key": 19,
@@ -76,6 +84,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 733,
     },
     Frame {
+      "callCount": 4,
       "col": undefined,
       "file": "src/Main.hs:(56,1)-(57,42)",
       "key": 4,
@@ -85,6 +94,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 320,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "src/Main.hs:31:9-29",
       "key": 16,
@@ -94,6 +104,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 3,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 28,
@@ -103,6 +114,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 35,
@@ -112,6 +124,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 27,
@@ -121,6 +134,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 3,
     },
     Frame {
+      "callCount": 4,
       "col": undefined,
       "file": "src/Main.hs:(61,1)-(63,26)",
       "key": 3,
@@ -130,6 +144,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 409,
     },
     Frame {
+      "callCount": 4,
       "col": undefined,
       "file": "src/Main.hs:63:19-26",
       "key": 1,
@@ -139,6 +154,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 2,
     },
     Frame {
+      "callCount": 4,
       "col": undefined,
       "file": "src/Main.hs:63:9-16",
       "key": 2,
@@ -148,6 +164,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 1,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 24,
@@ -157,6 +174,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 22,
@@ -166,6 +184,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 21,
@@ -175,6 +194,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 29,
@@ -184,6 +204,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 4,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "src/Main.hs:27:9-35",
       "key": 15,
@@ -193,6 +214,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 8,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 30,
@@ -202,6 +224,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 4,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 23,
@@ -211,6 +234,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 31,
@@ -220,6 +244,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 25,
@@ -229,6 +254,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:23:9-12",
       "key": 33,
@@ -238,6 +264,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:23:9-35",
       "key": 13,
@@ -247,6 +274,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:22:9",
       "key": 34,
@@ -256,6 +284,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:22:9-14",
       "key": 12,
@@ -265,6 +294,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:24:9-16",
       "key": 32,
@@ -274,6 +304,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:24:9-27",
       "key": 14,
@@ -283,6 +314,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:17:1-4",
       "key": 36,
@@ -292,6 +324,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:17:1-8",
       "key": 9,
@@ -301,6 +334,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 146,
@@ -310,6 +344,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 46,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 147,
@@ -319,6 +354,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 145,
@@ -328,6 +364,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 19,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:35:26-54",
       "key": 18,
@@ -337,6 +374,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "src/Main.hs:19:1-56",
       "key": 8,
@@ -346,6 +384,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:34:9-28",
       "key": 17,
@@ -355,6 +394,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 721,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:(42,1)-(45,38)",
       "key": 11,
@@ -364,6 +404,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 721,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:(49,1)-(52,31)",
       "key": 7,
@@ -373,6 +414,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 721,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:51:9-31",
       "key": 6,
@@ -382,6 +424,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 369,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:52:9-31",
       "key": 5,
@@ -391,6 +434,7 @@ exports[`importFromHaskell 1`] = `
       "totalWeight": 352,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:45:9-38",
       "key": 10,
@@ -424,6 +468,7 @@ exports[`importFromHaskell 2`] = `
 {
   "frames": [
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 144,
@@ -433,6 +478,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 1921672664,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 56,
@@ -442,6 +488,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 640,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 73,
@@ -451,6 +498,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 2768,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 75,
@@ -460,6 +508,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 200,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 84,
@@ -469,6 +518,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 34704,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 119,
@@ -478,6 +528,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 528,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 26,
@@ -487,6 +538,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 2097152,
     },
     Frame {
+      "callCount": 12,
       "col": undefined,
       "file": "src/Main.hs:(21,1)-(38,42)",
       "key": 19,
@@ -496,6 +548,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 1921591544,
     },
     Frame {
+      "callCount": 4,
       "col": undefined,
       "file": "src/Main.hs:(56,1)-(57,42)",
       "key": 4,
@@ -505,6 +558,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 406149056,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "src/Main.hs:31:9-29",
       "key": 16,
@@ -514,6 +568,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 7864112,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 28,
@@ -523,6 +578,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 1096,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 35,
@@ -532,6 +588,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 1888,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 27,
@@ -541,6 +598,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 7864112,
     },
     Frame {
+      "callCount": 4,
       "col": undefined,
       "file": "src/Main.hs:(61,1)-(63,26)",
       "key": 3,
@@ -550,6 +608,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 1512575520,
     },
     Frame {
+      "callCount": 4,
       "col": undefined,
       "file": "src/Main.hs:63:19-26",
       "key": 1,
@@ -559,6 +618,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 4,
       "col": undefined,
       "file": "src/Main.hs:63:9-16",
       "key": 2,
@@ -568,6 +628,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 24,
@@ -577,6 +638,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 22,
@@ -586,6 +648,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 520,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 21,
@@ -595,6 +658,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 16,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 29,
@@ -604,6 +668,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 4194304,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "src/Main.hs:27:9-35",
       "key": 15,
@@ -613,6 +678,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 19922736,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 30,
@@ -622,6 +688,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 15728432,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 23,
@@ -631,6 +698,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 31,
@@ -640,6 +708,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 880,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 25,
@@ -649,6 +718,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:23:9-12",
       "key": 33,
@@ -658,6 +728,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 32,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:23:9-35",
       "key": 13,
@@ -667,6 +738,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 32,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:22:9",
       "key": 34,
@@ -676,6 +748,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:22:9-14",
       "key": 12,
@@ -685,6 +758,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:24:9-16",
       "key": 32,
@@ -694,6 +768,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 32,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:24:9-27",
       "key": 14,
@@ -703,6 +778,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 32,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:17:1-4",
       "key": 36,
@@ -712,6 +788,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:17:1-8",
       "key": 9,
@@ -721,6 +798,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 146,
@@ -730,6 +808,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 0,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 147,
@@ -739,6 +818,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 2496,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": undefined,
       "key": 145,
@@ -748,6 +828,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 34736,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:35:26-54",
       "key": 18,
@@ -757,6 +838,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 46672,
     },
     Frame {
+      "callCount": 2,
       "col": undefined,
       "file": "src/Main.hs:19:1-56",
       "key": 8,
@@ -766,6 +848,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 67912,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:34:9-28",
       "key": 17,
@@ -775,6 +858,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 1891637344,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:(42,1)-(45,38)",
       "key": 11,
@@ -784,6 +868,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 1891637344,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:(49,1)-(52,31)",
       "key": 7,
@@ -793,6 +878,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 1891636224,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:51:9-31",
       "key": 6,
@@ -802,6 +888,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 945818112,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:52:9-31",
       "key": 5,
@@ -811,6 +898,7 @@ exports[`importFromHaskell 2`] = `
       "totalWeight": 945818112,
     },
     Frame {
+      "callCount": 1,
       "col": undefined,
       "file": "src/Main.hs:45:9-38",
       "key": 10,
