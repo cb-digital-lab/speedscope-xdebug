@@ -6,11 +6,26 @@ export interface CallTreeRow {
   depth: number
   hasChildren: boolean
   isExpanded: boolean
+  descendantCount: number
 
   // Heat ratios in [0, 1] relative to the heaviest sibling in the same scope
   // (nodes sharing the same parent). The worst offender in each scope is 1.
   totalHeat: number
   selfHeat: number
+}
+
+const descendantCountCache = new WeakMap<CallTreeNode, number>()
+
+export function getDescendantCount(node: CallTreeNode): number {
+  const cached = descendantCountCache.get(node)
+  if (cached != null) return cached
+
+  let count = 0
+  for (const child of node.children) {
+    count += 1 + getDescendantCount(child)
+  }
+  descendantCountCache.set(node, count)
+  return count
 }
 
 function sortChildren(children: CallTreeNode[], sortMethod: TreeSortMethod): CallTreeNode[] {
@@ -21,8 +36,10 @@ function sortChildren(children: CallTreeNode[], sortMethod: TreeSortMethod): Cal
   const sorted = [...children]
   if (sortMethod.field === TreeSortField.TOTAL) {
     sorted.sort((a, b) => a.getTotalWeight() - b.getTotalWeight())
-  } else {
+  } else if (sortMethod.field === TreeSortField.SELF) {
     sorted.sort((a, b) => a.getSelfWeight() - b.getSelfWeight())
+  } else if (sortMethod.field === TreeSortField.COUNT) {
+    sorted.sort((a, b) => getDescendantCount(a) - getDescendantCount(b))
   }
 
   if (sortMethod.direction === SortDirection.DESCENDING) {
@@ -58,6 +75,7 @@ export function buildCallTreeRows(
         depth,
         hasChildren,
         isExpanded,
+        descendantCount: getDescendantCount(node),
         totalHeat: maxTotal > 0 ? node.getTotalWeight() / maxTotal : 0,
         selfHeat: maxSelf > 0 ? node.getSelfWeight() / maxSelf : 0,
       })

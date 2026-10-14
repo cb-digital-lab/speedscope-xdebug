@@ -76,6 +76,7 @@ export enum TreeSortField {
   CALL_ORDER,
   TOTAL,
   SELF,
+  COUNT,
 }
 
 export interface TreeSortMethod {

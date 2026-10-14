@@ -1,5 +1,5 @@
 import {StackListProfileBuilder, CallTreeNode, FrameInfo} from './profile'
-import {buildCallTreeRows, getAllExpandableNodes, getAncestorNodes} from './call-tree-rows'
+import {buildCallTreeRows, getAllExpandableNodes, getAncestorNodes, getDescendantCount} from './call-tree-rows'
 import {SortDirection, TreeSortField} from '../app-state'
 
 function getFrameInfo(key: string): FrameInfo {
@@ -150,6 +150,49 @@ test('buildCallTreeRows sorts children by total weight descending', () => {
     expect(bChildRows[i - 1].node.getTotalWeight()).toBeGreaterThanOrEqual(
       bChildRows[i].node.getTotalWeight(),
     )
+  }
+})
+
+test('getDescendantCount counts recursive child nodes', () => {
+  const profile = buildTestProfile()
+  const root = profile.getAppendOrderCalltreeRoot()
+  const aNode = findNodeByPath(root, ['a'])!
+  const firstBNode = findNodeByPath(root, ['a', 'b'])!
+  const dNode = findNodeByPath(root, ['a', 'b', 'd'])!
+
+  expect(getDescendantCount(dNode)).toBe(0)
+  expect(getDescendantCount(firstBNode)).toBe(2)
+  expect(getDescendantCount(aNode)).toBe(1 + getDescendantCount(firstBNode))
+})
+
+test('buildCallTreeRows includes descendantCount on each row', () => {
+  const profile = buildTestProfile()
+  const root = profile.getAppendOrderCalltreeRoot()
+  const aNode = findNodeByPath(root, ['a'])!
+
+  const rows = buildCallTreeRows(root, new Set([aNode]), {
+    field: TreeSortField.CALL_ORDER,
+    direction: SortDirection.ASCENDING,
+  })
+
+  const aRow = rows.find(r => r.node === aNode)!
+  expect(aRow.descendantCount).toBe(getDescendantCount(aNode))
+})
+
+test('buildCallTreeRows sorts children by descendant count descending', () => {
+  const profile = buildTestProfile()
+  const root = profile.getAppendOrderCalltreeRoot()
+  const aNode = findNodeByPath(root, ['a'])!
+  const firstBNode = findNodeByPath(root, ['a', 'b'])!
+
+  const rows = buildCallTreeRows(root, new Set([aNode, firstBNode]), {
+    field: TreeSortField.COUNT,
+    direction: SortDirection.DESCENDING,
+  })
+  const bChildRows = rows.filter(r => r.depth === 2 && r.node.parent === firstBNode)
+
+  for (let i = 1; i < bChildRows.length; i++) {
+    expect(bChildRows[i - 1].descendantCount).toBeGreaterThanOrEqual(bChildRows[i].descendantCount)
   }
 })
 

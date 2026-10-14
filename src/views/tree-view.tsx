@@ -164,6 +164,7 @@ function TreeTableRowView({
         {profile.formatValue(selfWeight)} ({formatPercent(selfPerc)})
         <HBarDisplay perc={selfPerc} />
       </td>
+      <td className={css(style.countCell)}>{row.descendantCount.toLocaleString()}</td>
       <td title={frame.file} className={css(style.textCell)}>
         <span className={css(style.symbolCell)} style={{paddingLeft: depth * TREE_INDENT_PX}}>
           {hasChildren ? (
@@ -256,6 +257,10 @@ export const TreeTableView = memo(
               setSortMethod({field, direction: SortDirection.DESCENDING})
               break
             }
+            case TreeSortField.COUNT: {
+              setSortMethod({field, direction: SortDirection.DESCENDING})
+              break
+            }
           }
         }
       },
@@ -268,6 +273,10 @@ export const TreeTableView = memo(
     )
     const onSelfClick = useCallback(
       (ev: MouseEvent) => onSortClick(TreeSortField.SELF, ev),
+      [onSortClick],
+    )
+    const onCountClick = useCallback(
+      (ev: MouseEvent) => onSortClick(TreeSortField.COUNT, ev),
       [onSortClick],
     )
     const onCallOrderClick = useCallback(
@@ -301,7 +310,7 @@ export const TreeTableView = memo(
         if (rows.length === 0) {
           rows.push(
             <tr>
-              <td colSpan={3} className={css(style.emptyState)}>
+              <td colSpan={4} className={css(style.emptyState)}>
                 No call tree nodes found.
               </td>
             </tr>,
@@ -356,6 +365,14 @@ export const TreeTableView = memo(
                   }
                 />
                 Self
+              </th>
+              <th className={css(style.countCell)} onClick={onCountClick}>
+                <SortIcon
+                  activeDirection={
+                    sortMethod.field === TreeSortField.COUNT ? sortMethod.direction : null
+                  }
+                />
+                Count
               </th>
               <th className={css(style.textCell)} onClick={onCallOrderClick}>
                 <SortIcon
@@ -659,6 +676,15 @@ const getStyle = withTheme(theme =>
       paddingRight: Sizes.FRAME_HEIGHT,
       width: 6 * Sizes.FRAME_HEIGHT,
       minWidth: 6 * Sizes.FRAME_HEIGHT,
+    },
+    countCell: {
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textAlign: 'right',
+      paddingRight: Sizes.FRAME_HEIGHT,
+      width: 4 * Sizes.FRAME_HEIGHT,
+      minWidth: 4 * Sizes.FRAME_HEIGHT,
     },
     textCell: {
       textOverflow: 'ellipsis',
