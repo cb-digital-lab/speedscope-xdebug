@@ -151,7 +151,7 @@ export class FlamechartMinimapView extends Component<FlamechartMinimapViewProps,
       for (let x = Math.ceil(left / interval) * interval; x < right; x += interval) {
         // TODO(jlfwong): Ensure that labels do not overlap
         const pos = Math.round(configToPhysical.transformPosition(new Vec2(x, 0)).x)
-        const labelText = this.props.flamechart.formatValue(x)
+        const labelText = this.props.flamechart.formatValue(x, interval)
         const textWidth = Math.ceil(cachedMeasureTextWidth(ctx, labelText))
 
         ctx.fillStyle = theme.fgPrimaryColor

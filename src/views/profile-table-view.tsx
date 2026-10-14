@@ -317,7 +317,7 @@ export const ProfileTableView = memo(
                     sortMethod.field === SortField.COUNT ? sortMethod.direction : null
                   }
                 />
-                Count
+                Occurrences
               </th>
               <th className={css(style.textCell)} onClick={onSymbolNameClick}>
                 <SortIcon

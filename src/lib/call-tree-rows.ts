@@ -17,6 +17,7 @@ export interface CallTreeRow {
 const descendantCountCache = new WeakMap<CallTreeNode, number>()
 
 export function getDescendantCount(node: CallTreeNode): number {
+  if (node.children.length === 0) return 0
   const cached = descendantCountCache.get(node)
   if (cached != null) return cached
 

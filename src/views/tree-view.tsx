@@ -1,10 +1,9 @@
 import {h, JSX, ComponentChild, createContext} from 'preact'
 import {StyleSheet, css} from 'aphrodite'
 import {memo} from 'preact/compat'
-import {useCallback, useContext, useMemo, useState} from 'preact/hooks'
+import {useCallback, useContext, useMemo} from 'preact/hooks'
 import {CallTreeNode, Profile} from '../lib/profile'
 import {CallTreeRow} from '../lib/call-tree-rows'
-import {buildAnalysisPrompt} from '../lib/analysis-prompt'
 import {formatPercent} from '../lib/utils'
 import {FontSize, Sizes, commonStyle} from './style'
 import {ColorChit} from './color-chit'
@@ -350,7 +349,11 @@ export const TreeTableView = memo(
         <table className={css(style.tableView)}>
           <thead className={css(style.tableHeader)}>
             <tr>
-              <th className={css(style.numericCell)} onClick={onTotalClick}>
+              <th
+                className={css(style.numericCell)}
+                onClick={onTotalClick}
+                title="Includes child calls. Colors compare siblings within each branch."
+              >
                 <SortIcon
                   activeDirection={
                     sortMethod.field === TreeSortField.TOTAL ? sortMethod.direction : null
@@ -358,7 +361,11 @@ export const TreeTableView = memo(
                 />
                 Total
               </th>
-              <th className={css(style.numericCell)} onClick={onSelfClick}>
+              <th
+                className={css(style.numericCell)}
+                onClick={onSelfClick}
+                title="Excludes child calls. Colors compare siblings within each branch."
+              >
                 <SortIcon
                   activeDirection={
                     sortMethod.field === TreeSortField.SELF ? sortMethod.direction : null
@@ -366,13 +373,17 @@ export const TreeTableView = memo(
                 />
                 Self
               </th>
-              <th className={css(style.countCell)} onClick={onCountClick}>
+              <th
+                className={css(style.countCell)}
+                onClick={onCountClick}
+                title="Number of child calls in this branch, excluding this call"
+              >
                 <SortIcon
                   activeDirection={
                     sortMethod.field === TreeSortField.COUNT ? sortMethod.direction : null
                   }
                 />
-                Count
+                Descendants
               </th>
               <th className={css(style.textCell)} onClick={onCallOrderClick}>
                 <SortIcon
@@ -398,78 +409,6 @@ export const TreeTableView = memo(
     )
   },
 )
-
-async function copyTextToClipboard(text: string): Promise<boolean> {
-  try {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      await navigator.clipboard.writeText(text)
-      return true
-    }
-  } catch (e) {
-    // Fall through to the execCommand fallback below.
-  }
-
-  try {
-    const textarea = document.createElement('textarea')
-    textarea.value = text
-    textarea.style.position = 'fixed'
-    textarea.style.opacity = '0'
-    document.body.appendChild(textarea)
-    textarea.select()
-    const ok = document.execCommand('copy')
-    document.body.removeChild(textarea)
-    return ok
-  } catch (e) {
-    return false
-  }
-}
-
-interface GeneratePromptButtonProps {
-  profile: Profile
-  selectedNode: CallTreeNode
-}
-
-function GeneratePromptButton({profile, selectedNode}: GeneratePromptButtonProps) {
-  const style = getStyle(useTheme())
-  const treeContext = useContext(TreeViewContext)
-  const [status, setStatus] = useState<'idle' | 'copied' | 'error'>('idle')
-
-  const onClick = useCallback(() => {
-    let calleeRows: CallTreeRow[] = []
-    let selectedDepth = 0
-
-    if (treeContext) {
-      const index = treeContext.getIndexForNode(selectedNode)
-      if (index != null) {
-        selectedDepth = treeContext.rowList[index].depth
-        for (let i = index + 1; i < treeContext.rowList.length; i++) {
-          if (treeContext.rowList[i].depth <= selectedDepth) break
-          calleeRows.push(treeContext.rowList[i])
-        }
-      }
-    }
-
-    const prompt = buildAnalysisPrompt(profile, selectedNode, calleeRows, selectedDepth)
-
-    copyTextToClipboard(prompt).then(ok => {
-      setStatus(ok ? 'copied' : 'error')
-      window.setTimeout(() => setStatus('idle'), 2500)
-    })
-  }, [profile, selectedNode, treeContext])
-
-  const label =
-    status === 'copied'
-      ? 'Copied to clipboard!'
-      : status === 'error'
-        ? 'Copy failed — check console'
-        : 'Copy AI analysis prompt'
-
-  return (
-    <button type="button" className={css(style.promptButton)} onClick={onClick}>
-      {label}
-    </button>
-  )
-}
 
 interface TreeViewProps {
   theme: Theme
@@ -511,9 +450,6 @@ class TreeView extends StatelessComponent<TreeViewProps> {
     if (selectedNode) {
       detailView = (
         <div className={css(style.detailPanel, commonStyle.vbox)}>
-          <div className={css(style.detailActions)}>
-            <GeneratePromptButton profile={profile} selectedNode={selectedNode} />
-          </div>
           <div className={css(style.detailBody)}>
             <CallTreeNodeDetailView
               grandTotal={profile.getTotalNonIdleWeight()}
@@ -571,30 +507,11 @@ const getStyle = withTheme(theme =>
       overflow: 'hidden',
       background: theme.bgPrimaryColor,
     },
-    detailActions: {
-      display: 'flex',
-      flexShrink: 0,
-      padding: `${Sizes.FRAME_HEIGHT / 4}px ${Sizes.FRAME_HEIGHT / 2}px`,
-      borderBottom: `1px solid ${theme.bgSecondaryColor}`,
-    },
     detailBody: {
       position: 'relative',
       flex: 1,
       minHeight: 0,
       overflow: 'hidden',
-    },
-    promptButton: {
-      background: theme.selectionPrimaryColor,
-      color: theme.altFgPrimaryColor,
-      border: 'none',
-      padding: `4px ${Sizes.FRAME_HEIGHT / 2}px`,
-      fontSize: FontSize.LABEL,
-      fontFamily: 'inherit',
-      cursor: 'pointer',
-      width: '100%',
-      ':hover': {
-        background: theme.selectionSecondaryColor,
-      },
     },
     treeTableView: {
       background: theme.bgPrimaryColor,
@@ -683,8 +600,8 @@ const getStyle = withTheme(theme =>
       whiteSpace: 'nowrap',
       textAlign: 'right',
       paddingRight: Sizes.FRAME_HEIGHT,
-      width: 4 * Sizes.FRAME_HEIGHT,
-      minWidth: 4 * Sizes.FRAME_HEIGHT,
+      width: 6 * Sizes.FRAME_HEIGHT,
+      minWidth: 6 * Sizes.FRAME_HEIGHT,
     },
     textCell: {
       textOverflow: 'ellipsis',

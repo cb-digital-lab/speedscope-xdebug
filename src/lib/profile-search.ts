@@ -1,6 +1,7 @@
 import {Profile, Frame, CallTreeNode} from './profile'
 import {Flamechart, FlamechartFrame} from './flamechart'
 import {Rect, Vec2} from './math'
+import {forEachCallWithLOD} from './flamechart-lod'
 
 export enum FlamechartType {
   CHRONO_FLAME_CHART,
@@ -92,6 +93,7 @@ export class FlamechartSearchResults {
   constructor(
     readonly flamechart: Flamechart,
     readonly profileResults: ProfileSearchResults,
+    private readonly completeCallTreeRoot?: CallTreeNode,
   ) {}
 
   private matches: CachedFlamechartResult | null = null
@@ -115,9 +117,31 @@ export class FlamechartSearchResults {
         })
       }
 
-      const layers = this.flamechart.getLayers()
-      if (layers.length > 0) {
-        layers[0].forEach(frame => visit(frame, 0))
+      if (this.completeCallTreeRoot != null) {
+        let depth = 0
+        forEachCallWithLOD(
+          this.completeCallTreeRoot,
+          {minFrameWidth: 0, viewLeft: 0, viewRight: Infinity, quantizedViewportWidth: Infinity},
+          (node, start) => {
+            if (this.profileResults.getMatchForFrame(node.frame)) {
+              indexForNode.set(node, matches.length)
+              matches.push({
+                node,
+                configSpaceBounds: new Rect(
+                  new Vec2(start, depth),
+                  new Vec2(node.getTotalWeight(), 1),
+                ),
+              })
+            }
+            depth++
+          },
+          () => {
+            depth--
+          },
+        )
+      } else {
+        const layers = this.flamechart.getLayers()
+        if (layers.length > 0) layers[0].forEach(frame => visit(frame, 0))
       }
 
       this.matches = {matches, indexForNode}

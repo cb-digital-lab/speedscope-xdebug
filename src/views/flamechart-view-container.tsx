@@ -90,7 +90,9 @@ export const getChronoViewFlamechart = memoizeByShallowEquality(
     minFrameWidth: number
   }): Flamechart => {
     return new Flamechart({
+      allowLODZoom: true,
       getTotalWeight: profile.getTotalWeight.bind(profile),
+      getMaxStackDepth: profile.getMaxStackDepth.bind(profile),
       forEachCall: (openFrame, closeFrame) =>
         forEachCallWithLOD(
           profile.getAppendOrderCalltreeRoot(),
@@ -124,6 +126,11 @@ export const createMemoizedFlamechartRenderer = (options?: FlamechartRendererOpt
     },
   )
 
+// Keep the overview alive while the detail cache changes with the viewport.
+export const getChronoOverviewFlamechart = memoizeByShallowEquality(
+  (args: Parameters<typeof getChronoViewFlamechart>[0]) => getChronoViewFlamechart(args),
+)
+const getChronoOverviewFlamechartRenderer = createMemoizedFlamechartRenderer()
 const getChronoViewFlamechartRenderer = createMemoizedFlamechartRenderer()
 
 export interface FlamechartViewContainerProps {
@@ -146,12 +153,12 @@ export const ChronoFlamechartView = memo((props: FlamechartViewContainerProps) =
   const overviewLOD = getOverviewFlamechartLODParams(totalWeight)
   const detailLOD = getFlamechartLODParams(totalWeight, chronoViewState.configSpaceViewportRect)
 
-  const overviewFlamechart = getChronoViewFlamechart({
+  const overviewFlamechart = getChronoOverviewFlamechart({
     profile,
     getColorBucketForFrame,
     ...overviewLOD,
   })
-  const overviewFlamechartRenderer = getChronoViewFlamechartRenderer({
+  const overviewFlamechartRenderer = getChronoOverviewFlamechartRenderer({
     canvasContext,
     flamechart: overviewFlamechart,
   })
@@ -171,6 +178,7 @@ export const ChronoFlamechartView = memo((props: FlamechartViewContainerProps) =
   return (
     <FlamechartSearchContextProvider
       flamechart={flamechart}
+      completeCallTreeRoot={profile.getAppendOrderCalltreeRoot()}
       selectedNode={chronoViewState.selectedNode}
       setSelectedNode={setters.setSelectedNode}
       configSpaceViewportRect={chronoViewState.configSpaceViewportRect}
@@ -209,7 +217,9 @@ export const getLeftHeavyFlamechart = memoizeByShallowEquality(
     minFrameWidth: number
   }): Flamechart => {
     return new Flamechart({
+      allowLODZoom: true,
       getTotalWeight: profile.getTotalNonIdleWeight.bind(profile),
+      getMaxStackDepth: profile.getMaxStackDepth.bind(profile),
       forEachCall: (openFrame, closeFrame) =>
         forEachCallWithLOD(
           profile.getGroupedCalltreeRoot(),
@@ -223,6 +233,10 @@ export const getLeftHeavyFlamechart = memoizeByShallowEquality(
   },
 )
 
+export const getLeftHeavyOverviewFlamechart = memoizeByShallowEquality(
+  (args: Parameters<typeof getLeftHeavyFlamechart>[0]) => getLeftHeavyFlamechart(args),
+)
+const getLeftHeavyOverviewFlamechartRenderer = createMemoizedFlamechartRenderer()
 const getLeftHeavyFlamechartRenderer = createMemoizedFlamechartRenderer()
 
 export const LeftHeavyFlamechartView = memo((ownProps: FlamechartViewContainerProps) => {
@@ -241,12 +255,12 @@ export const LeftHeavyFlamechartView = memo((ownProps: FlamechartViewContainerPr
   const overviewLOD = getOverviewFlamechartLODParams(totalWeight)
   const detailLOD = getFlamechartLODParams(totalWeight, leftHeavyViewState.configSpaceViewportRect)
 
-  const overviewFlamechart = getLeftHeavyFlamechart({
+  const overviewFlamechart = getLeftHeavyOverviewFlamechart({
     profile,
     getColorBucketForFrame,
     ...overviewLOD,
   })
-  const overviewFlamechartRenderer = getLeftHeavyFlamechartRenderer({
+  const overviewFlamechartRenderer = getLeftHeavyOverviewFlamechartRenderer({
     canvasContext,
     flamechart: overviewFlamechart,
   })
@@ -266,6 +280,7 @@ export const LeftHeavyFlamechartView = memo((ownProps: FlamechartViewContainerPr
   return (
     <FlamechartSearchContextProvider
       flamechart={flamechart}
+      completeCallTreeRoot={profile.getGroupedCalltreeRoot()}
       selectedNode={leftHeavyViewState.selectedNode}
       setSelectedNode={setters.setSelectedNode}
       configSpaceViewportRect={leftHeavyViewState.configSpaceViewportRect}

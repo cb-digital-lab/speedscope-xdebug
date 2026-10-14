@@ -44,7 +44,7 @@ export function getOverviewFlamechartLODParams(totalWeight: number): FlamechartL
 
 function quantizeViewportWidth(totalWeight: number, viewportWidth: number): number {
   if (!(totalWeight > 0)) return 0
-  const ratio = Math.min(1, Math.max(viewportWidth / totalWeight, 1 / 1024))
+  const ratio = Math.min(1, Math.max(viewportWidth / totalWeight, 1 / Math.pow(2, 40)))
   const bucket = Math.pow(2, Math.ceil(Math.log2(ratio)))
   return totalWeight * bucket
 }
@@ -66,6 +66,7 @@ export function forEachCallWithLOD(
       return t
     }
 
+    start = node.getStartValue() ?? start
     const total = node.getTotalWeight()
     if (total < minFrameWidth) {
       return start + total

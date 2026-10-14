@@ -415,7 +415,7 @@ export class FlamechartPanZoomView extends Component<FlamechartPanZoomViewProps,
       for (let x = Math.ceil(left / interval) * interval; x < right; x += interval) {
         // TODO(jlfwong): Ensure that labels do not overlap
         const pos = Math.round(configToPhysical.transformPosition(new Vec2(x, 0)).x)
-        const labelText = this.props.flamechart.formatValue(x)
+        const labelText = this.props.flamechart.formatValue(x, interval)
         const textWidth = cachedMeasureTextWidth(ctx, labelText)
         ctx.fillStyle = theme.fgPrimaryColor
         ctx.fillText(labelText, pos - textWidth - labelPaddingPx, y + labelPaddingPx)

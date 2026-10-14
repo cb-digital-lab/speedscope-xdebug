@@ -38,6 +38,7 @@ function makeNode(name: string, total: number, parent: any) {
     parent,
     children: [] as any[],
     getTotalWeight: () => total,
+    getStartValue: () => null,
     isRoot: () => false,
   }
   parent.children.push(node)

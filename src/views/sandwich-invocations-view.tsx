@@ -117,7 +117,7 @@ export const SandwichInvocationsView = memo(
     const [expandedCallers, setExpandedCallers] = useState<Set<string>>(() => new Set())
     const [expandedStackKeys, setExpandedStackKeys] = useState<Set<string>>(() => new Set())
     const [selectedNode, setSelectedNode] = useState<InvocationRow['node'] | null>(null)
-    const [selectedCallerName, setSelectedCallerName] = useState<string | null>(null)
+    const [selectedCallerKey, setSelectedCallerKey] = useState<string | null>(null)
     const [selectedStackKey, setSelectedStackKey] = useState<string | null>(null)
     const [scrollLeft, setScrollLeft] = useState(0)
     const collectorRef = useRef<ChunkedCollector | null>(null)
@@ -139,7 +139,7 @@ export const SandwichInvocationsView = memo(
       setDone(false)
       setSortMethod(DEFAULT_SORT)
       setSelectedNode(null)
-      setSelectedCallerName(null)
+      setSelectedCallerKey(null)
       setSelectedStackKey(null)
       setExpandedCallers(new Set())
       setExpandedStackKeys(new Set())
@@ -177,29 +177,34 @@ export const SandwichInvocationsView = memo(
       }
     }, [profile, selectedFrame])
 
-    const displayRows: FlattenedInvocationListRow[] = useMemo(() => {
-      if (groupMode === GroupMode.FLAT) {
-        const sorted = rows.slice()
-        if (done) {
-          sortInvocationRows(sorted, sortMethod)
-        }
-        return sorted.map(row => ({kind: 'invocation' as const, row, indented: false}))
-      }
+    const sortedRows = useMemo(() => {
+      if (groupMode !== GroupMode.FLAT) return []
+      const sorted = rows.slice()
+      if (done) sortInvocationRows(sorted, sortMethod)
+      return sorted
+    }, [rows, done, sortMethod, groupMode])
 
-      if (groupMode === GroupMode.BY_CALLER) {
-        const groups = groupInvocationsByCaller(rows)
-        if (done) {
-          sortCallerGroups(groups, sortMethod)
-        }
-        return flattenCallerGroups(groups, expandedCallers)
-      }
+    const callerGroups = useMemo(() => {
+      if (groupMode !== GroupMode.BY_CALLER) return []
+      const groups = groupInvocationsByCaller(rows)
+      if (done) sortCallerGroups(groups, sortMethod)
+      return groups
+    }, [rows, done, sortMethod, groupMode])
 
+    const stackTree = useMemo(() => {
+      if (groupMode !== GroupMode.BY_STACK) return []
       const tree = buildInvocationStackTree(rows)
-      if (done) {
-        sortStackTree(tree, sortMethod)
-      }
-      return flattenStackTree(tree, expandedStackKeys)
-    }, [rows, done, sortMethod, groupMode, expandedCallers, expandedStackKeys])
+      if (done) sortStackTree(tree, sortMethod)
+      return tree
+    }, [rows, done, sortMethod, groupMode])
+
+    const displayRows: FlattenedInvocationListRow[] = useMemo(() => {
+      if (groupMode === GroupMode.FLAT)
+        return sortedRows.map(row => ({kind: 'invocation' as const, row, indented: false}))
+      if (groupMode === GroupMode.BY_CALLER)
+        return flattenCallerGroups(callerGroups, expandedCallers)
+      return flattenStackTree(stackTree, expandedStackKeys)
+    }, [sortedRows, callerGroups, stackTree, groupMode, expandedCallers, expandedStackKeys])
 
     const showCount = groupMode === GroupMode.BY_CALLER || groupMode === GroupMode.BY_STACK
     const showStackTree = groupMode === GroupMode.BY_STACK
@@ -257,7 +262,7 @@ export const SandwichInvocationsView = memo(
             case 1:
               return 'Self'
             case 2:
-              return 'Count'
+              return 'Occurrences'
             case 3:
               return 'Symbol'
             default:
@@ -271,7 +276,7 @@ export const SandwichInvocationsView = memo(
             case 1:
               return 'Self'
             case 2:
-              return 'Count'
+              return 'Occurrences'
             case 3:
               return 'Caller'
             case 4:
@@ -304,8 +309,7 @@ export const SandwichInvocationsView = memo(
         if (displayRow.kind === 'stack') {
           switch (columnIndex) {
             case 0: {
-              const totalPerc =
-                grandTotal === 0 ? 0 : (100.0 * displayRow.node.total) / grandTotal
+              const totalPerc = grandTotal === 0 ? 0 : (100.0 * displayRow.node.total) / grandTotal
               return `${profile.formatValue(displayRow.node.total)} (${formatPercent(totalPerc)})`
             }
             case 1: {
@@ -327,11 +331,12 @@ export const SandwichInvocationsView = memo(
               case 0: {
                 const totalPerc =
                   grandTotal === 0 ? 0 : (100.0 * displayRow.group.total) / grandTotal
-                return `${profile.formatValue(displayRow.group.total)} (${formatPercent(totalPerc)})`
+                return `${profile.formatValue(displayRow.group.total)} (${formatPercent(
+                  totalPerc,
+                )})`
               }
               case 1: {
-                const selfPerc =
-                  grandTotal === 0 ? 0 : (100.0 * displayRow.group.self) / grandTotal
+                const selfPerc = grandTotal === 0 ? 0 : (100.0 * displayRow.group.self) / grandTotal
                 return `${profile.formatValue(displayRow.group.self)} (${formatPercent(selfPerc)})`
               }
               case 2:
@@ -408,11 +413,12 @@ export const SandwichInvocationsView = memo(
     const autoSizeColumnsRef = useRef(autoSizeColumns)
     autoSizeColumnsRef.current = autoSizeColumns
 
+    const hasDisplayRows = displayRows.length > 0
     useEffect(() => {
-      if (!done || displayRows.length === 0) return
+      if (!done || !hasDisplayRows) return
       const indices = showStackTree || showCount ? [0, 1, 2, 3] : [0, 1, 2]
       autoSizeColumnsRef.current(indices)
-    }, [done, groupMode, showCount, showStackTree, displayRows.length === 0])
+    }, [done, groupMode, showCount, showStackTree, hasDisplayRows])
 
     const handleSortClick = useCallback(
       (field: InvocationSortField, ev: MouseEvent) => {
@@ -447,7 +453,7 @@ export const SandwichInvocationsView = memo(
     )
 
     const tableStyle = useMemo(
-      () => ({width: '100%', minWidth: tableMinWidth} as const),
+      () => ({width: '100%', minWidth: tableMinWidth}) as const,
       [tableMinWidth],
     )
 
@@ -517,7 +523,7 @@ export const SandwichInvocationsView = memo(
                 onMouseDown={preventDoubleClickTextSelection}
                 onClick={() => {
                   setSelectedStackKey(node.pathKey)
-                  setSelectedCallerName(null)
+                  setSelectedCallerKey(null)
                   setSelectedNode(node.invocation ? node.invocation.node : null)
                 }}
                 onDblClick={ev => {
@@ -573,20 +579,20 @@ export const SandwichInvocationsView = memo(
 
           if (displayRow.kind === 'group') {
             const {group, isExpanded} = displayRow
-            const selected = selectedCallerName === group.callerName && selectedNode == null
+            const selected = selectedCallerKey === group.key && selectedNode == null
             const totalPerc = grandTotal === 0 ? 0 : (100.0 * group.total) / grandTotal
             const selfPerc = grandTotal === 0 ? 0 : (100.0 * group.self) / grandTotal
             elements.push(
               <tr
-                key={`group-${group.callerName}`}
+                key={`group-${group.key}`}
                 onMouseDown={preventDoubleClickTextSelection}
                 onClick={() => {
-                  setSelectedCallerName(group.callerName)
+                  setSelectedCallerKey(group.key)
                   setSelectedNode(null)
                 }}
                 onDblClick={ev => {
                   ev.preventDefault()
-                  toggleCallerExpanded(group.callerName)
+                  toggleCallerExpanded(group.key)
                 }}
                 className={css(
                   style.tableRow,
@@ -605,13 +611,20 @@ export const SandwichInvocationsView = memo(
                 {showCount ? (
                   <td className={css(style.countCell)}>{group.count.toLocaleString()}</td>
                 ) : null}
-                <td className={css(style.callerCell)} title={group.callerName}>
+                <td
+                  className={css(style.callerCell)}
+                  title={
+                    group.callerFile
+                      ? `${group.callerName} [${group.callerFile}]`
+                      : group.callerName
+                  }
+                >
                   <span className={css(style.callerCellInner)}>
                     <span
                       className={css(style.chevron)}
                       onClick={ev => {
                         ev.stopPropagation()
-                        toggleCallerExpanded(group.callerName)
+                        toggleCallerExpanded(group.key)
                       }}
                     >
                       {isExpanded ? '▼' : '▶'}
@@ -635,7 +648,7 @@ export const SandwichInvocationsView = memo(
               onMouseDown={preventDoubleClickTextSelection}
               onClick={() => {
                 setSelectedNode(row.node)
-                setSelectedCallerName(null)
+                setSelectedCallerKey(null)
               }}
               onDblClick={ev => onRowDoubleClick(row.node, ev)}
               className={css(
@@ -655,9 +668,7 @@ export const SandwichInvocationsView = memo(
               {showCount ? <td className={css(style.countCell)} /> : null}
               <td className={css(style.callerCell)} title={row.callerName}>
                 <span className={css(style.callerCellInner)}>
-                  {displayRow.indented ? (
-                    <span className={css(style.chevronPlaceholder)} />
-                  ) : null}
+                  {displayRow.indented ? <span className={css(style.chevronPlaceholder)} /> : null}
                   {row.callerName}
                 </span>
               </td>
@@ -677,7 +688,7 @@ export const SandwichInvocationsView = memo(
       [
         displayRows,
         selectedNode,
-        selectedCallerName,
+        selectedCallerKey,
         selectedStackKey,
         grandTotal,
         profile,
@@ -724,10 +735,7 @@ export const SandwichInvocationsView = memo(
           </button>
           <button
             type="button"
-            className={css(
-              style.modeTab,
-              groupMode === GroupMode.BY_CALLER && style.modeTabActive,
-            )}
+            className={css(style.modeTab, groupMode === GroupMode.BY_CALLER && style.modeTabActive)}
             onClick={() => setGroupMode(GroupMode.BY_CALLER)}
           >
             Group by Caller
@@ -776,7 +784,7 @@ export const SandwichInvocationsView = memo(
                 {showCount ? (
                   <th className={css(style.headerCell, style.countCell)} onClick={onCountClick}>
                     <SortIcon activeDirection={activeDirection(InvocationSortField.COUNT)} />
-                    Count
+                    Occurrences
                     <ColumnResizeHandle
                       columnIndex={2}
                       active={draggingColumn === 2}
@@ -786,10 +794,7 @@ export const SandwichInvocationsView = memo(
                   </th>
                 ) : null}
                 {showStackTree ? (
-                  <th
-                    className={css(style.headerCell, style.textCell)}
-                    onClick={onCallStackClick}
-                  >
+                  <th className={css(style.headerCell, style.textCell)} onClick={onCallStackClick}>
                     <SortIcon activeDirection={activeDirection(InvocationSortField.CALL_STACK)} />
                     Symbol
                     <ColumnResizeHandle
@@ -811,10 +816,11 @@ export const SandwichInvocationsView = memo(
                         onAutoSize={autoSizeColumn}
                       />
                     </th>
-                    <th className={css(style.headerCell, style.textCell)} onClick={onCallStackClick}>
-                      <SortIcon
-                        activeDirection={activeDirection(InvocationSortField.CALL_STACK)}
-                      />
+                    <th
+                      className={css(style.headerCell, style.textCell)}
+                      onClick={onCallStackClick}
+                    >
+                      <SortIcon activeDirection={activeDirection(InvocationSortField.CALL_STACK)} />
                       Call stack
                       <ColumnResizeHandle
                         columnIndex={showCount ? 4 : 3}

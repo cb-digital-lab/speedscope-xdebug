@@ -1,5 +1,10 @@
 import {StackListProfileBuilder, CallTreeNode, FrameInfo} from './profile'
-import {buildCallTreeRows, getAllExpandableNodes, getAncestorNodes, getDescendantCount} from './call-tree-rows'
+import {
+  buildCallTreeRows,
+  getAllExpandableNodes,
+  getAncestorNodes,
+  getDescendantCount,
+} from './call-tree-rows'
 import {SortDirection, TreeSortField} from '../app-state'
 
 function getFrameInfo(key: string): FrameInfo {

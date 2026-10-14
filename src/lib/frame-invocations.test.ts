@@ -248,7 +248,7 @@ test('flattenCallerGroups expands only selected callers', () => {
   expect(collapsed.every(r => r.kind === 'group')).toBe(true)
   expect(collapsed.length).toBe(groups.length)
 
-  const expandedName = groups[0].callerName
+  const expandedName = groups[0].key
   const expanded = flattenCallerGroups(groups, new Set([expandedName]))
   expect(expanded[0]).toMatchObject({kind: 'group', isExpanded: true})
   expect(

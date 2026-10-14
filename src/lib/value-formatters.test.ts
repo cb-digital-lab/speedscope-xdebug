@@ -1,4 +1,4 @@
-import {TimeFormatter, ByteFormatter} from './value-formatters'
+import {TimeFormatter, ByteFormatter, ValueFormatter} from './value-formatters'
 
 describe('TimeFormatter', () => {
   test('input units milliseconds', () => {
@@ -19,6 +19,18 @@ describe('TimeFormatter', () => {
     expect(f.format(150)).toEqual('2:30')
     expect(f.format(1203.123)).toEqual('20:03')
   })
+
+  test('axis labels distinguish microsecond intervals late in a profile', () => {
+    const f: ValueFormatter = new TimeFormatter('nanoseconds')
+    expect(f.format(6400000000, 500)).toEqual('6.4000000s')
+    expect(f.format(6400000500, 500)).toEqual('6.4000005s')
+  })
+
+  test('axis labels retain subsecond precision beyond one minute', () => {
+    const f: ValueFormatter = new TimeFormatter('seconds')
+    expect(f.format(150.001, 0.001)).toEqual('150.001s')
+    expect(f.format(150, 1)).toEqual('2:30')
+  })
 })
 
 test('ByteFormatter', () => {
@@ -27,4 +39,10 @@ test('ByteFormatter', () => {
   expect(f.format(1024)).toEqual('1.00 KB')
   expect(f.format(3.5 * 1024 * 1024)).toEqual('3.50 MB')
   expect(f.format(4.32 * 1024 * 1024 * 1024)).toEqual('4.32 GB')
+})
+
+test('memory axis labels distinguish byte intervals at megabyte offsets', () => {
+  const f: ValueFormatter = new ByteFormatter()
+  expect(f.format(100 * 1024 * 1024 + 1, 1)).toEqual('100.0000010 MB')
+  expect(f.format(100 * 1024 * 1024 + 2, 1)).toEqual('100.0000019 MB')
 })

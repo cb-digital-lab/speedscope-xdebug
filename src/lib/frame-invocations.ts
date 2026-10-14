@@ -69,10 +69,7 @@ export interface ChunkedCollector {
   cancel(): void
 }
 
-export function createChunkedInvocationCollector(
-  profile: Profile,
-  frame: Frame,
-): ChunkedCollector {
+export function createChunkedInvocationCollector(profile: Profile, frame: Frame): ChunkedCollector {
   const expected = frame.getCallCount()
   const rows: InvocationRow[] = []
   let cancelled = false
@@ -90,7 +87,9 @@ export function createChunkedInvocationCollector(
       }
 
       let matchesThisChunk = 0
-      while (stack.length > 0 && matchesThisChunk < maxMatches) {
+      let steps = 0
+      // Bound work even if there are no matches in this part of the tree.
+      while (stack.length > 0 && matchesThisChunk < maxMatches && steps++ < 3000) {
         const top = stack[stack.length - 1]
         if (top.childIndex >= top.node.children.length) {
           stack.pop()
@@ -153,7 +152,9 @@ export function sortInvocationRows(rows: InvocationRow[], sortMethod: Invocation
 }
 
 export interface CallerGroup {
+  key: string
   callerName: string
+  callerFile?: string
   total: number
   self: number
   count: number
@@ -169,16 +170,20 @@ export function groupInvocationsByCaller(rows: InvocationRow[]): CallerGroup[] {
   const groupsByCaller = new Map<string, CallerGroup>()
 
   for (const row of rows) {
-    let group = groupsByCaller.get(row.callerName)
+    const caller = row.node.parent
+    const key = JSON.stringify(caller == null || caller.isRoot() ? [] : [caller.frame.key])
+    let group = groupsByCaller.get(key)
     if (group == null) {
       group = {
+        key,
         callerName: row.callerName,
+        callerFile: caller?.frame.file,
         total: 0,
         self: 0,
         count: 0,
         invocations: [],
       }
-      groupsByCaller.set(row.callerName, group)
+      groupsByCaller.set(key, group)
     }
     group.invocations.push(row)
     group.total += row.total
@@ -226,7 +231,7 @@ export function flattenCallerGroups(
 ): FlattenedInvocationListRow[] {
   const rows: FlattenedInvocationListRow[] = []
   for (const group of groups) {
-    const isExpanded = expandedCallers.has(group.callerName)
+    const isExpanded = expandedCallers.has(group.key)
     rows.push({kind: 'group', group, isExpanded})
     if (isExpanded) {
       for (const invocation of group.invocations) {
@@ -239,6 +244,7 @@ export function flattenCallerGroups(
 
 export interface StackTreeNode {
   name: string
+  frame: Frame
   pathKey: string
   depth: number
   total: number
@@ -251,6 +257,7 @@ export interface StackTreeNode {
 
 interface StackTreeBuildNode {
   name: string
+  frame: Frame
   pathKey: string
   depth: number
   total: number
@@ -258,7 +265,7 @@ interface StackTreeBuildNode {
   count: number
   children: StackTreeBuildNode[]
   invocation: InvocationRow | null
-  childMap: Map<string, StackTreeBuildNode>
+  childMap: Map<Frame, StackTreeBuildNode>
   seenCallSites: Set<CallTreeNode>
 }
 
@@ -280,7 +287,7 @@ export function formatStackTreeLabel(node: StackTreeNode): string {
 
 export function buildInvocationStackTree(rows: InvocationRow[]): StackTreeNode[] {
   const roots: StackTreeBuildNode[] = []
-  const rootMap: Map<string, StackTreeBuildNode> = new Map()
+  const rootMap: Map<Frame, StackTreeBuildNode> = new Map()
   let leafId = 0
 
   for (const row of rows) {
@@ -298,6 +305,7 @@ export function buildInvocationStackTree(rows: InvocationRow[]): StackTreeNode[]
         const parentKey = parent ? parent.pathKey : ''
         const leaf: StackTreeBuildNode = {
           name,
+          frame: callTreeNode.frame,
           pathKey: `${parentKey}\0leaf:${leafId++}`,
           depth,
           total: row.total,
@@ -316,12 +324,14 @@ export function buildInvocationStackTree(rows: InvocationRow[]): StackTreeNode[]
         break
       }
 
-      const pathKey: string = parent ? `${parent.pathKey}\0${name}` : name
-      const map: Map<string, StackTreeBuildNode> = parent ? parent.childMap : rootMap
-      let node: StackTreeBuildNode | undefined = map.get(name)
+      const frameKey = JSON.stringify(callTreeNode.frame.key)
+      const pathKey: string = parent ? `${parent.pathKey}\0${frameKey}` : frameKey
+      const map: Map<Frame, StackTreeBuildNode> = parent ? parent.childMap : rootMap
+      let node: StackTreeBuildNode | undefined = map.get(callTreeNode.frame)
       if (node == null) {
         node = {
           name,
+          frame: callTreeNode.frame,
           pathKey,
           depth,
           total: 0,
@@ -332,7 +342,7 @@ export function buildInvocationStackTree(rows: InvocationRow[]): StackTreeNode[]
           childMap: new Map(),
           seenCallSites: new Set(),
         }
-        map.set(name, node)
+        map.set(callTreeNode.frame, node)
         if (parent) {
           parent.children.push(node)
         } else {
@@ -350,6 +360,7 @@ export function buildInvocationStackTree(rows: InvocationRow[]): StackTreeNode[]
   function strip(node: StackTreeBuildNode): StackTreeNode {
     return {
       name: node.name,
+      frame: node.frame,
       pathKey: node.pathKey,
       depth: node.depth,
       total: node.total,

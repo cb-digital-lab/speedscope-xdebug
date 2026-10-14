@@ -3,7 +3,7 @@ import {useCallback, useEffect, useMemo, useRef, useState} from 'preact/hooks'
 import {StyleSheet, css} from 'aphrodite'
 import {clamp} from '../lib/math'
 import {cachedMeasureTextWidth} from '../lib/text-utils'
-import {FontSize} from './style'
+import {FontFamily, FontSize} from './style'
 import {Theme, useTheme, withTheme} from './themes/theme'
 
 const RESIZE_HANDLE_HIT_WIDTH = 6
@@ -21,7 +21,7 @@ function getMeasureContext(): CanvasRenderingContext2D {
   if (measureCtx == null) {
     throw new Error('Failed to create measure context')
   }
-  measureCtx.font = `${FontSize.LABEL}px sans-serif`
+  measureCtx.font = `${FontSize.LABEL}px ${FontFamily.MONOSPACE}`
   return measureCtx
 }
 
@@ -57,7 +57,7 @@ export function useResizableTableColumns({
       if (prev.length === defaultWidths.length) return prev
       return defaultWidths.slice()
     })
-  }, [defaultWidths.length])
+  }, [defaultWidths])
 
   const tableMinWidth = useMemo(
     () => columnWidths.reduce((sum, width) => sum + width, 0),
@@ -154,8 +154,7 @@ export function useResizableTableColumns({
   const autoSizeColumns = useCallback(
     (columnIndices: number[]) => {
       setColumnWidths(prev => {
-        const next =
-          prev.length === defaultWidths.length ? prev.slice() : defaultWidths.slice()
+        const next = prev.length === defaultWidths.length ? prev.slice() : defaultWidths.slice()
         for (const columnIndex of columnIndices) {
           if (columnIndex >= 0 && columnIndex < next.length) {
             next[columnIndex] = measureColumnWidth(columnIndex)

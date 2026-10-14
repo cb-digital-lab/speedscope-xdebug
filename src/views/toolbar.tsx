@@ -39,8 +39,14 @@ function ToolbarLeftContent(props: ToolbarProps) {
           props.viewMode === ViewMode.CHRONO_FLAME_CHART && style.toolbarTabActive,
         )}
         onClick={setChronoFlameChart}
+        title={
+          props.activeProfileState.profile.isTimelineReconstructed()
+            ? 'Call order reconstructed from Xdebug costs; actual timestamps are not recorded.'
+            : 'Recorded chronological order'
+        }
       >
-        <span className={css(style.emoji)}>🕰</span>Time Order
+        <span className={css(style.emoji)}>🕰</span>
+        {props.activeProfileState.profile.isTimelineReconstructed() ? 'Call Order' : 'Time Order'}
       </div>
       <div
         className={css(

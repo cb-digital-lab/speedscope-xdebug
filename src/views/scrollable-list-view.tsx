@@ -2,7 +2,7 @@
 // renders only items within the viewport + a couple extra items.
 
 import {h, JSX} from 'preact'
-import {useState, useCallback, useRef, useMemo, useEffect} from 'preact/hooks'
+import {useState, useCallback, useRef, useMemo, useEffect, useLayoutEffect} from 'preact/hooks'
 
 export interface ListItem {
   size: number
@@ -46,28 +46,43 @@ export const ScrollableListView = ({
   const leftOrTop = axis === 'x' ? 'left' : 'top'
   const scrollLeftOrScrollTop = axis === 'x' ? 'scrollLeft' : 'scrollTop'
 
-  // This is kind of a weird hack, but I'm not sure what the better of doing something like this is.
-  const offset = initialIndexInView
-    ? items.reduce((a, b, i) => (i < initialIndexInView ? a + b.size : a), 0)
-    : 0
-  const initialScroll = useRef<number | null>(offset)
+  const selectedOffset = useMemo(
+    () =>
+      initialIndexInView == null
+        ? null
+        : items.slice(0, initialIndexInView).reduce((sum, item) => sum + item.size, 0),
+    [items, initialIndexInView],
+  )
+  const selectedSize = initialIndexInView == null ? 0 : items[initialIndexInView]?.size ?? 0
+
+  useLayoutEffect(() => {
+    const viewport = viewportRef.current
+    if (viewport == null || selectedOffset == null || viewportSize == null) return
+    const current = viewport[scrollLeftOrScrollTop]
+    const next =
+      selectedOffset < current
+        ? selectedOffset
+        : selectedOffset + selectedSize > current + viewportSize
+          ? selectedOffset + selectedSize - viewportSize
+          : current
+    if (next !== current) {
+      viewport.scrollTo({[leftOrTop]: next})
+      setViewportScrollOffset(next)
+    }
+  }, [selectedOffset, selectedSize, viewportSize, scrollLeftOrScrollTop, leftOrTop])
 
   const viewportCallback = useCallback(
     (viewport: HTMLDivElement | null) => {
       if (viewport) {
         requestAnimationFrame(() => {
           setViewportSize(viewport.getBoundingClientRect()[widthOrHeight])
-          if (initialScroll.current != null) {
-            viewport.scrollTo({[leftOrTop]: initialScroll.current})
-            initialScroll.current = null
-          }
         })
       } else {
         setViewportSize(null)
       }
       viewportRef.current = viewport
     },
-    [widthOrHeight, leftOrTop],
+    [widthOrHeight],
   )
 
   const rangeResult: RangeResult | null = useMemo(() => {

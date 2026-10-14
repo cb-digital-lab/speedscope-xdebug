@@ -156,14 +156,14 @@ export class BufferBackedTextFileContent implements TextFileContent {
     const iterator = function* (this: BufferBackedTextFileContent) {
       let lineBuffer: string = ''
       for (let chunk of this.chunks) {
-        const fragments = chunk.split('\n')
-        for (let i = 0; i < fragments.length; i++) {
-          if (i === 0) lineBuffer += fragments[i]
-          else {
-            yield lineBuffer
-            lineBuffer = fragments[i]
-          }
+        let start = 0
+        let end: number
+        while ((end = chunk.indexOf('\n', start)) !== -1) {
+          yield lineBuffer + chunk.slice(start, end)
+          lineBuffer = ''
+          start = end + 1
         }
+        lineBuffer += chunk.slice(start)
       }
 
       yield lineBuffer

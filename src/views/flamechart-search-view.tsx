@@ -15,6 +15,7 @@ export const FlamechartSearchContext = createContext<FlamechartSearchData | null
 
 export interface FlamechartSearchProps {
   flamechart: Flamechart
+  completeCallTreeRoot?: CallTreeNode
   selectedNode: CallTreeNode | null
   setSelectedNode: (node: CallTreeNode | null) => void
   configSpaceViewportRect: Rect
@@ -33,6 +34,7 @@ interface FlamechartSearchData {
 
 export const FlamechartSearchContextProvider = ({
   flamechart,
+  completeCallTreeRoot,
   selectedNode,
   setSelectedNode,
   configSpaceViewportRect,
@@ -44,8 +46,8 @@ export const FlamechartSearchContextProvider = ({
     if (profileSearchResults == null) {
       return null
     }
-    return new FlamechartSearchResults(flamechart, profileSearchResults)
-  }, [flamechart, profileSearchResults])
+    return new FlamechartSearchResults(flamechart, profileSearchResults, completeCallTreeRoot)
+  }, [flamechart, profileSearchResults, completeCallTreeRoot])
 
   return (
     <FlamechartSearchContext.Provider

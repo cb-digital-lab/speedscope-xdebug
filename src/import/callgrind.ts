@@ -1,102 +1,11 @@
-// https://www.valgrind.org/docs/manual/cl-format.html
-//
-// Larger example files can be found by searching on github:
-// https://github.com/search?q=cfn%3D&type=code
-//
-// Converting callgrind files into flamegraphs is challenging because callgrind
-// formatted profiles contain call graphs with weighted nodes and edges, and
-// such a weighted call graph does not uniquely define a flamegraph.
-//
-// Consider a program that looks like this:
-//
-//    // example.js
-//    function backup(read) {
-//      if (read) {
-//        read()
-//      } else {
-//        write()
-//      }
-//    }
-//
-//    function start() {
-//       backup(true)
-//    }
-//
-//    function end() {
-//       backup(false)
-//    }
-//
-//    start()
-//    end()
-//
-// Profiling this program might result in a profile that looks like the
-// following flame graph defined in Brendan Gregg's plaintext format:
-//
-//    start;backup;read 4
-//    end;backup;write 4
-//
-// When we convert this execution into a call-graph, we get the following:
-//
-//      +------------------+     +---------------+
-//      | start (self: 0)  |     | end (self: 0) |
-//      +------------------+     +---------------|
-//                   \               /
-//        (total: 4)  \             / (total: 4)
-//                     v           v
-//                 +------------------+
-//                 | backup (self: 0) |
-//                 +------------------+
-//                    /            \
-//       (total: 4)  /              \ (total: 4)
-//                  v                v
-//      +----------------+      +-----------------+
-//      | read (self: 4) |      | write (self: 4) |
-//      +----------------+      +-----------------+
-//
-// In the process of the conversion, we've lost information about the ratio of
-// time spent in read v.s. write in the start call v.s. the end call. The
-// following flame graph would yield the exact same call-graph, and therefore
-// the exact sample call-grind formatted profile:
-//
-//    start;backup;read 3
-//    start;backup;write 1
-//    end;backup;read 1
-//    end;backup;write 3
-//
-// This is unfortunate, since it means we can't produce a flamegraph that isn't
-// potentially lying about the what the actual execution behavior was. To
-// produce a flamegraph at all from the call graph representation, we have to
-// decide how much weight each sub-call should have. Given that we know the
-// total weight of each node, we'll make the incorrect assumption that every
-// invocation of a function will have the average distribution of costs among
-// the sub-function invocations. In the example given, this means we assume that
-// every invocation of backup() is assumed to spend half its time in read() and
-// half its time in write().
-//
-// So the flamegraph we'll produce from the given call-graph will actually be:
-//
-//    start;backup;read 2
-//    start;backup;write 2
-//    end;backup;read 2
-//    end;backup;write 2
-//
-// A particularly bad consequence is that the resulting flamegraph will suggest
-// that there was at some point a call stack that looked like
-// strat;backup;write, even though that never happened in the real program
-// execution.
-//
-// This lossy behavior only applies to files that genuinely contain an
-// aggregated call graph (e.g. those produced by valgrind/callgrind). Some
-// producers -- notably Xdebug -- instead emit a separate cost record for each
-// distinct invocation, in the order the calls complete (post-order: a callee's
-// record always precedes its caller's). When that's the case, the true call
-// tree can be reconstructed exactly by matching each caller's call edge to the
-// specific callee record whose inclusive cost it reports. We detect that
-// situation and reconstruct the real tree, falling back to the lossy
-// even-distribution heuristic only for individual edges we can't resolve.
+// This local fork reads Callgrind data as Xdebug per-invocation records.
+// Xdebug emits completed calls before their callers (post-order). Reconstruct
+// the hierarchy once and reuse it for time and memory. Inclusive edge costs
+// can differ slightly from the sum of self costs because of rounding.
+// No aggregate call-graph distribution or producer guessing is performed.
 
 import {CallTreeProfileBuilder, Frame, FrameInfo, Profile, ProfileGroup} from '../lib/profile'
-import {getOrInsert, KeyedSet} from '../lib/utils'
+import {KeyedSet} from '../lib/utils'
 import {ByteFormatter, TimeFormatter} from '../lib/value-formatters'
 import {TextFileContent} from './utils'
 
@@ -104,16 +13,6 @@ interface CallgrindRecord {
   frame: FrameInfo
   self: number[]
   childCount: number
-  edgeCallees: FrameInfo[]
-  edgeCalls: number[]
-  edgeInclusive: number[]
-}
-
-interface TreeNode {
-  frame: Frame
-  selfWeight: number
-  totalWeight: number
-  children: TreeNode[]
 }
 
 interface TopologyNode {
@@ -127,36 +26,12 @@ class CallgrindProfileBuilder {
     private fileName: string,
     private eventNames: string[],
     private records: CallgrindRecord[],
-    private knownReconstructable: boolean,
   ) {}
 
   build(): Profile[] {
-    let canReconstruct = this.knownReconstructable
-    if (!canReconstruct) {
-      const recordsPerFrame = new Map<string | number, number>()
-      for (const record of this.records) {
-        recordsPerFrame.set(record.frame.key, (recordsPerFrame.get(record.frame.key) ?? 0) + 1)
-      }
-      for (const count of recordsPerFrame.values()) {
-        if (count > 1) {
-          canReconstruct = true
-          break
-        }
-      }
-    }
-
-    if (canReconstruct) {
-      for (const record of this.records) {
-        record.edgeCallees = []
-        record.edgeCalls = []
-        record.edgeInclusive = []
-      }
-      const topology = this.buildTopology()
-      this.records.length = 0
-      return this.eventNames.map((name, index) => this.emitFromTopology(topology, name, index))
-    }
-
-    return this.eventNames.map((name, index) => this.buildHeuristicProfile(name, index))
+    const topology = this.buildTopology()
+    this.records.length = 0
+    return this.eventNames.map((name, index) => this.emitFromTopology(topology, name, index))
   }
 
   private buildTopology(): TopologyNode[] {
@@ -165,7 +40,9 @@ class CallgrindProfileBuilder {
     for (const record of this.records) {
       let childCount = record.childCount
       if (childCount > pending.length) {
-        childCount = pending.length
+        throw new Error(
+          'Invalid Xdebug post-order profile: a caller references missing child records. Aggregated Callgrind files are not supported by this fork.',
+        )
       }
 
       const children = childCount > 0 ? pending.splice(pending.length - childCount, childCount) : []
@@ -183,6 +60,7 @@ class CallgrindProfileBuilder {
     const frameSet = new KeyedSet<Frame>()
     const getFrame = (info: FrameInfo): Frame => Frame.getOrInsert(frameSet, info)
     const profile = new CallTreeProfileBuilder()
+    profile.setReconstructedTimeline(true)
     const unitMultiplier = this.configureProfile(profile, fieldName)
 
     let totalCumulative = 0
@@ -216,116 +94,6 @@ class CallgrindProfileBuilder {
     }
     return unitMultiplier
   }
-
-  private buildHeuristicProfile(fieldName: string, eventIndex: number): Profile {
-    const frameSet = new KeyedSet<Frame>()
-    const getFrame = (info: FrameInfo): Frame => Frame.getOrInsert(frameSet, info)
-
-    const totalWeights = new Map<Frame, number>()
-    const childrenTotalWeights = new Map<Frame, Map<Frame, number>>()
-    const addTotal = (frame: Frame, weight: number) => {
-      totalWeights.set(frame, (totalWeights.get(frame) ?? 0) + weight)
-    }
-
-    for (const record of this.records) {
-      const frame = getFrame(record.frame)
-      addTotal(frame, record.self[eventIndex] || 0)
-      const numEvents = this.eventNames.length
-      for (let i = 0; i < record.edgeCallees.length; i++) {
-        const child = getFrame(record.edgeCallees[i])
-        const childMap = getOrInsert(childrenTotalWeights, frame, () => new Map<Frame, number>())
-        const weight = record.edgeInclusive[i * numEvents + eventIndex] || 0
-        childMap.set(child, (childMap.get(child) ?? 0) + weight)
-        addTotal(frame, weight)
-      }
-    }
-
-    let maxWeight = 0
-    for (const [, weight] of totalWeights) {
-      maxWeight = Math.max(maxWeight, weight)
-    }
-
-    const buildHeuristicSubtree = (
-      frame: Frame,
-      subtreeTotalWeight: number,
-      currentStack: Set<Frame>,
-    ): TreeNode | null => {
-      // Call-graphs are allowed to have cycles. Call-trees are not. If we run
-      // into a cycle, avoid recursing into the same subtree more than once in a
-      // call stack; the time is instead attributed as self time in the parent.
-      if (currentStack.has(frame)) {
-        return null
-      }
-
-      // The even-distribution assumption can generate a call tree with
-      // dramatically more nodes than the call graph, so we ignore subtrees
-      // whose weight is less than 0.01% of the heaviest node in the graph.
-      if (subtreeTotalWeight < 1e-4 * maxWeight) {
-        return null
-      }
-
-      const graphTotal = totalWeights.get(frame) ?? 0
-      if (graphTotal === 0) {
-        return null
-      }
-
-      const children: TreeNode[] = []
-      let childrenTotal = 0
-
-      currentStack.add(frame)
-      for (const [child, childGraphWeight] of childrenTotalWeights.get(frame) || []) {
-        const childCallTreeWeight = subtreeTotalWeight * (childGraphWeight / graphTotal)
-        const childNode = buildHeuristicSubtree(child, childCallTreeWeight, currentStack)
-        if (childNode) {
-          children.push(childNode)
-          childrenTotal += childNode.totalWeight
-        }
-      }
-      currentStack.delete(frame)
-
-      // Any weight not actually claimed by a subtree (due to pruning or cycles)
-      // is absorbed into self, so we don't lose weight in the call tree.
-      return {
-        frame,
-        selfWeight: subtreeTotalWeight - childrenTotal,
-        totalWeight: subtreeTotalWeight,
-        children,
-      }
-    }
-
-    // A node is a root of a call tree if nothing calls it. This isn't always
-    // correct for fully general call graphs, but it's right in practice.
-    const rootNodes = new Set<Frame>(frameSet)
-    for (const [, childMap] of childrenTotalWeights) {
-      for (const [child] of childMap) {
-        rootNodes.delete(child)
-      }
-    }
-
-    const forest: TreeNode[] = []
-    for (const rootNode of rootNodes) {
-      const node = buildHeuristicSubtree(rootNode, totalWeights.get(rootNode) ?? 0, new Set())
-      if (node) forest.push(node)
-    }
-
-    const profile = new CallTreeProfileBuilder()
-    const unitMultiplier = this.configureProfile(profile, fieldName)
-
-    let totalCumulative = 0
-    const emit = (node: TreeNode) => {
-      profile.enterFrame(node.frame, Math.round(totalCumulative * unitMultiplier))
-      for (const child of node.children) {
-        emit(child)
-      }
-      totalCumulative += Math.max(0, node.selfWeight)
-      profile.leaveFrame(node.frame, Math.round(totalCumulative * unitMultiplier))
-    }
-    for (const root of forest) {
-      emit(root)
-    }
-
-    return profile.build()
-  }
 }
 
 // In writing this, I initially tried to use the formal grammar described in
@@ -352,14 +120,10 @@ class CallgrindParser {
 
   private filename: string | null = null
   private functionName: string | null = null
-  private calleeFilename: string | null = null
-  private calleeFunctionName: string | null = null
 
   private savedFileNames: {[id: string]: string} = {}
   private savedFunctionNames: {[id: string]: string} = {}
   private internedFrames = new Map<string, FrameInfo>()
-  private seenFrameKeys = new Set<string>()
-  private dropEdgeDetails = false
 
   constructor(
     contents: TextFileContent,
@@ -408,12 +172,10 @@ class CallgrindParser {
     }
 
     this.internedFrames.clear()
-    this.seenFrameKeys.clear()
     const builder = new CallgrindProfileBuilder(
       this.importedFileName,
       this.eventNames,
       this.records,
-      this.dropEdgeDetails,
     )
     return {
       name: this.importedFileName,
@@ -436,36 +198,11 @@ class CallgrindParser {
     return this.internFrame(this.filename || '(unknown)', this.functionName || '(unknown)')
   }
 
-  private calleeFrameInfo(): FrameInfo {
-    return this.internFrame(
-      this.calleeFilename || this.filename || '(unknown)',
-      this.calleeFunctionName || '(unknown)',
-    )
-  }
-
   private beginRecord() {
-    const frame = this.frameInfo()
-    const key = String(frame.key)
-    if (this.seenFrameKeys.has(key)) {
-      if (!this.dropEdgeDetails) {
-        this.dropEdgeDetails = true
-        for (const record of this.records) {
-          record.edgeCallees = []
-          record.edgeCalls = []
-          record.edgeInclusive = []
-        }
-      }
-    } else {
-      this.seenFrameKeys.add(key)
-    }
-
     const record: CallgrindRecord = {
-      frame,
+      frame: this.frameInfo(),
       self: new Array(this.numEvents).fill(0),
       childCount: 0,
-      edgeCallees: [],
-      edgeCalls: [],
-      edgeInclusive: [],
     }
     this.records.push(record)
     this.currentRecord = record
@@ -474,6 +211,10 @@ class CallgrindParser {
   private parseHeaderLine(line: string): boolean {
     const headerMatch = /^\s*(\w+):\s*(.*)+$/.exec(line)
     if (!headerMatch) return false
+
+    if (headerMatch[1] === 'creator' && !/^xdebug\b/i.test(headerMatch[2])) {
+      throw new Error('This fork supports Xdebug Callgrind profiles only.')
+    }
 
     if (headerMatch[1] !== 'events') {
       // We don't care about other headers. Ignore this line.
@@ -525,7 +266,7 @@ class CallgrindParser {
 
       case 'fn': {
         this.functionName = this.parseNameWithCompression(value, this.savedFunctionNames)
-        this.beginRecord()
+        this.currentRecord = null
         break
       }
 
@@ -533,39 +274,23 @@ class CallgrindParser {
       case 'cfl': {
         // NOTE: unlike the fe/fi distinction described above, cfi and cfl are
         // interchangeable.
-        this.calleeFilename = this.parseNameWithCompression(value, this.savedFileNames)
+        this.parseNameWithCompression(value, this.savedFileNames)
         break
       }
 
       case 'cfn': {
-        this.calleeFunctionName = this.parseNameWithCompression(value, this.savedFunctionNames)
+        this.parseNameWithCompression(value, this.savedFunctionNames)
         break
       }
 
       case 'calls': {
-        const calls = parseInt(value.trim().split(/\s+/)[0]) || 1
+        const calls = Number(value.trim().split(/\s+/)[0])
+        if (!Number.isSafeInteger(calls) || calls < 0)
+          throw new Error(`Invalid call count on line ${this.lineNum}`)
         const nums = this.parseCostNums(this.nextLine())
-        if (nums != null && this.currentRecord != null) {
-          const record = this.currentRecord
-          record.childCount += calls
-          if (!this.dropEdgeDetails) {
-            record.edgeCallees.push(this.calleeFrameInfo())
-            record.edgeCalls.push(calls)
-            const values = this.eventValues(nums)
-            for (let i = 0; i < this.numEvents; i++) {
-              record.edgeInclusive.push(values[i] || 0)
-            }
-          }
-        }
-
-        // This isn't specified anywhere in the spec, but empirically the
-        // "cfn" scope should only persist for a single "call".
-        //
-        // This seems to be what KCacheGrind does too:
-        //
-        // https://github.com/KDE/kcachegrind/blob/ea4314db2785cb8f279fe884ee7f82445642b692/libcore/cachegrindloader.cpp#L1259
-        this.calleeFilename = null
-        this.calleeFunctionName = null
+        if (nums == null) throw new Error(`Missing call cost on line ${this.lineNum}`)
+        if (this.currentRecord == null) this.beginRecord()
+        this.currentRecord!.childCount += calls
         break
       }
 
@@ -577,7 +302,7 @@ class CallgrindParser {
       }
 
       default: {
-        console.log(`Ignoring assignment to unrecognized key "${line}" on line ${this.lineNum}`)
+        console.warn(`Ignoring assignment to unrecognized key "${line}" on line ${this.lineNum}`)
       }
     }
 

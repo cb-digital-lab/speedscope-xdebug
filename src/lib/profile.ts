@@ -99,6 +99,16 @@ export class Frame extends HasWeights {
 
 export class CallTreeNode extends HasWeights {
   children: CallTreeNode[] = []
+  // Append-order nodes are contiguous intervals. Grouped nodes have no timeline.
+  private startValue: number | null = null
+
+  getStartValue() {
+    return this.startValue
+  }
+
+  setStartValue(value: number) {
+    this.startValue = value
+  }
 
   isRoot() {
     return this.frame === Frame.root
@@ -129,6 +139,20 @@ export interface ProfileGroup {
 
 export class Profile {
   protected name: string = ''
+  protected maxStackDepth = 0
+
+  getMaxStackDepth() {
+    return this.maxStackDepth
+  }
+  private reconstructedTimeline = false
+
+  setReconstructedTimeline(value: boolean) {
+    this.reconstructedTimeline = value
+  }
+
+  isTimelineReconstructed() {
+    return this.reconstructedTimeline
+  }
 
   protected totalWeight: number
 
@@ -168,8 +192,8 @@ export class Profile {
     return profile
   }
 
-  formatValue(v: number) {
-    return this.valueFormatter.format(v)
+  formatValue(v: number, resolution?: number) {
+    return this.valueFormatter.format(v, resolution)
   }
   setValueFormatter(f: ValueFormatter) {
     this.valueFormatter = f
@@ -317,6 +341,7 @@ export class Profile {
     const flattenedProfile = builder.build()
     flattenedProfile.name = this.name
     flattenedProfile.valueFormatter = this.valueFormatter
+    flattenedProfile.reconstructedTimeline = this.reconstructedTimeline
 
     // When constructing a profile with recursion flattened,
     // counter-intuitive things can happen to "self time" measurements
@@ -339,7 +364,7 @@ export class Profile {
     // is flattened. To work around that, we'll just copy the weights directly from the
     // un-flattened profile.
     this.forEachFrame(f => {
-      flattenedProfile.frames.getOrInsert(f).overwriteWith(f)
+      flattenedProfile.frames.getOrInsert(f).overwriteWeightWith(f)
     })
 
     return flattenedProfile
@@ -460,8 +485,10 @@ export class Profile {
 }
 
 export class StackListProfileBuilder extends Profile {
+  private cumulativeWeight = 0
   _appendSample(stack: Frame[], weight: number, useAppendOrder: boolean) {
     if (isNaN(weight)) throw new Error('invalid weight')
+    if (useAppendOrder) this.maxStackDepth = Math.max(this.maxStackDepth, stack.length)
     let node = useAppendOrder ? this.appendOrderCalltreeRoot : this.groupedCalltreeRoot
 
     let framesInStack = new Set<Frame>()
@@ -478,6 +505,7 @@ export class StackListProfileBuilder extends Profile {
         parent.children.push(node)
         if (useAppendOrder) {
           frame.addToCallCount(1)
+          node.setStartValue(this.cumulativeWeight)
         }
       }
       node.addToTotalWeight(weight)
@@ -526,6 +554,7 @@ export class StackListProfileBuilder extends Profile {
     const frames = stack.map(fr => Frame.getOrInsert(this.frames, fr))
     this._appendSample(frames, weight, true)
     this._appendSample(frames, weight, false)
+    this.cumulativeWeight += weight
   }
 
   private pendingSample: {
@@ -633,9 +662,11 @@ export class CallTreeProfileBuilder extends Profile {
         prevTop.children.push(node)
         if (useAppendOrder) {
           frame.addToCallCount(1)
+          node.setStartValue(value)
         }
       }
       stack.push(node)
+      if (useAppendOrder) this.maxStackDepth = Math.max(this.maxStackDepth, stack.length - 1)
     }
   }
   enterFrame(frameInfo: FrameInfo, value: number) {

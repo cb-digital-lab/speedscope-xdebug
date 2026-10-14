@@ -14,9 +14,11 @@ export interface FlamechartFrame {
 type StackLayer = FlamechartFrame[]
 
 interface FlamechartDataSource {
+  allowLODZoom?: boolean
+  getMaxStackDepth?(): number
   getTotalWeight(): number
 
-  formatValue(v: number): string
+  formatValue(v: number, resolution?: number): string
 
   forEachCall(
     openFrame: (node: CallTreeNode, value: number) => void,
@@ -44,8 +46,8 @@ export class Flamechart {
   getMinFrameWidth() {
     return this.minFrameWidth
   }
-  formatValue(v: number) {
-    return this.source.formatValue(v)
+  formatValue(v: number, resolution?: number) {
+    return this.source.formatValue(v, resolution)
   }
 
   getClampedViewportWidth(viewportWidth: number) {
@@ -86,12 +88,11 @@ export class Flamechart {
     // determined by the minimum zoom of either 2^40x zoom or the necessary zoom
     // for the smallest frame to fill the screen three times.
     //
-    // When LOD is active, minFrameWidth reflects only currently materialized
-    // frames. Allow zooming past that so a finer LOD can load on zoom-in.
-    const minWidth = Math.min(
-      clamp(3 * this.getMinFrameWidth(), maxWidth / maxZoom, maxWidth),
-      maxWidth / 512,
-    )
+    // LOD geometry cannot define the zoom limit: the missing tiny frames
+    // must become visible when the user zooms in or selects a search result.
+    const minWidth = this.source.allowLODZoom
+      ? maxWidth / maxZoom
+      : clamp(3 * this.getMinFrameWidth(), maxWidth / maxZoom, maxWidth)
 
     return clamp(viewportWidth, minWidth, maxWidth)
   }
@@ -106,7 +107,10 @@ export class Flamechart {
     configSpaceViewportRect: Rect
     renderInverted?: boolean
   }) {
-    const configSpaceSize = new Vec2(this.getTotalWeight(), this.getLayers().length)
+    const configSpaceSize = new Vec2(
+      this.getTotalWeight(),
+      this.source.getMaxStackDepth?.() ?? this.getLayers().length,
+    )
     const width = this.getClampedViewportWidth(configSpaceViewportRect.size.x)
     const size = configSpaceViewportRect.size.withX(width)
     const origin = Vec2.clamp(
