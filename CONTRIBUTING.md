@@ -3,9 +3,6 @@
 Hi! This is a short guide & set of guidelines for contributing to speedscope.
 Contributors of all skill levels are welcome to submit pull requests.
 
-This project adheres to the Contributor Covenant [code of conduct](./CODE_OF_CONDUCT.md).
-All contributors are expected to uphold this code of conduct.
-
 ## Setting up for development
 
 To start running speedscope locally, run the following:

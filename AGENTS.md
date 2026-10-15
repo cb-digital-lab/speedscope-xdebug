@@ -2,8 +2,7 @@
 
 ### Issue tracker
 
-Local Markdown in `.scratch/<feature>/`. Read `docs/agents/issue-tracker.md`
-before creating, reading, or updating issues and specs.
+Issues and specs live in GitHub Issues for `cb-digital-lab/speedscope-xdebug`; read `docs/agents/issue-tracker.md` before tracker operations.
 
 ### Triage labels
 

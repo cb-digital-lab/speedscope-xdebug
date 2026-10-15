@@ -1,3 +1,75 @@
+# Changelog
+
+## Fork changes (unreleased)
+
+These are development dates from the fork's Git history, not release dates.
+The package version remains inherited from upstream.
+
+### 2026-10-15
+
+- Reduce Xdebug import time and memory with typed-array record chunks, a fast
+  decimal parser, and one-time finalization of each call. A 398 MB benchmark
+  improves from 18.97 s to 11.88 s, with matching complete-tree checksums.
+- Add `benchmark:callgrind` with separate read/decode/parse measurements, resident
+  memory reporting, optional checksums, and a parsing time budget.
+- Add the English **Profile with Speedscope** skill and an MCP batch runner for
+  cold/warm and before/after comparisons.
+- Rewrite the README around Xdebug-only support, credit the original speedscope
+  project, and add screenshots made entirely from synthetic data.
+- Remove the inherited Chinese README, administrator README, and code of conduct.
+- Ignore `.scratch/` and remove its contents from the fork's Git history.
+
+### 2026-10-14
+
+- Add sortable descendant counts to Tree view and clarify occurrence counts in
+  function lists.
+- Limit the Callgrind importer to Xdebug's per-invocation records; reject
+  aggregated call graphs and incomplete call structures.
+- Add a local STDIO MCP server for function rankings, callers, individual
+  occurrences, node details, and call-tree navigation.
+- Fix search navigation, progressive occurrence collection, and function identity
+  and counting in grouped occurrence views.
+- Stabilize flamechart detail filtering, overview caches, and zoom behavior.
+- Improve time and memory formatting and axis precision at high zoom; label the
+  reconstructed Xdebug call order explicitly.
+- Remove the experimental AI prompt export in favor of MCP analysis.
+
+### 2026-07-24
+
+- Replace Sandwich's callers/callees charts with a progressively built occurrence
+  list, sortable and resizable columns, and navigation to a call in Tree view.
+- Add **Group by Caller** and **Call tree** modes, occurrence counts, and merged
+  call-site counts on aggregated call paths.
+- Fix flickering and runaway scrolling in virtualized lists.
+- Prevent unwanted text selection when double-clicking tree rows.
+
+### 2026-07-15
+
+- Reduce Xdebug import memory by streaming lines, interning function identities,
+  packing edges, and reconstructing topology once for all metrics.
+- Add viewport-based flamechart detail filtering to keep large profiles interactive.
+
+### 2026-07-14
+
+- Reconstruct individual calls and their calling contexts from Xdebug's
+  post-order Callgrind records instead of distributing an aggregated call graph.
+
+### 2026-07-13
+
+- Add resizable panes to the investigation views.
+- Highlight expensive sibling calls in Tree view with branch heat colors.
+- Add an experimental AI prompt export, later removed on 2026-10-14.
+
+### 2026-07-10
+
+- Add Tree view with an expandable call hierarchy, self and total costs, and search.
+
+---
+
+The upstream release notes below are preserved from
+[jlfwong/speedscope](https://github.com/jlfwong/speedscope). References to other
+profilers describe upstream history; this fork supports Xdebug only.
+
 ## [1.25.0] - 2025-12-03
 
 - Upgrade Jest to 30.2.0 [[#536](https://github.com/jlfwong/speedscope/pull/536)] (by @jlfwong)
