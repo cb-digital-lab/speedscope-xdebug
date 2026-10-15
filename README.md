@@ -1,134 +1,189 @@
-English | [简体中文](./README-zh_CN.md)
-# 🔬speedscope 
-A fast, interactive web-based viewer for performance profiles. Supports import from a variety of profiles in a variety of languages (JS, Ruby, Python, Go & more). Try it here: https://www.speedscope.app
+# speedscope-xdebug
 
-Given raw profiling data, speedscope allows you to interactively explore the data to get insight into what's slow in your application, or allocating all the memory, or whatever data is represented in the profiling data.
+An **Xdebug-only fork of [speedscope](https://github.com/jlfwong/speedscope)**,
+focused on exploring PHP call trees and large profiles, including WordPress workloads.
 
-![Example Profile](https://user-images.githubusercontent.com/150329/40900669-86eced80-6781-11e8-92c1-dc667b651e72.gif)
+> **Only Xdebug profiler output is supported by this fork.**
+> Input files must contain Xdebug's per-invocation Callgrind records, typically
+> named `cachegrind.out.*`. Aggregated Callgrind files from other producers are
+> not supported. For other profilers and languages, use the original
+> [speedscope project](https://github.com/jlfwong/speedscope).
 
-[0]: https://en.wikipedia.org/wiki/Profiling_(computer_programming)#Statistical_profilers
-[1]: https://github.com/brendangregg/FlameGraph
+This fork builds on the work of **Jamie Wong and the speedscope contributors**.
+The original project provides the viewer, rendering engine, and foundation for
+these changes. See [Credits and license](#credits-and-license).
 
-# Supported file formats
+## Main changes from upstream
 
-speedscope is designed to ingest profiles from a variety of different profilers for different programming languages & environments. Click the links below for documentation on how to import from a specific source.
+| Area                      | Changes in this fork                                                                                                                                                                         |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Xdebug import             | Reconstructs individual calls and their calling contexts from Xdebug's post-order records, with separate time and memory profiles. Replaces the generic Callgrind call-graph reconstruction. |
+| Tree view                 | Adds an expandable call tree with self/total costs, sortable descendant counts, search, and branch heat colors.                                                                              |
+| Function occurrences      | Extends Sandwich view with individual occurrences, **Flat**, **Group by Caller**, and **Call tree** modes. Includes occurrence counts and navigation to a specific call in Tree view.        |
+| Investigation interface   | Adds resizable panes and table columns, and fixes scrolling and virtualization issues when exploring large call lists.                                                                       |
+| Large-profile performance | Uses compact typed-array records and finalizes each call once during import. Adds viewport-based flamechart detail filtering to reduce rendering work.                                       |
+| Cost display              | Improves time and memory formatting, axis precision at high zoom, and the distinction between one occurrence and all occurrences of a function.                                              |
+| MCP analysis              | Adds a local Model Context Protocol server for function searches, caller analysis, call-tree navigation, and inspection of expensive occurrences.                                            |
+| Reusable workflow         | Includes the **Profile with Speedscope** skill and a batch runner that saves MCP analysis results for before/after and cold/warm comparisons.                                                |
 
-- JavaScript
-  - [Importing from Chrome](https://github.com/jlfwong/speedscope/wiki/Importing-from-Chrome)
-  - [Importing from Firefox](https://github.com/jlfwong/speedscope/wiki/Importing-from-Firefox)
-  - [Importing from Safari](https://github.com/jlfwong/speedscope/wiki/Importing-from-Safari)
-  - [Importing from Node.js](https://github.com/jlfwong/speedscope/wiki/Importing-from-Node.js)
-  - [Importing from Hermes (for React Native)](https://github.com/jlfwong/speedscope/wiki/Importing-from-Hermes)
-- Ruby
-  - [Importing from stackprof](https://github.com/jlfwong/speedscope/wiki/Importing-from-stackprof-(ruby))
-  - [Importing from rbspy](https://github.com/jlfwong/speedscope/wiki/Importing-from-rbspy-(ruby))
-  - [Importing from ruby-prof](https://github.com/jlfwong/speedscope/wiki/Importing-from-ruby-prof)
-- Python
-  - [Importing from py-spy](https://github.com/jlfwong/speedscope/wiki/Importing-from-py-spy-(python))
-  - [pyspeedscope](https://github.com/windelbouwman/pyspeedscope)
-  - [Importing from Austin](https://github.com/P403n1x87/austin-python#format-conversion)
-  - [Importing from pyinstrument](https://github.com/jlfwong/speedscope/wiki/Importing-from-pyinstrument-(python))
-- PHP
-  - [Importing from phpspy or sj-i/php-profiler](https://github.com/sj-i/php-profiler/pull/101)
-- Go
-  - [Importing from pprof](https://github.com/jlfwong/speedscope/wiki/Importing-from-pprof-(go))  
-- Rust
-  - [flamescope](https://github.com/coolreader18/flamescope)
-- Java
-  - [Importing from async‐profiler (Java)
-](https://github.com/jlfwong/speedscope/wiki/Importing-from-async%E2%80%90profiler-(Java))
-  - [Importing from Java Flight Recorder](https://github.com/jlfwong/speedscope/wiki/Importing-from-Java-Flight-Recorder)
-- Erlang/Elixir
-  - [eflambe](https://github.com/Stratus3D/eflambe)
-- Native code
-  - [Importing from Instruments.app](https://github.com/jlfwong/speedscope/wiki/Importing-from-Instruments.app) (macOS)
-  - [Importing from `perf`](https://github.com/jlfwong/speedscope/wiki/Importing-from-perf-(linux)) (linux)
-- [Importing from .NET Core](https://github.com/jlfwong/speedscope/wiki/Importing-from-.NET-Core)
-- [Importing from GHC (Haskell)](https://github.com/jlfwong/speedscope/wiki/Importing-from-Haskell)
-- [Importing from custom sources](https://github.com/jlfwong/speedscope/wiki/Importing-from-custom-sources)
+### Xdebug is the supported scope
 
-Contributions to add support for additional formats are welcome! See issues with the ["import source" tag](https://github.com/jlfwong/speedscope/issues?q=is%3Aissue+is%3Aopen+label%3A%22import+source%22).
-# Usage
+The Callgrind importer expects Xdebug's completed calls before their callers and
+preserves individual occurrences rather than distributing an aggregated call graph.
+Files from a declared non-Xdebug producer are rejected by that importer.
 
-Visit https://www.speedscope.app, then either browse to find a profile file or drag-and-drop one onto the page. The profiles are not uploaded anywhere -- the application is totally in-browser.
+Some inherited importers remain in the source tree, but compatibility with other
+profilers is outside this fork's supported scope. The multi-format guarantees and
+import guides of upstream speedscope do not apply to this fork.
 
-## Command line usage
+## Screenshots
 
-For offline use, or convenience in the terminal, you can also install speedscope
-via npm:
+All screenshots use a [fully synthetic example profile](sample/profiles/callgrind/example-request.callgrind).
+Function names, file names, and costs are invented. No customer or application
+profile was used to create these images. Open the example file in the viewer to
+explore the same data.
 
-    npm install -g speedscope
+**Tree:** compare individual calls, descendant counts, and the selected call's
+costs against all occurrences of its function.
 
-Invoking `speedscope /path/to/profile` will load speedscope in your default browser.
+![Tree view of a synthetic Xdebug profile](docs/screenshots/tree.jpg)
 
-## Self-contained directory
+**Sandwich:** group a function's occurrences by caller, then expand a group to
+inspect individual costs and call stacks.
 
-If you don't have npm or node installed, you can also download a
-self-contained version from https://github.com/jlfwong/speedscope/releases.
-After you download the zip file from a release, simply unzip it and open the
-contained `index.html` in Chrome or Firefox.
+![Synthetic function occurrences grouped by caller](docs/screenshots/sandwich.jpg)
 
-## Importing via URL
+**Call Order:** explore the hierarchy reconstructed from Xdebug costs. Positions
+on this axis are not recorded timestamps.
 
-To load a specific profile by URL, you can append a hash fragment like `#profileURL=[URL-encoded profile URL]&title=[URL-encoded custom title]`. Note that the server hosting the profile must have CORS configured to allow AJAX requests from speedscope.
+![Reconstructed call order of a synthetic Xdebug profile](docs/screenshots/call-order.jpg)
 
-## Views
+## Run locally
 
-### 🕰Time Order
-![Detail View](https://user-images.githubusercontent.com/150329/42108613-e6ef6d3a-7b8f-11e8-93d4-541b2cb93fe5.png)
+Use Node.js 20 or newer and install from this fork's source:
 
-In the "Time Order" view (the default), call stacks are ordered left-to-right in the same order as they occurred in the input file, which is usually going to be the chronological order they were recorded in. This view is most helpful for understanding the behavior of an application over time, e.g. "first the data is fetched from the database, then the data is prepared for serialization, then the data is serialized to JSON". 
+```sh
+git clone https://github.com/cb-digital-lab/speedscope-xdebug.git
+cd speedscope-xdebug
+npm install
+npm run serve
+```
 
-The horizontal axis represents the "weight" of each stack (most commonly CPU time), and the vertical axis shows you the stack active at the time of the sample. If you click on one of the frames, you'll be able to see summary statistics about it.
+Open the local URL printed in the terminal, then browse for an Xdebug profile or
+drag and drop it onto the page. Files opened this way are parsed in the browser;
+they are not uploaded to an analysis server. Use the profile selector to switch
+between time and memory when both metrics are available.
 
+To create a standalone browser build:
 
-### ⬅️Left Heavy
-![Left Heavy View](https://user-images.githubusercontent.com/150329/44534434-a05f8380-a6ac-11e8-86ac-e3e05e577c52.png)
+```sh
+npm run prepack
+```
 
-In the "Left Heavy" view, identical stacks are grouped together, regardless of whether they were recorded sequentially. Then, the stacks are sorted so that the heaviest stack for each parent is on the left -- hence "left heavy". This view is useful for understanding where all the time is going in situations where there are hundreds or thousands of function calls interleaved between other call stacks.
+Open `dist/release/index.html` in Chrome or Firefox. For very large profiles,
+prefer opening the file directly in the viewer over passing it through the CLI.
 
-### 🥪 Sandwich
-![Sandwich View](https://user-images.githubusercontent.com/150329/42108467-76a57baa-7b8f-11e8-815f-1df7b6ac3ede.png)
+## Explore a profile
 
-The Sandwich view is a table view in which you can find a list of all functions and their associated times. You can sort by self time or total time.
-It's called "Sandwich" view because if you select one of the rows in the table, you can see flamegraphs for all the callers and callees of the selected
-row.
+- **Call Order** shows the hierarchy and positions reconstructed from Xdebug
+  costs. These positions are not recorded timestamps.
+- **Left Heavy** groups identical stacks to highlight the most expensive branches.
+- **Sandwich** starts from a function and lets you investigate its individual
+  occurrences, group them by caller, or explore their call paths.
+- **Tree** exposes the reconstructed hierarchy as an expandable table. Compare
+  self and total costs, sort by descendants, and inspect a selected occurrence's
+  stack and its function's overall statistics.
 
+Click a frame to inspect it, double-click a flamechart frame to zoom, and use
+`Cmd+F` / `Ctrl+F` to search. Drag pane dividers and column boundaries to adjust
+an investigation's layout.
 
-## Navigation
+## Analyze through MCP
 
-Once a profile has loaded, the main view is split into two: the top area is the "minimap", and the bottom area is the "stack view".
+The local MCP server loads an Xdebug profile once and exposes bounded queries over
+its time and memory metrics. It uses the same importer and profile model as the
+browser viewer.
 
-### Minimap Navigation
+From the repository directory:
 
-* Scroll on either axis to pan around
-* Click and drag to narrow your view to a specific range
+```sh
+node --import tsx scripts/mcp-server.ts --profiles-dir /path/to/profiles
+```
 
-### Stack View Navigation
+This is a **STDIO** server for an MCP client, not an HTTP endpoint. It does not
+call an AI model itself; the client controls which results are shared with one.
+File access is restricted to the configured profiles directory.
 
-* Scroll on either axis to pan around
-* Pinch to zoom
-* Hold Cmd+Scroll to zoom
-* Double click on a frame to fit the viewport to it
-* Click on a frame to view summary statistics about it
+A typical investigation uses:
 
-### Keyboard Navigation
+1. `list_profiles` to find a file.
+2. `load_profile` to load it and obtain the current `datasetId` and metric indices.
+3. `find_functions` to rank functions by self cost, total cost, or occurrence count.
+4. `function_callers` and `function_invocations` to identify expensive calling contexts.
+5. `node_details` and `call_tree` to inspect an occurrence and drill into its children.
 
-* `+`: zoom in
-* `-`: zoom out
-* `0`: zoom out to see the entire profile
-* `w`/`a`/`s`/`d` or arrow keys: pan around the profile
-* `1`: Switch to the "Time Order" view
-* `2`: Switch to the "Left Heavy" view
-* `3`: Switch to the "Sandwich" view
-* `r`: Collapse recursion in the flamegraphs
-* `Cmd+S`/`Ctrl+S` to save the current profile
-* `Cmd+O`/`Ctrl+O` to open a new profile
-* `n`: Go to next profile/thread if one is available
-* `p`: Go to previous profile/thread if one is available
-* `t`: Open the profile/thread selector if available
-* `Cmd+F`/`Ctrl+F`: to open search. While open, `Enter` and `Shift+Enter` cycle through results
+Loading another file replaces the active dataset. Use its new identifiers and
+paths for subsequent queries.
 
-## Contributing
+See [MCP setup and reference](docs/mcp.md) for client configuration and tool semantics.
+The [Profile with Speedscope skill](skills/profile-with-speedscope/SKILL.md) adds a
+repeatable investigation and measurement workflow. Its
+[batch runner](skills/profile-with-speedscope/scripts/profile-suite.mjs) can save
+analysis results as JSON:
 
-Do you want to contribute to speedscope? Sweeeeet. Check out [CONTRIBUTING.md](./CONTRIBUTING.md) for instructions on setting up your dev environment.
+```sh
+node skills/profile-with-speedscope/scripts/profile-suite.mjs --help
+```
+
+## Reading the results correctly
+
+- **Total** includes child calls; **Self** excludes them. Inclusive costs overlap,
+  so adding nested or recursive function totals causes double counting.
+- **Call Order is reconstructed.** Xdebug does not provide real call timestamps
+  or the distribution of self work before and between child calls.
+- **Xdebug adds overhead.** Use profiles to locate work, and comparable requests
+  without profiling to establish an optimization's actual effect on latency.
+- **Memory costs are not peak memory.** They are reconstructed cumulative costs,
+  not PHP's peak allocation or the RAM used by the viewer or MCP server.
+- **Profiles do not contain SQL arguments, exact hook names, or cache hit rates.**
+  Establish those through separate targeted observations when needed.
+
+## Import benchmark
+
+One local comparison used a 398 MB Xdebug file with 5,552,009 occurrences per
+metric, running both versions in separate Node.js 26.11.1 processes without a CPU
+profiler:
+
+| Measurement                   | Before import optimization | After import optimization |
+| ----------------------------- | -------------------------: | ------------------------: |
+| Parsing                       |                    18.97 s |                   11.88 s |
+| Resident memory after parsing |                  4,785 MiB |                 3,911 MiB |
+
+Complete frame and call-tree checksums matched for both metrics. These figures
+measure the Node importer, not browser rendering or PHP request latency; results
+will vary by profile and machine.
+
+To measure another file and verify its output:
+
+```sh
+npm run benchmark:callgrind -- /path/to/cachegrind.out.example --verify
+```
+
+## Development
+
+```sh
+npm test
+```
+
+This runs type checking, lint, the test suite with coverage, and schema generation.
+
+## Credits and license
+
+**Original project:** [jlfwong/speedscope](https://github.com/jlfwong/speedscope),
+created by **Jamie Wong**, with contributions from the speedscope community.
+
+**This fork:** [cb-digital-lab/speedscope-xdebug](https://github.com/cb-digital-lab/speedscope-xdebug),
+with changes focused on Xdebug profiling and investigation workflows.
+
+The project retains the **MIT license**. The original copyright notice and license
+are preserved in [LICENSE](LICENSE).

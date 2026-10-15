@@ -1,0 +1,806 @@
+# Synthetic demonstration data. No captured application or customer data.
+version: 1
+creator: xdebug 3.5.0 (synthetic example)
+cmd: index.php
+part: 1
+positions: line
+
+events: Time_(10ns) Memory_(bytes)
+
+fl=cache.php
+fn=read_cache
+1 250000 1024
+
+fl=settings.php
+fn=load_settings
+1 320000 4096
+cfl=cache.php
+cfn=read_cache
+calls=1 1
+2 250000 1024
+
+fl=bootstrap.php
+fn=register_handlers
+1 550000 8192
+
+fl=bootstrap.php
+fn=bootstrap
+1 650000 16384
+cfl=settings.php
+cfn=load_settings
+calls=1 1
+2 570000 5120
+cfl=bootstrap.php
+cfn=register_handlers
+calls=1 1
+3 550000 8192
+
+fl=database.php
+fn=query_database
+1 3800000 24576
+
+fl=database.php
+fn=query_database
+1 2400000 24576
+
+fl=template.php
+fn=render_template
+1 600000 8192
+
+fl=menu.php
+fn=load_menu
+1 230000 4096
+cfl=database.php
+cfn=query_database
+calls=1 1
+2 3800000 24576
+cfl=database.php
+cfn=query_database
+calls=1 1
+3 2400000 24576
+cfl=template.php
+cfn=render_template
+calls=1 1
+4 600000 8192
+
+fl=database.php
+fn=query_database
+1 2200000 24576
+
+fl=storage.php
+fn=fetch_record
+1 120000 1024
+cfl=database.php
+cfn=query_database
+calls=1 1
+2 2200000 24576
+
+fl=formatting.php
+fn=format_title
+1 70000 512
+
+fl=formatting.php
+fn=format_date
+1 40000 256
+
+fl=cache.php
+fn=read_cache
+1 80000 256
+
+fl=media.php
+fn=decode_image
+1 1200000 98304
+
+fl=media.php
+fn=load_thumbnail
+1 240000 2048
+cfl=cache.php
+cfn=read_cache
+calls=1 1
+2 80000 256
+cfl=media.php
+cfn=decode_image
+calls=1 1
+3 1200000 98304
+
+fl=template.php
+fn=render_template
+1 450000 4096
+
+fl=template.php
+fn=render_card
+1 210000 4096
+cfl=storage.php
+cfn=fetch_record
+calls=1 1
+2 2320000 25600
+cfl=formatting.php
+cfn=format_title
+calls=1 1
+3 70000 512
+cfl=formatting.php
+cfn=format_date
+calls=1 1
+4 40000 256
+cfl=media.php
+cfn=load_thumbnail
+calls=1 1
+5 1520000 100608
+cfl=template.php
+cfn=render_template
+calls=1 1
+6 450000 4096
+
+fl=database.php
+fn=query_database
+1 2400000 24576
+
+fl=storage.php
+fn=fetch_record
+1 120000 1024
+cfl=database.php
+cfn=query_database
+calls=1 1
+2 2400000 24576
+
+fl=formatting.php
+fn=format_title
+1 70000 512
+
+fl=formatting.php
+fn=format_date
+1 40000 256
+
+fl=cache.php
+fn=read_cache
+1 140000 512
+
+fl=media.php
+fn=load_thumbnail
+1 180000 2048
+cfl=cache.php
+cfn=read_cache
+calls=1 1
+2 140000 512
+
+fl=template.php
+fn=render_template
+1 470000 4096
+
+fl=template.php
+fn=render_card
+1 210000 4096
+cfl=storage.php
+cfn=fetch_record
+calls=1 1
+2 2520000 25600
+cfl=formatting.php
+cfn=format_title
+calls=1 1
+3 70000 512
+cfl=formatting.php
+cfn=format_date
+calls=1 1
+4 40000 256
+cfl=media.php
+cfn=load_thumbnail
+calls=1 1
+5 320000 2560
+cfl=template.php
+cfn=render_template
+calls=1 1
+6 470000 4096
+
+fl=database.php
+fn=query_database
+1 2600000 24576
+
+fl=storage.php
+fn=fetch_record
+1 120000 1024
+cfl=database.php
+cfn=query_database
+calls=1 1
+2 2600000 24576
+
+fl=formatting.php
+fn=format_title
+1 70000 512
+
+fl=formatting.php
+fn=format_date
+1 40000 256
+
+fl=cache.php
+fn=read_cache
+1 140000 512
+
+fl=media.php
+fn=load_thumbnail
+1 180000 2048
+cfl=cache.php
+cfn=read_cache
+calls=1 1
+2 140000 512
+
+fl=template.php
+fn=render_template
+1 490000 4096
+
+fl=template.php
+fn=render_card
+1 210000 4096
+cfl=storage.php
+cfn=fetch_record
+calls=1 1
+2 2720000 25600
+cfl=formatting.php
+cfn=format_title
+calls=1 1
+3 70000 512
+cfl=formatting.php
+cfn=format_date
+calls=1 1
+4 40000 256
+cfl=media.php
+cfn=load_thumbnail
+calls=1 1
+5 320000 2560
+cfl=template.php
+cfn=render_template
+calls=1 1
+6 490000 4096
+
+fl=database.php
+fn=query_database
+1 2800000 24576
+
+fl=storage.php
+fn=fetch_record
+1 120000 1024
+cfl=database.php
+cfn=query_database
+calls=1 1
+2 2800000 24576
+
+fl=formatting.php
+fn=format_title
+1 70000 512
+
+fl=formatting.php
+fn=format_date
+1 40000 256
+
+fl=cache.php
+fn=read_cache
+1 80000 256
+
+fl=media.php
+fn=decode_image
+1 1200000 98304
+
+fl=media.php
+fn=load_thumbnail
+1 240000 2048
+cfl=cache.php
+cfn=read_cache
+calls=1 1
+2 80000 256
+cfl=media.php
+cfn=decode_image
+calls=1 1
+3 1200000 98304
+
+fl=template.php
+fn=render_template
+1 510000 4096
+
+fl=template.php
+fn=render_card
+1 210000 4096
+cfl=storage.php
+cfn=fetch_record
+calls=1 1
+2 2920000 25600
+cfl=formatting.php
+cfn=format_title
+calls=1 1
+3 70000 512
+cfl=formatting.php
+cfn=format_date
+calls=1 1
+4 40000 256
+cfl=media.php
+cfn=load_thumbnail
+calls=1 1
+5 1520000 100608
+cfl=template.php
+cfn=render_template
+calls=1 1
+6 510000 4096
+
+fl=database.php
+fn=query_database
+1 3000000 24576
+
+fl=storage.php
+fn=fetch_record
+1 120000 1024
+cfl=database.php
+cfn=query_database
+calls=1 1
+2 3000000 24576
+
+fl=formatting.php
+fn=format_title
+1 70000 512
+
+fl=formatting.php
+fn=format_date
+1 40000 256
+
+fl=cache.php
+fn=read_cache
+1 140000 512
+
+fl=media.php
+fn=load_thumbnail
+1 180000 2048
+cfl=cache.php
+cfn=read_cache
+calls=1 1
+2 140000 512
+
+fl=template.php
+fn=render_template
+1 530000 4096
+
+fl=template.php
+fn=render_card
+1 210000 4096
+cfl=storage.php
+cfn=fetch_record
+calls=1 1
+2 3120000 25600
+cfl=formatting.php
+cfn=format_title
+calls=1 1
+3 70000 512
+cfl=formatting.php
+cfn=format_date
+calls=1 1
+4 40000 256
+cfl=media.php
+cfn=load_thumbnail
+calls=1 1
+5 320000 2560
+cfl=template.php
+cfn=render_template
+calls=1 1
+6 530000 4096
+
+fl=database.php
+fn=query_database
+1 3200000 24576
+
+fl=storage.php
+fn=fetch_record
+1 120000 1024
+cfl=database.php
+cfn=query_database
+calls=1 1
+2 3200000 24576
+
+fl=formatting.php
+fn=format_title
+1 70000 512
+
+fl=formatting.php
+fn=format_date
+1 40000 256
+
+fl=cache.php
+fn=read_cache
+1 140000 512
+
+fl=media.php
+fn=load_thumbnail
+1 180000 2048
+cfl=cache.php
+cfn=read_cache
+calls=1 1
+2 140000 512
+
+fl=template.php
+fn=render_template
+1 550000 4096
+
+fl=template.php
+fn=render_card
+1 210000 4096
+cfl=storage.php
+cfn=fetch_record
+calls=1 1
+2 3320000 25600
+cfl=formatting.php
+cfn=format_title
+calls=1 1
+3 70000 512
+cfl=formatting.php
+cfn=format_date
+calls=1 1
+4 40000 256
+cfl=media.php
+cfn=load_thumbnail
+calls=1 1
+5 320000 2560
+cfl=template.php
+cfn=render_template
+calls=1 1
+6 550000 4096
+
+fl=database.php
+fn=query_database
+1 3400000 24576
+
+fl=storage.php
+fn=fetch_record
+1 120000 1024
+cfl=database.php
+cfn=query_database
+calls=1 1
+2 3400000 24576
+
+fl=formatting.php
+fn=format_title
+1 70000 512
+
+fl=formatting.php
+fn=format_date
+1 40000 256
+
+fl=cache.php
+fn=read_cache
+1 80000 256
+
+fl=media.php
+fn=decode_image
+1 1200000 98304
+
+fl=media.php
+fn=load_thumbnail
+1 240000 2048
+cfl=cache.php
+cfn=read_cache
+calls=1 1
+2 80000 256
+cfl=media.php
+cfn=decode_image
+calls=1 1
+3 1200000 98304
+
+fl=template.php
+fn=render_template
+1 570000 4096
+
+fl=template.php
+fn=render_card
+1 210000 4096
+cfl=storage.php
+cfn=fetch_record
+calls=1 1
+2 3520000 25600
+cfl=formatting.php
+cfn=format_title
+calls=1 1
+3 70000 512
+cfl=formatting.php
+cfn=format_date
+calls=1 1
+4 40000 256
+cfl=media.php
+cfn=load_thumbnail
+calls=1 1
+5 1520000 100608
+cfl=template.php
+cfn=render_template
+calls=1 1
+6 570000 4096
+
+fl=database.php
+fn=query_database
+1 3600000 24576
+
+fl=storage.php
+fn=fetch_record
+1 120000 1024
+cfl=database.php
+cfn=query_database
+calls=1 1
+2 3600000 24576
+
+fl=formatting.php
+fn=format_title
+1 70000 512
+
+fl=formatting.php
+fn=format_date
+1 40000 256
+
+fl=cache.php
+fn=read_cache
+1 140000 512
+
+fl=media.php
+fn=load_thumbnail
+1 180000 2048
+cfl=cache.php
+cfn=read_cache
+calls=1 1
+2 140000 512
+
+fl=template.php
+fn=render_template
+1 590000 4096
+
+fl=template.php
+fn=render_card
+1 210000 4096
+cfl=storage.php
+cfn=fetch_record
+calls=1 1
+2 3720000 25600
+cfl=formatting.php
+cfn=format_title
+calls=1 1
+3 70000 512
+cfl=formatting.php
+cfn=format_date
+calls=1 1
+4 40000 256
+cfl=media.php
+cfn=load_thumbnail
+calls=1 1
+5 320000 2560
+cfl=template.php
+cfn=render_template
+calls=1 1
+6 590000 4096
+
+fl=database.php
+fn=query_database
+1 3800000 24576
+
+fl=storage.php
+fn=fetch_record
+1 120000 1024
+cfl=database.php
+cfn=query_database
+calls=1 1
+2 3800000 24576
+
+fl=formatting.php
+fn=format_title
+1 70000 512
+
+fl=formatting.php
+fn=format_date
+1 40000 256
+
+fl=cache.php
+fn=read_cache
+1 140000 512
+
+fl=media.php
+fn=load_thumbnail
+1 180000 2048
+cfl=cache.php
+cfn=read_cache
+calls=1 1
+2 140000 512
+
+fl=template.php
+fn=render_template
+1 610000 4096
+
+fl=template.php
+fn=render_card
+1 210000 4096
+cfl=storage.php
+cfn=fetch_record
+calls=1 1
+2 3920000 25600
+cfl=formatting.php
+cfn=format_title
+calls=1 1
+3 70000 512
+cfl=formatting.php
+cfn=format_date
+calls=1 1
+4 40000 256
+cfl=media.php
+cfn=load_thumbnail
+calls=1 1
+5 320000 2560
+cfl=template.php
+cfn=render_template
+calls=1 1
+6 610000 4096
+
+fl=database.php
+fn=query_database
+1 4000000 24576
+
+fl=storage.php
+fn=fetch_record
+1 120000 1024
+cfl=database.php
+cfn=query_database
+calls=1 1
+2 4000000 24576
+
+fl=formatting.php
+fn=format_title
+1 70000 512
+
+fl=formatting.php
+fn=format_date
+1 40000 256
+
+fl=cache.php
+fn=read_cache
+1 80000 256
+
+fl=media.php
+fn=decode_image
+1 1200000 98304
+
+fl=media.php
+fn=load_thumbnail
+1 240000 2048
+cfl=cache.php
+cfn=read_cache
+calls=1 1
+2 80000 256
+cfl=media.php
+cfn=decode_image
+calls=1 1
+3 1200000 98304
+
+fl=template.php
+fn=render_template
+1 630000 4096
+
+fl=template.php
+fn=render_card
+1 210000 4096
+cfl=storage.php
+cfn=fetch_record
+calls=1 1
+2 4120000 25600
+cfl=formatting.php
+cfn=format_title
+calls=1 1
+3 70000 512
+cfl=formatting.php
+cfn=format_date
+calls=1 1
+4 40000 256
+cfl=media.php
+cfn=load_thumbnail
+calls=1 1
+5 1520000 100608
+cfl=template.php
+cfn=render_template
+calls=1 1
+6 630000 4096
+
+fl=database.php
+fn=query_database
+1 5700000 24576
+
+fl=database.php
+fn=query_database
+1 3100000 24576
+
+fl=template.php
+fn=render_template
+1 950000 8192
+
+fl=template.php
+fn=render_sidebar
+1 320000 4096
+cfl=database.php
+cfn=query_database
+calls=1 1
+2 5700000 24576
+cfl=database.php
+cfn=query_database
+calls=1 1
+3 3100000 24576
+cfl=template.php
+cfn=render_template
+calls=1 1
+4 950000 8192
+
+fl=template.php
+fn=render_page
+1 800000 16384
+cfl=menu.php
+cfn=load_menu
+calls=1 1
+2 7030000 61440
+cfl=template.php
+cfn=render_card
+calls=1 1
+3 4610000 135168
+cfl=template.php
+cfn=render_card
+calls=1 1
+4 3630000 37120
+cfl=template.php
+cfn=render_card
+calls=1 1
+5 3850000 37120
+cfl=template.php
+cfn=render_card
+calls=1 1
+6 5270000 135168
+cfl=template.php
+cfn=render_card
+calls=1 1
+7 4290000 37120
+cfl=template.php
+cfn=render_card
+calls=1 1
+8 4510000 37120
+cfl=template.php
+cfn=render_card
+calls=1 1
+9 5930000 135168
+cfl=template.php
+cfn=render_card
+calls=1 1
+10 4950000 37120
+cfl=template.php
+cfn=render_card
+calls=1 1
+11 5170000 37120
+cfl=template.php
+cfn=render_card
+calls=1 1
+12 6590000 135168
+cfl=template.php
+cfn=render_sidebar
+calls=1 1
+13 10070000 61440
+
+fl=cache.php
+fn=write_cache
+1 700000 4096
+
+fl=output.php
+fn=serialize_output
+1 1500000 24576
+cfl=cache.php
+cfn=write_cache
+calls=1 1
+2 700000 4096
+
+fl=index.php
+fn=main
+1 300000 8192
+cfl=bootstrap.php
+cfn=bootstrap
+calls=1 1
+2 1770000 29696
+cfl=template.php
+cfn=render_page
+calls=1 1
+3 66700000 902656
+cfl=output.php
+cfn=serialize_output
+calls=1 1
+4 2200000 28672
+
+summary: 70970000 969216
