@@ -1,0 +1,4 @@
+interface:
+  display_name: "Profile with Speedscope"
+  short_description: "Profile WordPress and compare tests through the MCP"
+  default_prompt: "Use $profile-with-speedscope to analyze the website's Xdebug profiles and run the required comparative tests through the Speedscope MCP."

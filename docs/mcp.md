@@ -124,3 +124,18 @@ occurrences par métrique :
 Les empreintes complètes des fonctions et des arbres des deux métriques sont
 identiques entre les versions. Ces chiffres mesurent l’importeur dans Node ;
 ils n’incluent pas le rendu du navigateur.
+
+## Profiling skill
+
+The [Profile with Speedscope](../skills/profile-with-speedscope/SKILL.md) skill
+is versioned in `skills/profile-with-speedscope/`. It covers MCP analysis,
+Xdebug captures, and before/after comparisons with cold or warm caches.
+Its runner saves responses from the actual MCP server as JSON in a new results
+directory, without contacting or modifying a website.
+
+To use it as a personal skill, copy that directory into
+`~/.codex/skills/profile-with-speedscope/`. See the runner's options with:
+
+```sh
+node skills/profile-with-speedscope/scripts/profile-suite.mjs --help
+```
