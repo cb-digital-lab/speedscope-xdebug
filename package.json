@@ -18,7 +18,8 @@
     "test": "./scripts/ci.sh",
     "serve": "tsx scripts/dev-server.ts",
     "mcp:serve": "node --import tsx scripts/mcp-server.ts",
-    "mcp:smoke": "node --import tsx scripts/mcp-smoke.ts"
+    "mcp:smoke": "node --import tsx scripts/mcp-smoke.ts",
+    "benchmark:callgrind": "node --import tsx scripts/benchmark-callgrind.ts"
   },
   "files": [
     "bin/cli.mjs",

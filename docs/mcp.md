@@ -90,3 +90,37 @@ vrai client MCP, cherche une fonction et parcourt une occurrence. Les profils
 restent hors Git. La connexion MCP et le navigateur possèdent chacun leur propre
 profil en mémoire s’ils sont utilisés simultanément ; aucune copie intégrale ne
 transite dans les réponses MCP.
+
+## Mesurer le parsing
+
+```sh
+npm run benchmark:callgrind -- ../sample/mon-fichier-cachegrind --verify
+```
+
+La commande affiche un JSON avec les temps de lecture, de décodage et de parsing,
+la RAM résidente après parsing, les totaux et le nombre d’occurrences par métrique.
+`--verify` ajoute une empreinte SHA-256 de toutes les fonctions et des deux arbres
+complets, calculée après la mesure. Comparer ces empreintes permet de vérifier
+qu’une optimisation préserve les données, l’ordre des enfants et les positions.
+`PARSE_BUDGET_MS=15000` permet de faire échouer la commande si le parsing dépasse
+15 secondes. Exécuter les mesures dans des processus séparés, sans autre benchmark
+ou suite de tests en parallèle.
+
+L’importeur commun à l’interface et au MCP conserve les appels dans des tableaux
+typés par blocs et construit les arbres à partir des coûts propres en post-ordre.
+Chaque occurrence est finalisée une fois, sans mettre à jour tous ses ancêtres
+à chaque coût. Les coûts d’une fonction récursive comptent chaque intervalle une
+seule fois, comme avec le constructeur de profils général.
+
+Mesure locale du 15 octobre 2026 (Node 26.11.1, processus distincts, sans profileur
+CPU) sur un profil Xdebug de 397 824 027 octets et 5 552 009
+occurrences par métrique :
+
+| Mesure | Avant | Après |
+| --- | ---: | ---: |
+| Parsing | 18,97 s | 11,88 s |
+| RAM résidente après parsing | 4 785 Mio | 3 911 Mio |
+
+Les empreintes complètes des fonctions et des arbres des deux métriques sont
+identiques entre les versions. Ces chiffres mesurent l’importeur dans Node ;
+ils n’incluent pas le rendu du navigateur.
