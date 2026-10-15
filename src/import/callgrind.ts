@@ -4,8 +4,8 @@
 // can differ slightly from the sum of self costs because of rounding.
 // No aggregate call-graph distribution or producer guessing is performed.
 
-import {CallTreeProfileBuilder, Frame, FrameInfo, Profile, ProfileGroup} from '../lib/profile'
-import {KeyedSet} from '../lib/utils'
+import {FrameInfo, Profile, ProfileGroup} from '../lib/profile'
+import {PostOrderCallTreeProfileBuilder} from '../lib/post-order-profile'
 import {ByteFormatter, TimeFormatter} from '../lib/value-formatters'
 import {TextFileContent} from './utils'
 
@@ -15,72 +15,108 @@ interface CallgrindRecord {
   childCount: number
 }
 
-interface TopologyNode {
-  frameInfo: FrameInfo
-  self: number[]
-  children: TopologyNode[]
+// Keep millions of completed calls outside the GC heap. Node IDs are one-based;
+// zero denotes an absent child/sibling. Only function identities are objects.
+const RECORD_CHUNK_BITS = 16
+const RECORD_CHUNK_SIZE = 1 << RECORD_CHUNK_BITS
+const RECORD_CHUNK_MASK = RECORD_CHUNK_SIZE - 1
+
+interface RecordChunk {
+  frames: Uint32Array
+  firstChild: Uint32Array
+  nextSibling: Uint32Array
+  self: Float64Array[]
 }
 
 class CallgrindProfileBuilder {
+  private chunks: RecordChunk[] = []
+  private length = 0
+  private pending: number[] = []
+  private frames: FrameInfo[] = []
+  private frameIds = new Map<FrameInfo, number>()
+
   constructor(
     private fileName: string,
     private eventNames: string[],
-    private records: CallgrindRecord[],
   ) {}
 
-  build(): Profile[] {
-    const topology = this.buildTopology()
-    this.records.length = 0
-    return this.eventNames.map((name, index) => this.emitFromTopology(topology, name, index))
-  }
-
-  private buildTopology(): TopologyNode[] {
-    const pending: TopologyNode[] = []
-
-    for (const record of this.records) {
-      let childCount = record.childCount
-      if (childCount > pending.length) {
-        throw new Error(
-          'Invalid Xdebug post-order profile: a caller references missing child records. Aggregated Callgrind files are not supported by this fork.',
-        )
-      }
-
-      const children = childCount > 0 ? pending.splice(pending.length - childCount, childCount) : []
-      pending.push({
-        frameInfo: record.frame,
-        self: record.self,
-        children,
+  append(record: CallgrindRecord) {
+    const first = this.pending.length - record.childCount
+    if (first < 0) {
+      throw new Error(
+        'Invalid Xdebug post-order profile: a caller references missing child records. Aggregated Callgrind files are not supported by this fork.',
+      )
+    }
+    const index = this.length++
+    const offset = index & RECORD_CHUNK_MASK
+    if (offset === 0) {
+      this.chunks.push({
+        frames: new Uint32Array(RECORD_CHUNK_SIZE),
+        firstChild: new Uint32Array(RECORD_CHUNK_SIZE),
+        nextSibling: new Uint32Array(RECORD_CHUNK_SIZE),
+        self: this.eventNames.map(() => new Float64Array(RECORD_CHUNK_SIZE)),
       })
     }
-
-    return pending
+    const chunk = this.chunks[index >>> RECORD_CHUNK_BITS]
+    let frameId = this.frameIds.get(record.frame)
+    if (frameId === undefined) {
+      frameId = this.frames.length
+      this.frames.push(record.frame)
+      this.frameIds.set(record.frame, frameId)
+    }
+    chunk.frames[offset] = frameId
+    for (let i = 0; i < this.eventNames.length; i++) chunk.self[i][offset] = record.self[i]
+    if (record.childCount > 0) {
+      chunk.firstChild[offset] = this.pending[first]
+      for (let i = first; i < this.pending.length - 1; i++) {
+        const child = this.pending[i] - 1
+        this.chunks[child >>> RECORD_CHUNK_BITS].nextSibling[child & RECORD_CHUNK_MASK] =
+          this.pending[i + 1]
+      }
+      this.pending.length = first
+    }
+    this.pending.push(index + 1)
   }
 
-  private emitFromTopology(forest: TopologyNode[], fieldName: string, eventIndex: number): Profile {
-    const frameSet = new KeyedSet<Frame>()
-    const getFrame = (info: FrameInfo): Frame => Frame.getOrInsert(frameSet, info)
-    const profile = new CallTreeProfileBuilder()
+  build(): Profile[] {
+    this.frameIds.clear()
+    const profiles = this.eventNames.map((name, index) => this.emitFromTopology(name, index))
+    this.chunks.length = 0
+    return profiles
+  }
+
+  private emitFromTopology(fieldName: string, eventIndex: number): Profile {
+    const profile = new PostOrderCallTreeProfileBuilder()
     profile.setReconstructedTimeline(true)
     const unitMultiplier = this.configureProfile(profile, fieldName)
 
     let totalCumulative = 0
-    const emit = (node: TopologyNode) => {
-      const frame = getFrame(node.frameInfo)
-      profile.enterFrame(frame, Math.round(totalCumulative * unitMultiplier))
-      for (const child of node.children) {
-        emit(child)
+    const stack: number[] = []
+    for (const root of this.pending) {
+      let id = root
+      while (id !== 0) {
+        const index = id - 1
+        const chunk = this.chunks[index >>> RECORD_CHUNK_BITS]
+        const offset = index & RECORD_CHUNK_MASK
+        profile.enterFrame(this.frames[chunk.frames[offset]])
+        stack.push(id)
+        id = chunk.firstChild[offset]
+        if (id !== 0) continue
+        do {
+          const completed = stack.pop()! - 1
+          const chunk = this.chunks[completed >>> RECORD_CHUNK_BITS]
+          const offset = completed & RECORD_CHUNK_MASK
+          totalCumulative += Math.max(0, chunk.self[eventIndex][offset] || 0)
+          profile.leaveFrame(Math.round(totalCumulative * unitMultiplier))
+          id = chunk.nextSibling[offset]
+        } while (id === 0 && stack.length > 0)
       }
-      totalCumulative += Math.max(0, node.self[eventIndex] || 0)
-      profile.leaveFrame(frame, Math.round(totalCumulative * unitMultiplier))
-    }
-    for (const root of forest) {
-      emit(root)
     }
 
     return profile.build()
   }
 
-  private configureProfile(profile: CallTreeProfileBuilder, fieldName: string): number {
+  private configureProfile(profile: PostOrderCallTreeProfileBuilder, fieldName: string): number {
     let unitMultiplier = 1
     if (fieldName === 'Time_(10ns)') {
       profile.setName(`${this.fileName} -- Time`)
@@ -115,8 +151,9 @@ class CallgrindParser {
   private eventNames: string[] | null = null
   private numEvents = 0
 
-  private records: CallgrindRecord[] = []
+  private builder: CallgrindProfileBuilder | null = null
   private currentRecord: CallgrindRecord | null = null
+  private selfCosts: number[] = []
 
   private filename: string | null = null
   private functionName: string | null = null
@@ -142,6 +179,15 @@ class CallgrindParser {
   parse(): ProfileGroup | null {
     let line: string | null
     while ((line = this.nextLine()) !== null) {
+      if (line.length === 0) continue
+      const first = line.charCodeAt(0)
+      // Xdebug overwhelmingly emits decimal costs and f*/c* assignments.
+      // Avoid testing every such line against the header/comment grammar.
+      if (first >= 48 && first <= 57) {
+        if (this.parseSelfCostLine(line)) continue
+      } else if (first === 102 || first === 99) {
+        if (this.parseAssignmentLine(line)) continue
+      }
       if (/^\s*#/.exec(line)) {
         // Line is a comment. Ignore it.
         continue
@@ -171,16 +217,12 @@ class CallgrindParser {
       return null
     }
 
+    this.finishRecord()
     this.internedFrames.clear()
-    const builder = new CallgrindProfileBuilder(
-      this.importedFileName,
-      this.eventNames,
-      this.records,
-    )
     return {
       name: this.importedFileName,
       indexToView: 0,
-      profiles: builder.build(),
+      profiles: this.builder!.build(),
     }
   }
 
@@ -201,11 +243,17 @@ class CallgrindParser {
   private beginRecord() {
     const record: CallgrindRecord = {
       frame: this.frameInfo(),
-      self: new Array(this.numEvents).fill(0),
+      self: this.selfCosts.fill(0),
       childCount: 0,
     }
-    this.records.push(record)
     this.currentRecord = record
+  }
+
+  private finishRecord() {
+    if (this.currentRecord !== null) {
+      this.builder?.append(this.currentRecord)
+      this.currentRecord = null
+    }
   }
 
   private parseHeaderLine(line: string): boolean {
@@ -234,6 +282,8 @@ class CallgrindParser {
 
     this.eventNames = fields
     this.numEvents = fields.length
+    this.selfCosts = new Array(this.numEvents).fill(0)
+    this.builder = new CallgrindProfileBuilder(this.importedFileName, fields)
 
     return true
   }
@@ -265,8 +315,8 @@ class CallgrindParser {
       }
 
       case 'fn': {
+        this.finishRecord()
         this.functionName = this.parseNameWithCompression(value, this.savedFunctionNames)
-        this.currentRecord = null
         break
       }
 
@@ -351,10 +401,6 @@ class CallgrindParser {
   // conflicts with how speedscope uses line numbers.
   private static numPositionFields = 1
 
-  private eventValues(nums: number[]): number[] {
-    return nums.slice(CallgrindParser.numPositionFields)
-  }
-
   private parseSelfCostLine(line: string): boolean {
     const nums = this.parseCostNums(line)
     if (nums == null) return false
@@ -363,16 +409,41 @@ class CallgrindParser {
       this.beginRecord()
     }
 
-    const values = this.eventValues(nums)
     for (let i = 0; i < this.numEvents; i++) {
-      this.currentRecord!.self[i] += values[i] || 0
+      this.currentRecord!.self[i] += nums[i + CallgrindParser.numPositionFields] || 0
     }
     return true
   }
 
   private parseCostNums(line: string | null): number[] | null {
-    // TODO(jlfwong): Allow hexadecimal encoding
     if (line == null) return null
+    const nums = this.costScratch
+    nums.length = 0
+    let index = 0
+    while (index < line.length) {
+      let value = 0
+      const start = index
+      let digit: number
+      while (index < line.length && (digit = line.charCodeAt(index) - 48) >= 0 && digit <= 9) {
+        value = value * 10 + digit
+        index++
+      }
+      if (index === start || !Number.isSafeInteger(value)) return this.parseCostNumsSlow(line)
+      nums.push(value)
+      if (index === line.length) break
+      if (line.charCodeAt(index++) !== 32 || index === line.length)
+        return this.parseCostNumsSlow(line)
+    }
+    if (nums.length === 0) return null
+    this.costScratch = this.prevCostLineNumbers
+    this.prevCostLineNumbers = nums
+    return nums
+  }
+
+  private costScratch: number[] = []
+
+  private parseCostNumsSlow(line: string): number[] | null {
+    // TODO(jlfwong): Allow hexadecimal encoding
 
     const parts = line.split(/\s+/)
     const nums: number[] = []
