@@ -13,3 +13,10 @@ before applying or interpreting triage states.
 
 Single-context: root `GLOSSARY.md` and `docs/adr/`.
 Read `docs/agents/domain.md` before exploring the codebase.
+
+### Git commits
+
+Use this checkout's configured maintainer identity for both author and committer,
+and sign commits with its configured signing key. For changes implemented with
+Codex, include `Co-authored-by: Codex <noreply@openai.com>` in the commit message.
+Preserve existing credits to other contributors when rewriting commits.
